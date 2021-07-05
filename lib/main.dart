@@ -10,17 +10,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Financial Simulator',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
       ),
-      home: MyHomePage(title: 'FinSim - Financial Simulator'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  MyHomePage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -31,15 +31,34 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Welcome to your personal finance simulator !!',
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo_white.png',
+              fit: BoxFit.contain,
+              height: 32,
             ),
+            Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Financial Simulator'))
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 0),
+        child: Column(
+          children: [
+            Container(
+              height: 300,
+              child: Image.asset('assets/images/pig.png'),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Welcome to your personal finance simulator. Please add your major income and expenditure details to get started',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(onPressed: () {}, child: Text('Continue')),
           ],
         ),
       ),
