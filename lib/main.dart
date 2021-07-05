@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Financial Simulator',
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.deepPurple,
       ),
       home: MyHomePage(),
     );
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(height: 20),
             Text(
-              'Welcome to your personal finance simulator. Please add your major income and expenditure details to get started',
+              'Welcome to Personal Finance Simulator. Please add your major income and expenditure details to get started',
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
