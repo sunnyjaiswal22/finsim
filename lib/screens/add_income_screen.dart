@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum IncomeFrequency { Monthly, Yearly }
+
 class AddIncomeScreen extends StatefulWidget {
   const AddIncomeScreen({Key? key}) : super(key: key);
   static final routeName = 'add-income-screen';
@@ -10,7 +12,7 @@ class AddIncomeScreen extends StatefulWidget {
 
 class _AddIncomeScreenState extends State<AddIncomeScreen> {
   final _formKey = GlobalKey<FormState>();
-  String frequency = 'Monthly';
+  IncomeFrequency? _selectedIncomeFrequency = IncomeFrequency.Monthly;
 
   @override
   Widget build(BuildContext context) {
@@ -39,33 +41,46 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               ),
               Row(
                 children: [
-                  Text('Frequency'),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  DropdownButton<String>(
-                    value: frequency,
-                    icon: const Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    underline: Container(
-                      height: 2,
-                      color: Theme.of(context).accentColor,
-                    ),
-                    onChanged: (String? newValue) {
+                  Text('Frequency:'),
+                  SizedBox(width: 20),
+                  Radio<IncomeFrequency>(
+                    value: IncomeFrequency.Monthly,
+                    groupValue: _selectedIncomeFrequency,
+                    onChanged: (IncomeFrequency? value) {
                       setState(() {
-                        frequency = newValue!;
+                        _selectedIncomeFrequency = value;
                       });
                     },
-                    items: <String>['Monthly', 'Yearly']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
                   ),
+                  Text('Monthly'),
+                  SizedBox(width: 20),
+                  Radio<IncomeFrequency>(
+                    value: IncomeFrequency.Yearly,
+                    groupValue: _selectedIncomeFrequency,
+                    onChanged: (IncomeFrequency? value) {
+                      setState(() {
+                        _selectedIncomeFrequency = value;
+                      });
+                    },
+                  ),
+                  Text('Yearly'),
                 ],
+              ),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Amount',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter amount";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {},
+                child: Text('Add Income'),
               ),
             ],
           ),
