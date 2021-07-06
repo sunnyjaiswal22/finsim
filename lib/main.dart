@@ -1,3 +1,5 @@
+import 'package:finsim/screens/add_income_screen.dart';
+import 'package:finsim/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,56 +14,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo_white.png',
-              fit: BoxFit.contain,
-              height: 32,
-            ),
-            Container(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Financial Simulator'))
-          ],
-        ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 0),
-        child: Column(
-          children: [
-            Container(
-              height: 300,
-              child: Image.asset('assets/images/pig.png'),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Welcome to Personal Finance Simulator. Please add your major income and expenditure details to get started',
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(onPressed: () {}, child: Text('Continue')),
-          ],
-        ),
-      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomeScreen(),
+        AddIncomeScreen.routeName: (context) => AddIncomeScreen(),
+      },
     );
   }
 }
