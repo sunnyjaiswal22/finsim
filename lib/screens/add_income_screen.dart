@@ -1,5 +1,7 @@
 import 'package:finsim/helpers/db_helper.dart';
 import 'package:finsim/models/income.dart';
+import 'package:finsim/widgets/finsim_appbar.dart';
+import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,11 +21,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text('FinSim - Add Income'),
-        ),
-      ),
+      appBar: FinSimAppBar.appbar(title: 'Add Income'),
+      drawer: NavigationDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Form(
@@ -53,7 +52,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     groupValue: income.frequency,
                     onChanged: (IncomeFrequency? value) {
                       setState(() {
-                        income.frequency = value;
+                        income.frequency = value!;
                       });
                     },
                   ),
@@ -64,7 +63,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     groupValue: income.frequency,
                     onChanged: (IncomeFrequency? value) {
                       setState(() {
-                        income.frequency = value;
+                        income.frequency = value!;
                       });
                     },
                   ),
@@ -103,9 +102,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  print(
-                      'Name: ${income.name}, amount: ${income.amount}, frequency: ${income.frequency}');
-                  // DBHelper.insert('income', {});
+                  DBHelper.saveIncome(income);
                 },
                 child: Text('Add Income'),
               ),
