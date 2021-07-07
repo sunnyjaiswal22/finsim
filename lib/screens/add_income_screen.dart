@@ -1,6 +1,11 @@
+import 'package:finsim/helpers/db_helper.dart';
+import 'package:finsim/models/income.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 enum IncomeFrequency { Monthly, Yearly }
+final _formKey = GlobalKey<FormState>();
+Income income = Income();
 
 class AddIncomeScreen extends StatefulWidget {
   const AddIncomeScreen({Key? key}) : super(key: key);
@@ -11,9 +16,6 @@ class AddIncomeScreen extends StatefulWidget {
 }
 
 class _AddIncomeScreenState extends State<AddIncomeScreen> {
-  final _formKey = GlobalKey<FormState>();
-  IncomeFrequency? _selectedIncomeFrequency = IncomeFrequency.Monthly;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +40,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   }
                   return null;
                 },
+                onChanged: (value) {
+                  income.name = value;
+                },
               ),
               Row(
                 children: [
@@ -45,10 +50,10 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   SizedBox(width: 20),
                   Radio<IncomeFrequency>(
                     value: IncomeFrequency.Monthly,
-                    groupValue: _selectedIncomeFrequency,
+                    groupValue: income.frequency,
                     onChanged: (IncomeFrequency? value) {
                       setState(() {
-                        _selectedIncomeFrequency = value;
+                        income.frequency = value;
                       });
                     },
                   ),
@@ -56,10 +61,10 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   SizedBox(width: 20),
                   Radio<IncomeFrequency>(
                     value: IncomeFrequency.Yearly,
-                    groupValue: _selectedIncomeFrequency,
+                    groupValue: income.frequency,
                     onChanged: (IncomeFrequency? value) {
                       setState(() {
-                        _selectedIncomeFrequency = value;
+                        income.frequency = value;
                       });
                     },
                   ),
@@ -70,16 +75,38 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Amount',
                 ),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter amount";
                   }
+                },
+                onChanged: (value) {
+                  income.amount = value.isEmpty ? 0 : int.parse(value);
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(
+                    labelText: 'Yearly Appreciation Percentage',
+                    hintText: 'Change per annum (in percentage)'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter appreciation percentage";
+                  }
                   return null;
+                },
+                onChanged: (value) {
+                  income.yearlyAppreciationPercentage = int.parse(value);
                 },
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  print(
+                      'Name: ${income.name}, amount: ${income.amount}, frequency: ${income.frequency}');
+                  // DBHelper.insert('income', {});
+                },
                 child: Text('Add Income'),
               ),
             ],

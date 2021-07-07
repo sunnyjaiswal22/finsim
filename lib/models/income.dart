@@ -1,13 +1,15 @@
 import 'package:finsim/screens/add_income_screen.dart';
 
 class Income {
-  final String name;
-  final IncomeFrequency frequency;
-  final int amount;
+  String name;
+  IncomeFrequency? frequency;
+  int amount;
+  int yearlyAppreciationPercentage;
 
   Income({
-    required this.name,
-    required this.frequency,
-    required this.amount,
+    this.name = '',
+    this.frequency = IncomeFrequency.Monthly,
+    this.amount = 0,
+    this.yearlyAppreciationPercentage = 0,
   });
 }
