@@ -1,8 +1,7 @@
-import 'package:finsim/helpers/db_helper.dart';
-import 'package:finsim/models/income.dart';
+import 'package:flutter/material.dart';
+
 import 'package:finsim/screens/add_income_screen.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
-import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

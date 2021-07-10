@@ -1,8 +1,5 @@
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
-import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
-import 'package:finsim/screens/add_expenditure_screen.dart'
-    show ExpenditureFrequency;
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 
@@ -52,44 +49,22 @@ class DBHelper {
   }
 
   static Future<void> saveIncome(Income income) {
-    return insert(
-      'income',
-      {
-        'name': income.name,
-        'frequency': IncomeFrequency.values
-            .indexOf(income.frequency), //Storing enum index in database
-        'amount': income.amount,
-        'yearlyAppreciationPercentage': income.yearlyAppreciationPercentage,
-      },
-    );
+    return insert('income', income.toMap());
   }
 
   static Future<void> saveExpenditure(Expenditure expenditure) {
-    return insert(
-      'expenditure',
-      {
-        'name': expenditure.name,
-        'frequency': ExpenditureFrequency.values
-            .indexOf(expenditure.frequency), //Storing enum index in database
-        'amount': expenditure.amount,
-        'yearlyAppreciationPercentage':
-            expenditure.yearlyAppreciationPercentage,
-      },
-    );
+    return insert('expenditure', expenditure.toMap());
+  }
+
+  static Future<void> deleteExpenditure(int id) {
+    return Future.value();
   }
 
   static Future<List<Income>> getIncome() async {
     final incomeMapList = await fetch('income');
     List<Income> incomeList = [];
     incomeMapList.forEach((incomeMap) {
-      var income = Income();
-      income.name = incomeMap['name'];
-      income.frequency = IncomeFrequency.values[incomeMap['frequency']];
-      income.amount = incomeMap['amount'];
-      income.yearlyAppreciationPercentage =
-          incomeMap['yearlyAppreciationPercentage'];
-
-      incomeList.add(income);
+      incomeList.add(Income.fromMap(incomeMap));
     });
 
     return incomeList;
@@ -99,15 +74,7 @@ class DBHelper {
     final expenditureMapList = await fetch('expenditure');
     List<Expenditure> expenditureList = [];
     expenditureMapList.forEach((expenditureMap) {
-      var expenditure = Expenditure();
-      expenditure.name = expenditureMap['name'];
-      expenditure.frequency =
-          ExpenditureFrequency.values[expenditureMap['frequency']];
-      expenditure.amount = expenditureMap['amount'];
-      expenditure.yearlyAppreciationPercentage =
-          expenditureMap['yearlyAppreciationPercentage'];
-
-      expenditureList.add(expenditure);
+      expenditureList.add(Expenditure.fromMap(expenditureMap));
     });
 
     return expenditureList;

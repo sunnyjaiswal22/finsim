@@ -59,7 +59,18 @@ class _ExpenditureSourcesScreenState extends State<ExpenditureSourcesScreen> {
                   title: Text(expenditureList[index].name),
                   subtitle: Text(describeEnum(
                       expenditureList[index].frequency.toString())),
-                  trailing: Text(expenditureList[index].amount.toString()),
+                  trailing: Row(
+                    children: [
+                      Text(expenditureList[index].amount.toString()),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              //DBHelper
+                            });
+                          },
+                          icon: Icon(Icons.delete)),
+                    ],
+                  ),
                 );
               },
             ),
