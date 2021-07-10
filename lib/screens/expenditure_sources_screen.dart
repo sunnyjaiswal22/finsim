@@ -1,27 +1,28 @@
 import 'package:finsim/helpers/db_helper.dart';
-import 'package:finsim/models/income.dart';
-import 'package:finsim/screens/add_income_screen.dart';
+import 'package:finsim/models/expenditure.dart';
+import 'package:finsim/screens/add_expenditure_screen.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class IncomeSourcesScreen extends StatefulWidget {
-  const IncomeSourcesScreen({Key? key}) : super(key: key);
-  static final routeName = 'income-sources-screen';
+class ExpenditureSourcesScreen extends StatefulWidget {
+  const ExpenditureSourcesScreen({Key? key}) : super(key: key);
+  static final routeName = 'expenditure-sources-screen';
 
   @override
-  _IncomeSourcesState createState() => _IncomeSourcesState();
+  _ExpenditureSourcesScreenState createState() =>
+      _ExpenditureSourcesScreenState();
 }
 
-class _IncomeSourcesState extends State<IncomeSourcesScreen> {
-  List<Income> incomeList = [];
+class _ExpenditureSourcesScreenState extends State<ExpenditureSourcesScreen> {
+  List<Expenditure> expenditureList = [];
   var _isLoading = true;
 
   @override
   void initState() {
-    DBHelper.getIncome().then(
+    DBHelper.getExpenditure().then(
       (data) {
-        incomeList = data;
+        expenditureList = data;
         setState(() {
           _isLoading = false;
         });
@@ -35,12 +36,12 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text('Income Sources'),
+          child: Text('Expenditure Sources'),
         ),
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, AddIncomeScreen.routeName);
+              Navigator.pushNamed(context, AddExpenditureScreen.routeName);
             },
             icon: Icon(Icons.add),
           ),
@@ -52,13 +53,13 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
-              itemCount: incomeList.length,
+              itemCount: expenditureList.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  title: Text(incomeList[index].name),
-                  subtitle: Text(
-                      describeEnum(incomeList[index].frequency.toString())),
-                  trailing: Text(incomeList[index].amount.toString()),
+                  title: Text(expenditureList[index].name),
+                  subtitle: Text(describeEnum(
+                      expenditureList[index].frequency.toString())),
+                  trailing: Text(expenditureList[index].amount.toString()),
                 );
               },
             ),

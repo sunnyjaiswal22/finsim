@@ -1,28 +1,28 @@
 import 'package:finsim/helpers/db_helper.dart';
-import 'package:finsim/models/income.dart';
-import 'package:finsim/screens/income_sources_screen.dart';
+import 'package:finsim/models/expenditure.dart';
+import 'package:finsim/screens/expenditure_sources_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum IncomeFrequency { Monthly, Yearly }
+enum ExpenditureFrequency { Monthly, Yearly }
 final _formKey = GlobalKey<FormState>();
-Income income = Income();
+Expenditure expenditure = Expenditure();
 
-class AddIncomeScreen extends StatefulWidget {
-  const AddIncomeScreen({Key? key}) : super(key: key);
-  static final routeName = 'add-income-screen';
+class AddExpenditureScreen extends StatefulWidget {
+  const AddExpenditureScreen({Key? key}) : super(key: key);
+  static final routeName = 'add-expenditure-screen';
 
   @override
-  _AddIncomeScreenState createState() => _AddIncomeScreenState();
+  _AddExpenditureScreenState createState() => _AddExpenditureScreenState();
 }
 
-class _AddIncomeScreenState extends State<AddIncomeScreen> {
+class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: FinSimAppBar.appbar(title: 'Add Income'),
+      appBar: FinSimAppBar.appbar(title: 'Add Expenditure'),
       drawer: NavigationDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -32,39 +32,39 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
             children: [
               TextFormField(
                 decoration: const InputDecoration(
-                  labelText: 'Income Name',
+                  labelText: 'Expenditure Name',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Please enter name of the income";
+                    return "Please enter name of the expenditure";
                   }
                   return null;
                 },
                 onChanged: (value) {
-                  income.name = value;
+                  expenditure.name = value;
                 },
               ),
               Row(
                 children: [
                   Text('Frequency:'),
                   SizedBox(width: 20),
-                  Radio<IncomeFrequency>(
-                    value: IncomeFrequency.Monthly,
-                    groupValue: income.frequency,
-                    onChanged: (IncomeFrequency? value) {
+                  Radio<ExpenditureFrequency>(
+                    value: ExpenditureFrequency.Monthly,
+                    groupValue: expenditure.frequency,
+                    onChanged: (ExpenditureFrequency? value) {
                       setState(() {
-                        income.frequency = value!;
+                        expenditure.frequency = value!;
                       });
                     },
                   ),
                   Text('Monthly'),
                   SizedBox(width: 20),
-                  Radio<IncomeFrequency>(
-                    value: IncomeFrequency.Yearly,
-                    groupValue: income.frequency,
-                    onChanged: (IncomeFrequency? value) {
+                  Radio<ExpenditureFrequency>(
+                    value: ExpenditureFrequency.Yearly,
+                    groupValue: expenditure.frequency,
+                    onChanged: (ExpenditureFrequency? value) {
                       setState(() {
-                        income.frequency = value!;
+                        expenditure.frequency = value!;
                       });
                     },
                   ),
@@ -83,7 +83,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   }
                 },
                 onChanged: (value) {
-                  income.amount = value.isEmpty ? 0 : int.parse(value);
+                  expenditure.amount = value.isEmpty ? 0 : int.parse(value);
                 },
               ),
               TextFormField(
@@ -97,21 +97,21 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   return null;
                 },
                 onChanged: (value) {
-                  income.yearlyAppreciationPercentage = int.parse(value);
+                  expenditure.yearlyAppreciationPercentage = int.parse(value);
                 },
               ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  DBHelper.saveIncome(income)
-                      .then((_) => Navigator.pushReplacementNamed(
-                          context, IncomeSourcesScreen.routeName))
-                      .then((value) {
-                    setState(
-                        () {}); //Calling setState() to refresh the IncomeSourcesScreen
-                  });
+                  DBHelper.saveExpenditure(expenditure).then((_) =>
+                      Navigator.pushReplacementNamed(
+                              context, ExpenditureSourcesScreen.routeName)
+                          .then((value) {
+                        setState(
+                            () {}); //Calling setState() to refresh ExpenditureSourcesScreen
+                      }));
                 },
-                child: Text('Add Income'),
+                child: Text('Add Expenditure'),
               ),
             ],
           ),

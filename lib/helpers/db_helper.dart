@@ -1,5 +1,8 @@
+import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
-import 'package:finsim/screens/add_income_screen.dart';
+import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
+import 'package:finsim/screens/add_expenditure_screen.dart'
+    show ExpenditureFrequency;
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 
@@ -7,13 +10,20 @@ class DBHelper {
   static const dbName = 'finsim.db';
   static const version = 1;
 
-  static Future<void> createDatabase(sql.Database db, version) {
-    return db.execute('''CREATE TABLE income(
+  static Future<void> createDatabase(sql.Database db, version) async {
+    await db.execute('''CREATE TABLE income (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
                   frequency INTEGER, 
                   amount INTEGER, 
-                  yearlyAppreciationPercentage INTEGER)''');
+                  yearlyAppreciationPercentage INTEGER);''');
+    await db.execute('''CREATE TABLE expenditure (
+                  id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                  name TEXT, 
+                  frequency INTEGER, 
+                  amount INTEGER, 
+                  yearlyAppreciationPercentage INTEGER);''');
+    return;
   }
 
   static Future<sql.Database> getDatabase() async {
@@ -54,6 +64,20 @@ class DBHelper {
     );
   }
 
+  static Future<void> saveExpenditure(Expenditure expenditure) {
+    return insert(
+      'expenditure',
+      {
+        'name': expenditure.name,
+        'frequency': ExpenditureFrequency.values
+            .indexOf(expenditure.frequency), //Storing enum index in database
+        'amount': expenditure.amount,
+        'yearlyAppreciationPercentage':
+            expenditure.yearlyAppreciationPercentage,
+      },
+    );
+  }
+
   static Future<List<Income>> getIncome() async {
     final incomeMapList = await fetch('income');
     List<Income> incomeList = [];
@@ -69,5 +93,23 @@ class DBHelper {
     });
 
     return incomeList;
+  }
+
+  static Future<List<Expenditure>> getExpenditure() async {
+    final expenditureMapList = await fetch('expenditure');
+    List<Expenditure> expenditureList = [];
+    expenditureMapList.forEach((expenditureMap) {
+      var expenditure = Expenditure();
+      expenditure.name = expenditureMap['name'];
+      expenditure.frequency =
+          ExpenditureFrequency.values[expenditureMap['frequency']];
+      expenditure.amount = expenditureMap['amount'];
+      expenditure.yearlyAppreciationPercentage =
+          expenditureMap['yearlyAppreciationPercentage'];
+
+      expenditureList.add(expenditure);
+    });
+
+    return expenditureList;
   }
 }
