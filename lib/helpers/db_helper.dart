@@ -48,16 +48,18 @@ class DBHelper {
     return db.query(table);
   }
 
-  static Future<void> saveIncome(Income income) {
-    return insert('income', income.toMap());
+  static Future<void> saveIncome(Income income) async {
+    return await insert('income', income.toMap());
   }
 
-  static Future<void> saveExpenditure(Expenditure expenditure) {
-    return insert('expenditure', expenditure.toMap());
+  static Future<void> saveExpenditure(Expenditure expenditure) async {
+    return await insert('expenditure', expenditure.toMap());
   }
 
-  static Future<void> deleteExpenditure(int id) {
-    return Future.value();
+  static Future<int> deleteExpenditure(int id) async {
+    final db = await getDatabase();
+
+    return await db.delete('expenditure', where: 'id = ?', whereArgs: [id]);
   }
 
   static Future<List<Income>> getIncome() async {

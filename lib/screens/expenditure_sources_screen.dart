@@ -60,15 +60,19 @@ class _ExpenditureSourcesScreenState extends State<ExpenditureSourcesScreen> {
                   subtitle: Text(describeEnum(
                       expenditureList[index].frequency.toString())),
                   trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(expenditureList[index].amount.toString()),
                       IconButton(
-                          onPressed: () {
-                            setState(() {
-                              //DBHelper
-                            });
-                          },
-                          icon: Icon(Icons.delete)),
+                        onPressed: () {
+                          setState(() {
+                            DBHelper.deleteExpenditure(
+                                    expenditureList[index].id)
+                                .then((_) => expenditureList.removeAt(index));
+                          });
+                        },
+                        icon: Icon(Icons.delete),
+                      ),
                     ],
                   ),
                 );
