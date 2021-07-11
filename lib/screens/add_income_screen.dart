@@ -1,6 +1,5 @@
 import 'package:finsim/helpers/db_helper.dart';
 import 'package:finsim/models/income.dart';
-import 'package:finsim/screens/income_sources_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';

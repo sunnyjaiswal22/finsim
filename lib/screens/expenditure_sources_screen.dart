@@ -2,6 +2,7 @@ import 'package:finsim/helpers/db_helper.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
+import 'package:finsim/widgets/yearly_appreciation_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -57,8 +58,18 @@ class _ExpenditureSourcesScreenState extends State<ExpenditureSourcesScreen> {
                 return ListTile(
                   key: ValueKey(_expenditureList[index].id),
                   title: Text(_expenditureList[index].name),
-                  subtitle: Text(describeEnum(
-                      _expenditureList[index].frequency.toString())),
+                  subtitle: Row(
+                    children: [
+                      Text(
+                        describeEnum(
+                          _expenditureList[index].frequency.toString(),
+                        ),
+                      ),
+                      YearlyAppreciationInfo(
+                          percentage: _expenditureList[index]
+                              .yearlyAppreciationPercentage),
+                    ],
+                  ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

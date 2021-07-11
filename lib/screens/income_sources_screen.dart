@@ -2,6 +2,7 @@ import 'package:finsim/helpers/db_helper.dart';
 import 'package:finsim/models/income.dart';
 import 'package:finsim/screens/add_income_screen.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
+import 'package:finsim/widgets/yearly_appreciation_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -57,8 +58,16 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
                 return ListTile(
                   key: ValueKey(_incomeList[index].id),
                   title: Text(_incomeList[index].name),
-                  subtitle: Text(
-                      describeEnum(_incomeList[index].frequency.toString())),
+                  subtitle: Row(
+                    children: [
+                      Text(
+                        describeEnum(_incomeList[index].frequency.toString()),
+                      ),
+                      YearlyAppreciationInfo(
+                          percentage:
+                              _incomeList[index].yearlyAppreciationPercentage),
+                    ],
+                  ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
