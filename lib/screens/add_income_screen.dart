@@ -103,13 +103,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  DBHelper.saveIncome(income)
-                      .then((_) => Navigator.pushReplacementNamed(
-                          context, IncomeSourcesScreen.routeName))
-                      .then((value) {
-                    setState(
-                        () {}); //Calling setState() to refresh the IncomeSourcesScreen
-                  });
+                  DBHelper.saveIncome(income);
+                  Navigator.pop(context);
                 },
                 child: Text('Add Income'),
               ),

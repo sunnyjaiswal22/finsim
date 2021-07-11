@@ -14,24 +14,20 @@ class IncomeSourcesScreen extends StatefulWidget {
 }
 
 class _IncomeSourcesState extends State<IncomeSourcesScreen> {
-  List<Income> incomeList = [];
+  List<Income> _incomeList = [];
   var _isLoading = true;
 
   @override
-  void initState() {
+  Widget build(BuildContext context) {
     DBHelper.getIncome().then(
       (data) {
-        incomeList = data;
+        _incomeList = data;
         setState(() {
           _isLoading = false;
         });
       },
     );
-    super.initState();
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -40,7 +36,11 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, AddIncomeScreen.routeName);
+              Navigator.pushNamed(context, AddIncomeScreen.routeName)
+                  .then((value) {
+                print("\n\nThen called\n\n");
+                setState(() {}); //Calling setState() to refresh screen on pop
+              });
             },
             icon: Icon(Icons.add),
           ),
@@ -52,13 +52,29 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
-              itemCount: incomeList.length,
+              itemCount: _incomeList.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  title: Text(incomeList[index].name),
+                  key: ValueKey(_incomeList[index].id),
+                  title: Text(_incomeList[index].name),
                   subtitle: Text(
-                      describeEnum(incomeList[index].frequency.toString())),
-                  trailing: Text(incomeList[index].amount.toString()),
+                      describeEnum(_incomeList[index].frequency.toString())),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(_incomeList[index].amount.toString()),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            var selectedIncome = _incomeList[index];
+                            _incomeList.removeAt(index);
+                            DBHelper.deleteIncome(selectedIncome.id);
+                          });
+                        },
+                        icon: Icon(Icons.delete),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),

@@ -15,24 +15,20 @@ class ExpenditureSourcesScreen extends StatefulWidget {
 }
 
 class _ExpenditureSourcesScreenState extends State<ExpenditureSourcesScreen> {
-  List<Expenditure> expenditureList = [];
+  List<Expenditure> _expenditureList = [];
   var _isLoading = true;
 
   @override
-  void initState() {
+  Widget build(BuildContext context) {
     DBHelper.getExpenditure().then(
       (data) {
-        expenditureList = data;
+        _expenditureList = data;
         setState(() {
           _isLoading = false;
         });
       },
     );
-    super.initState();
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -41,7 +37,10 @@ class _ExpenditureSourcesScreenState extends State<ExpenditureSourcesScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, AddExpenditureScreen.routeName);
+              Navigator.pushNamed(context, AddExpenditureScreen.routeName)
+                  .then((value) {
+                setState(() {}); //Calling setState() to refresh screen on pop
+              });
             },
             icon: Icon(Icons.add),
           ),
@@ -53,22 +52,23 @@ class _ExpenditureSourcesScreenState extends State<ExpenditureSourcesScreen> {
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
-              itemCount: expenditureList.length,
+              itemCount: _expenditureList.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  title: Text(expenditureList[index].name),
+                  key: ValueKey(_expenditureList[index].id),
+                  title: Text(_expenditureList[index].name),
                   subtitle: Text(describeEnum(
-                      expenditureList[index].frequency.toString())),
+                      _expenditureList[index].frequency.toString())),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(expenditureList[index].amount.toString()),
+                      Text(_expenditureList[index].amount.toString()),
                       IconButton(
                         onPressed: () {
                           setState(() {
-                            DBHelper.deleteExpenditure(
-                                    expenditureList[index].id)
-                                .then((_) => expenditureList.removeAt(index));
+                            var selectedExpenditure = _expenditureList[index];
+                            _expenditureList.removeAt(index);
+                            DBHelper.deleteExpenditure(selectedExpenditure.id);
                           });
                         },
                         icon: Icon(Icons.delete),

@@ -62,6 +62,12 @@ class DBHelper {
     return await db.delete('expenditure', where: 'id = ?', whereArgs: [id]);
   }
 
+  static Future<int> deleteIncome(int id) async {
+    final db = await getDatabase();
+
+    return await db.delete('income', where: 'id = ?', whereArgs: [id]);
+  }
+
   static Future<List<Income>> getIncome() async {
     final incomeMapList = await fetch('income');
     List<Income> incomeList = [];

@@ -5,6 +5,7 @@ import 'package:finsim/widgets/navigation_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+  static final routeName = '/';
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -42,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(
+                    Navigator.pushNamed(
                       context,
                       AddIncomeScreen.routeName,
                     );

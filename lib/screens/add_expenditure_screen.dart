@@ -103,13 +103,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  DBHelper.saveExpenditure(expenditure).then((_) =>
-                      Navigator.pushReplacementNamed(
-                              context, ExpenditureSourcesScreen.routeName)
-                          .then((value) {
-                        setState(
-                            () {}); //Calling setState() to refresh ExpenditureSourcesScreen
-                      }));
+                  DBHelper.saveExpenditure(expenditure)
+                      .then((_) => Navigator.pop(context));
                 },
                 child: Text('Add Expenditure'),
               ),
