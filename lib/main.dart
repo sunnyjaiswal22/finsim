@@ -1,5 +1,6 @@
 import 'package:finsim/screens/add_expenditure_screen.dart';
 import 'package:finsim/screens/add_income_screen.dart';
+import 'package:finsim/screens/dashboard_screen.dart';
 import 'package:finsim/screens/expenditure_sources_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/screens/income_sources_screen.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         AddExpenditureScreen.routeName: (context) => AddExpenditureScreen(),
         ExpenditureSourcesScreen.routeName: (context) =>
             ExpenditureSourcesScreen(),
+        DashboardScreen.routeName: (context) => DashboardScreen(),
       },
     );
   }

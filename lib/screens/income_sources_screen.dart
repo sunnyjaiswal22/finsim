@@ -32,7 +32,7 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text('Income Sources'),
+          child: Text('Current Income Sources'),
         ),
         actions: [
           IconButton(

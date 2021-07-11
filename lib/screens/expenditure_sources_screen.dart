@@ -33,7 +33,7 @@ class _ExpenditureSourcesScreenState extends State<ExpenditureSourcesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text('Expenditure Sources'),
+          child: Text('Current Expenditure Sources'),
         ),
         actions: [
           IconButton(
