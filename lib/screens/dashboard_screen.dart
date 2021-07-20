@@ -1,8 +1,10 @@
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'dart:developer';
+import 'dart:math' as math;
+
 import 'package:finsim/helpers/db_helper.dart';
-import 'package:finsim/screens/add_income_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -14,109 +16,94 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  var chartData;
+  List<BarChartGroupData> barGroupList = [];
+  var maxYearlyIncome = 0;
 
   @override
   Widget build(BuildContext context) {
-    if (chartData == null) {
+    log("barGroupList.isEmpty: ${barGroupList.isEmpty}");
+    if (barGroupList.isEmpty) {
       DBHelper.getIncome().then((incomeList) {
-        DateTime now = new DateTime.now();
-        var currentYear = now.year;
-
-        List<OrdinalData> ordinalDataList = [
-          OrdinalData((currentYear + 1).toString(), 0),
-          OrdinalData((currentYear + 2).toString(), 0),
-          OrdinalData((currentYear + 3).toString(), 0),
-          OrdinalData((currentYear + 4).toString(), 0),
-          OrdinalData((currentYear + 5).toString(), 0),
-        ];
-
-        incomeList.forEach((income) {
-          print(
-              'Looping for income id ${income.id} with amount ${income.amount}');
-          var adjustedIncomeAmount = income.amount;
-
-          for (int i = 0; i < 5; i++) {
-            var totalIncomeThisYear = 0;
-
-            if (income.frequency == IncomeFrequency.Monthly) {
-              totalIncomeThisYear = adjustedIncomeAmount * 12;
-            }
-            if (income.frequency == IncomeFrequency.Yearly) {
-              totalIncomeThisYear = adjustedIncomeAmount;
-            }
-
-            adjustedIncomeAmount = (adjustedIncomeAmount +
-                    (adjustedIncomeAmount *
-                        income.yearlyAppreciationPercentage /
-                        100))
-                .toInt();
-
-            print('Year $i income: $totalIncomeThisYear');
-
-            ordinalDataList[i].value += totalIncomeThisYear;
-          }
-        });
-
         setState(() {
-          chartData = [
-            new charts.Series<OrdinalData, String>(
-              id: 'Cash Flow',
-              colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-              domainFn: (OrdinalData data, _) => data.label,
-              measureFn: (OrdinalData data, _) => data.value,
-              data: ordinalDataList,
-            )
-          ];
+          DateTime now = new DateTime.now();
+          var currentYear = now.year;
+
+          for (var year = 1; year <= 5; year++) {
+            log("Computing income for year: $year");
+            var totalYearlyIncome = 0;
+            incomeList.forEach(
+              (income) {
+                log("Adding income ${income.amount}");
+                totalYearlyIncome += (income.amount *
+                        math.pow(
+                            (1 + income.yearlyAppreciationPercentage / 100),
+                            year))
+                    .toInt();
+                maxYearlyIncome = maxYearlyIncome < totalYearlyIncome
+                    ? totalYearlyIncome
+                    : maxYearlyIncome;
+                log("totalYearlyIncome $totalYearlyIncome");
+              },
+            );
+            var barChartGroupData = BarChartGroupData(
+              x: currentYear + year,
+              barRods: [
+                BarChartRodData(
+                  y: totalYearlyIncome.toDouble(),
+                  colors: [
+                    Theme.of(context).primaryColorDark,
+                    Theme.of(context).primaryColorDark,
+                  ],
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(4),
+                    topRight: Radius.circular(4),
+                  ),
+                  width: 30,
+                )
+              ],
+              showingTooltipIndicators: [0],
+            );
+
+            barGroupList.add(barChartGroupData);
+          }
         });
       });
     }
 
+    log("maxYAxisValue: $maxYearlyIncome");
+
     return Scaffold(
       appBar: FinSimAppBar.appbar(title: 'Finance Simulator'),
       drawer: NavigationDrawer(),
-      body: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Text('Cash Flow'),
-              chartData == null
-                  ? Container(
-                      height: 250,
-                      child: CircularProgressIndicator(),
-                    )
-                  : Container(
-                      height: 250,
-                      child: charts.BarChart(
-                        chartData,
-                        animate: true,
-                        selectionModels: [
-                          new charts.SelectionModelConfig(
-                              changedListener: (charts.SelectionModel model) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text(
-                                'Amount: ${model.selectedSeries[0].measureFn(model.selectedDatum[0].index)}',
-                                textAlign: TextAlign.center,
-                              ),
-                              duration: Duration(seconds: 1),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          })
-                        ],
-                      ),
-                    ),
-            ],
+      body: AspectRatio(
+        aspectRatio: 1.618,
+        child: Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          color: Colors.white,
+          child: BarChart(
+            BarChartData(
+              alignment: BarChartAlignment.spaceAround,
+              maxY: maxYearlyIncome + maxYearlyIncome / 2.5,
+              titlesData: FlTitlesData(
+                show: true,
+                bottomTitles: SideTitles(
+                  showTitles: true,
+                  getTitles: (double value) {
+                    return value.toInt().toString();
+                  },
+                ),
+                leftTitles: SideTitles(showTitles: false),
+              ),
+              borderData: FlBorderData(
+                show: true,
+                border: Border(bottom: BorderSide()),
+              ),
+              barGroups: barGroupList,
+            ),
           ),
         ),
       ),
     );
   }
-}
-
-class OrdinalData {
-  String label;
-  int value;
-  OrdinalData(this.label, this.value);
 }
