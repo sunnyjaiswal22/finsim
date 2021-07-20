@@ -17,60 +17,72 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   List<BarChartGroupData> barGroupList = [];
-  var maxYearlyIncome = 0;
-
+  var maxYearlyAmount = 0;
+  var minYearlyAmount = 0;
   @override
   Widget build(BuildContext context) {
-    log("barGroupList.isEmpty: ${barGroupList.isEmpty}");
     if (barGroupList.isEmpty) {
       DBHelper.getIncome().then((incomeList) {
-        setState(() {
-          DateTime now = new DateTime.now();
-          var currentYear = now.year;
+        DBHelper.getExpenditure().then((expenditureList) {
+          setState(() {
+            DateTime now = new DateTime.now();
+            var currentYear = now.year;
+            for (var year = 1; year <= 5; year++) {
+              var totalYearlyAmount = 0;
 
-          for (var year = 1; year <= 5; year++) {
-            log("Computing income for year: $year");
-            var totalYearlyIncome = 0;
-            incomeList.forEach(
-              (income) {
-                log("Adding income ${income.amount}");
-                totalYearlyIncome += (income.amount *
+              incomeList.forEach(
+                (income) {
+                  totalYearlyAmount += (income.amount *
+                          math.pow(
+                              (1 + income.yearlyAppreciationPercentage / 100),
+                              year))
+                      .toInt();
+                },
+              );
+
+              expenditureList.forEach((expenditure) {
+                totalYearlyAmount -= (expenditure.amount *
                         math.pow(
-                            (1 + income.yearlyAppreciationPercentage / 100),
+                            (1 +
+                                expenditure.yearlyAppreciationPercentage / 100),
                             year))
                     .toInt();
-                maxYearlyIncome = maxYearlyIncome < totalYearlyIncome
-                    ? totalYearlyIncome
-                    : maxYearlyIncome;
-                log("totalYearlyIncome $totalYearlyIncome");
-              },
-            );
-            var barChartGroupData = BarChartGroupData(
-              x: currentYear + year,
-              barRods: [
-                BarChartRodData(
-                  y: totalYearlyIncome.toDouble(),
-                  colors: [
-                    Theme.of(context).primaryColorDark,
-                    Theme.of(context).primaryColorDark,
-                  ],
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(4),
-                    topRight: Radius.circular(4),
-                  ),
-                  width: 30,
-                )
-              ],
-              showingTooltipIndicators: [0],
-            );
+              });
 
-            barGroupList.add(barChartGroupData);
-          }
+              maxYearlyAmount = maxYearlyAmount < totalYearlyAmount
+                  ? totalYearlyAmount
+                  : maxYearlyAmount;
+              minYearlyAmount = minYearlyAmount > totalYearlyAmount
+                  ? totalYearlyAmount
+                  : minYearlyAmount;
+
+              var barColor = totalYearlyAmount >= 0 ? Colors.green : Colors.red;
+
+              var barChartGroupData = BarChartGroupData(
+                x: currentYear + year,
+                barRods: [
+                  BarChartRodData(
+                    y: totalYearlyAmount.toDouble(),
+                    colors: [
+                      barColor,
+                      barColor,
+                    ],
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(2),
+                      topRight: Radius.circular(2),
+                    ),
+                    width: 30,
+                  )
+                ],
+                showingTooltipIndicators: [0],
+              );
+
+              barGroupList.add(barChartGroupData);
+            }
+          });
         });
       });
     }
-
-    log("maxYAxisValue: $maxYearlyIncome");
 
     return Scaffold(
       appBar: FinSimAppBar.appbar(title: 'Finance Simulator'),
@@ -84,7 +96,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: BarChart(
             BarChartData(
               alignment: BarChartAlignment.spaceAround,
-              maxY: maxYearlyIncome + maxYearlyIncome / 2.5,
+              maxY: maxYearlyAmount > 0
+                  ? (maxYearlyAmount + minYearlyAmount.abs()) * 1.4
+                  : 0,
+              minY: minYearlyAmount < 0
+                  ? -(maxYearlyAmount + minYearlyAmount.abs()) * 1.4
+                  : 0,
               titlesData: FlTitlesData(
                 show: true,
                 bottomTitles: SideTitles(
@@ -97,7 +114,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               borderData: FlBorderData(
                 show: true,
-                border: Border(bottom: BorderSide()),
+                border: Border(
+                  bottom: BorderSide(),
+                ),
               ),
               barGroups: barGroupList,
             ),
