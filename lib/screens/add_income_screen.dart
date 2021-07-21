@@ -5,7 +5,7 @@ import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum IncomeFrequency { Monthly, Yearly }
+enum IncomeFrequency { Once, Monthly, Yearly }
 final _formKey = GlobalKey<FormState>();
 Income income = Income();
 
@@ -31,44 +31,17 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
             children: [
               TextFormField(
                 decoration: const InputDecoration(
-                  labelText: 'Income Name',
+                  labelText: 'Source of Income',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Please enter name of the income";
+                    return "Please enter source of income";
                   }
                   return null;
                 },
                 onChanged: (value) {
                   income.name = value;
                 },
-              ),
-              Row(
-                children: [
-                  Text('Frequency:'),
-                  SizedBox(width: 20),
-                  Radio<IncomeFrequency>(
-                    value: IncomeFrequency.Monthly,
-                    groupValue: income.frequency,
-                    onChanged: (IncomeFrequency? value) {
-                      setState(() {
-                        income.frequency = value!;
-                      });
-                    },
-                  ),
-                  Text('Monthly'),
-                  SizedBox(width: 20),
-                  Radio<IncomeFrequency>(
-                    value: IncomeFrequency.Yearly,
-                    groupValue: income.frequency,
-                    onChanged: (IncomeFrequency? value) {
-                      setState(() {
-                        income.frequency = value!;
-                      });
-                    },
-                  ),
-                  Text('Yearly'),
-                ],
               ),
               TextFormField(
                 decoration: const InputDecoration(
@@ -84,6 +57,54 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 onChanged: (value) {
                   income.amount = value.isEmpty ? 0 : int.parse(value);
                 },
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Text('Frequency:'),
+                  SizedBox(width: 10),
+                  SizedBox(
+                    width: 30,
+                    child: Radio<IncomeFrequency>(
+                      value: IncomeFrequency.Once,
+                      groupValue: income.frequency,
+                      onChanged: (IncomeFrequency? value) {
+                        setState(() {
+                          income.frequency = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Text('Once'),
+                  SizedBox(width: 15),
+                  SizedBox(
+                    width: 30,
+                    child: Radio<IncomeFrequency>(
+                      value: IncomeFrequency.Monthly,
+                      groupValue: income.frequency,
+                      onChanged: (IncomeFrequency? value) {
+                        setState(() {
+                          income.frequency = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Text('Monthly'),
+                  SizedBox(width: 15),
+                  SizedBox(
+                    width: 30,
+                    child: Radio<IncomeFrequency>(
+                      value: IncomeFrequency.Yearly,
+                      groupValue: income.frequency,
+                      onChanged: (IncomeFrequency? value) {
+                        setState(() {
+                          income.frequency = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Text('Yearly'),
+                ],
               ),
               TextFormField(
                 decoration: const InputDecoration(

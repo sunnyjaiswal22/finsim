@@ -5,7 +5,7 @@ import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum ExpenditureFrequency { Monthly, Yearly }
+enum ExpenditureFrequency { Once, Monthly, Yearly }
 final _formKey = GlobalKey<FormState>();
 Expenditure expenditure = Expenditure();
 
@@ -31,7 +31,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
             children: [
               TextFormField(
                 decoration: const InputDecoration(
-                  labelText: 'Expenditure Name',
+                  labelText: 'Expenditure On',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -42,33 +42,6 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                 onChanged: (value) {
                   expenditure.name = value;
                 },
-              ),
-              Row(
-                children: [
-                  Text('Frequency:'),
-                  SizedBox(width: 20),
-                  Radio<ExpenditureFrequency>(
-                    value: ExpenditureFrequency.Monthly,
-                    groupValue: expenditure.frequency,
-                    onChanged: (ExpenditureFrequency? value) {
-                      setState(() {
-                        expenditure.frequency = value!;
-                      });
-                    },
-                  ),
-                  Text('Monthly'),
-                  SizedBox(width: 20),
-                  Radio<ExpenditureFrequency>(
-                    value: ExpenditureFrequency.Yearly,
-                    groupValue: expenditure.frequency,
-                    onChanged: (ExpenditureFrequency? value) {
-                      setState(() {
-                        expenditure.frequency = value!;
-                      });
-                    },
-                  ),
-                  Text('Yearly'),
-                ],
               ),
               TextFormField(
                 decoration: const InputDecoration(
@@ -84,6 +57,54 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                 onChanged: (value) {
                   expenditure.amount = value.isEmpty ? 0 : int.parse(value);
                 },
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Text('Frequency:'),
+                  SizedBox(width: 10),
+                  SizedBox(
+                    width: 30,
+                    child: Radio<ExpenditureFrequency>(
+                      value: ExpenditureFrequency.Once,
+                      groupValue: expenditure.frequency,
+                      onChanged: (ExpenditureFrequency? value) {
+                        setState(() {
+                          expenditure.frequency = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Text('Once'),
+                  SizedBox(width: 15),
+                  SizedBox(
+                    width: 30,
+                    child: Radio<ExpenditureFrequency>(
+                      value: ExpenditureFrequency.Monthly,
+                      groupValue: expenditure.frequency,
+                      onChanged: (ExpenditureFrequency? value) {
+                        setState(() {
+                          expenditure.frequency = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Text('Monthly'),
+                  SizedBox(width: 15),
+                  SizedBox(
+                    width: 30,
+                    child: Radio<ExpenditureFrequency>(
+                      value: ExpenditureFrequency.Yearly,
+                      groupValue: expenditure.frequency,
+                      onChanged: (ExpenditureFrequency? value) {
+                        setState(() {
+                          expenditure.frequency = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Text('Yearly'),
+                ],
               ),
               TextFormField(
                 decoration: const InputDecoration(

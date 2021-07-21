@@ -1,5 +1,8 @@
-import 'dart:developer';
 import 'dart:math' as math;
+import 'dart:ui';
+import 'package:finsim/screens/add_expenditure_screen.dart'
+    show ExpenditureFrequency;
+import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
 import 'package:intl/intl.dart';
 import 'package:finsim/helpers/db_helper.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
@@ -19,7 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<BarChartGroupData> barGroupList = [];
   var maxYearlyAmount = 0;
   var minYearlyAmount = 0;
-  var currencyFormat = new NumberFormat("#,##0", "en_IN");
+  var currencyFormat = new NumberFormat("#,##,##,###", "en_IN");
   @override
   Widget build(BuildContext context) {
     if (barGroupList.isEmpty) {
@@ -32,22 +35,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
             for (var year = 1; year <= 5; year++) {
               incomeList.forEach(
                 (income) {
-                  totalYearlyAmount += (income.amount *
-                          math.pow(
-                              (1 + income.yearlyAppreciationPercentage / 100),
-                              year))
-                      .toInt();
+                  if (income.frequency == IncomeFrequency.Once && year == 1) {
+                    totalYearlyAmount += income.amount;
+                  } else if (income.frequency == IncomeFrequency.Monthly) {
+                    var yearlyAmount = income.amount * 12;
+                    totalYearlyAmount += (yearlyAmount *
+                            math.pow(
+                                (1 + income.yearlyAppreciationPercentage / 100),
+                                year))
+                        .toInt();
+                  } else if (income.frequency == IncomeFrequency.Yearly) {
+                    totalYearlyAmount += (income.amount *
+                            math.pow(
+                                (1 + income.yearlyAppreciationPercentage / 100),
+                                year))
+                        .toInt();
+                  }
                 },
               );
 
-              expenditureList.forEach((expenditure) {
-                totalYearlyAmount -= (expenditure.amount *
-                        math.pow(
-                            (1 +
-                                expenditure.yearlyAppreciationPercentage / 100),
-                            year))
-                    .toInt();
-              });
+              expenditureList.forEach(
+                (expenditure) {
+                  if (expenditure.frequency == ExpenditureFrequency.Once &&
+                      year == 1) {
+                    totalYearlyAmount -= expenditure.amount;
+                  } else if (expenditure.frequency ==
+                      ExpenditureFrequency.Monthly) {
+                    var yearlyAmount = expenditure.amount * 12;
+                    totalYearlyAmount -= (yearlyAmount *
+                            math.pow(
+                                (1 +
+                                    expenditure.yearlyAppreciationPercentage /
+                                        100),
+                                year))
+                        .toInt();
+                  } else if (expenditure.frequency ==
+                      ExpenditureFrequency.Yearly) {
+                    totalYearlyAmount -= (expenditure.amount *
+                            math.pow(
+                                (1 +
+                                    expenditure.yearlyAppreciationPercentage /
+                                        100),
+                                year))
+                        .toInt();
+                  }
+                },
+              );
 
               maxYearlyAmount = maxYearlyAmount < totalYearlyAmount
                   ? totalYearlyAmount
@@ -68,13 +101,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       barColor,
                     ],
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(2),
-                      topRight: Radius.circular(2),
+                      topLeft: Radius.circular(0),
+                      topRight: Radius.circular(0),
                     ),
                     width: 30,
                   )
                 ],
-                showingTooltipIndicators: [0, 1],
+                //Not showing tooltip value in case of 0 amount as it overlaps with bottom titles
+                showingTooltipIndicators: totalYearlyAmount == 0 ? [] : [0],
               );
 
               barGroupList.add(barChartGroupData);
@@ -141,14 +175,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       textStyle: TextStyle(
                         fontSize: 16,
                         color: Colors.black,
-                        wordSpacing: 2,
-                        letterSpacing: 1,
                       ),
                     )),
                 gridData: FlGridData(
                   show: true,
                   horizontalInterval:
-                      horizontalGridInterval == 0 ? 7 : horizontalGridInterval,
+                      horizontalGridInterval == 0 ? 5 : horizontalGridInterval,
                 ),
                 barTouchData: BarTouchData(
                   touchTooltipData: BarTouchTooltipData(
