@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'dart:math' as math;
-
+import 'package:intl/intl.dart';
 import 'package:finsim/helpers/db_helper.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
@@ -19,6 +19,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<BarChartGroupData> barGroupList = [];
   var maxYearlyAmount = 0;
   var minYearlyAmount = 0;
+  var currencyFormat = new NumberFormat("#,##0", "en_IN");
   @override
   Widget build(BuildContext context) {
     if (barGroupList.isEmpty) {
@@ -27,9 +28,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           setState(() {
             DateTime now = new DateTime.now();
             var currentYear = now.year;
+            var totalYearlyAmount = 0;
             for (var year = 1; year <= 5; year++) {
-              var totalYearlyAmount = 0;
-
               incomeList.forEach(
                 (income) {
                   totalYearlyAmount += (income.amount *
@@ -74,7 +74,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     width: 30,
                   )
                 ],
-                showingTooltipIndicators: [0],
+                showingTooltipIndicators: [0, 1],
               );
 
               barGroupList.add(barChartGroupData);
@@ -84,41 +84,94 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
     }
 
+    var horizontalGridInterval =
+        (maxYearlyAmount.abs() + minYearlyAmount.abs()) / 3;
+
     return Scaffold(
       appBar: FinSimAppBar.appbar(title: 'Finance Simulator'),
       drawer: NavigationDrawer(),
-      body: AspectRatio(
-        aspectRatio: 1.618,
-        child: Card(
-          elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          color: Colors.white,
-          child: BarChart(
-            BarChartData(
-              alignment: BarChartAlignment.spaceAround,
-              maxY: maxYearlyAmount > 0
-                  ? (maxYearlyAmount + minYearlyAmount.abs()) * 1.4
-                  : 0,
-              minY: minYearlyAmount < 0
-                  ? -(maxYearlyAmount + minYearlyAmount.abs()) * 1.4
-                  : 0,
-              titlesData: FlTitlesData(
-                show: true,
-                bottomTitles: SideTitles(
-                  showTitles: true,
-                  getTitles: (double value) {
-                    return value.toInt().toString();
-                  },
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: AspectRatio(
+          aspectRatio: 1.618,
+          child: Card(
+            elevation: 0,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            color: Colors.white,
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: maxYearlyAmount > 0
+                    ? (maxYearlyAmount + minYearlyAmount.abs()) * 1.4
+                    : 0,
+                minY: minYearlyAmount < 0
+                    ? -(maxYearlyAmount + minYearlyAmount.abs()) * 1.4
+                    : 0,
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: SideTitles(
+                    showTitles: true,
+                    getTitles: (double value) {
+                      return value.toInt().toString();
+                    },
+                  ),
+                  leftTitles: SideTitles(showTitles: false),
                 ),
-                leftTitles: SideTitles(showTitles: false),
-              ),
-              borderData: FlBorderData(
-                show: true,
-                border: Border(
-                  bottom: BorderSide(),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border(
+                    bottom: BorderSide(),
+                    left: BorderSide(),
+                  ),
                 ),
+                axisTitleData: FlAxisTitleData(
+                    bottomTitle: AxisTitle(
+                      showTitle: true,
+                      titleText: 'Year',
+                      margin: 0,
+                    ),
+                    leftTitle: AxisTitle(
+                      showTitle: true,
+                      titleText: 'Amount',
+                    ),
+                    topTitle: AxisTitle(
+                      showTitle: true,
+                      titleText: 'Commulative Cash Flow',
+                      textStyle: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        wordSpacing: 2,
+                        letterSpacing: 1,
+                      ),
+                    )),
+                gridData: FlGridData(
+                  show: true,
+                  horizontalInterval:
+                      horizontalGridInterval == 0 ? 7 : horizontalGridInterval,
+                ),
+                barTouchData: BarTouchData(
+                  touchTooltipData: BarTouchTooltipData(
+                    tooltipMargin: 4,
+                    tooltipPadding: EdgeInsets.all(2),
+                    getTooltipItem: (
+                      BarChartGroupData group,
+                      int groupIndex,
+                      BarChartRodData rod,
+                      int rodIndex,
+                    ) {
+                      return BarTooltipItem(
+                        currencyFormat.format(rod.y),
+                        TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                barGroups: barGroupList,
               ),
-              barGroups: barGroupList,
             ),
           ),
         ),
