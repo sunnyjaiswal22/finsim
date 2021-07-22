@@ -124,8 +124,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: FinSimAppBar.appbar(title: 'Finance Simulator'),
       drawer: NavigationDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
+      body: Container(
+        padding: const EdgeInsets.all(5),
+        margin: EdgeInsets.only(top: 15),
         child: AspectRatio(
           aspectRatio: 1.618,
           child: Card(
@@ -172,6 +173,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     topTitle: AxisTitle(
                       showTitle: true,
                       titleText: 'Commulative Cash Flow',
+                      margin: 15,
                       textStyle: TextStyle(
                         fontSize: 16,
                         color: Colors.black,
