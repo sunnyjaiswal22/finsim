@@ -5,26 +5,25 @@ import 'package:finsim/screens/add_expenditure_screen.dart'
 import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
 import 'package:intl/intl.dart';
 import 'package:finsim/helpers/db_helper.dart';
-import 'package:finsim/widgets/finsim_appbar.dart';
-import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
-  static final routeName = 'dashboard-screen';
+class CashFlowChart extends StatefulWidget {
+  const CashFlowChart({Key? key}) : super(key: key);
 
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  _CashFlowChartState createState() => _CashFlowChartState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _CashFlowChartState extends State<CashFlowChart> {
   List<BarChartGroupData> barGroupList = [];
   var maxYearlyAmount = 0;
   var minYearlyAmount = 0;
   var currencyFormat = new NumberFormat("#,##,##,###", "en_IN");
+
   @override
   Widget build(BuildContext context) {
+    print("Building Cash Flow Chart ...");
     if (barGroupList.isEmpty) {
       DBHelper.getIncome().then((incomeList) {
         DBHelper.getExpenditure().then((expenditureList) {
@@ -121,91 +120,86 @@ class _DashboardScreenState extends State<DashboardScreen> {
     var horizontalGridInterval =
         (maxYearlyAmount.abs() + minYearlyAmount.abs()) / 3;
 
-    return Scaffold(
-      appBar: FinSimAppBar.appbar(title: 'Finance Simulator'),
-      drawer: NavigationDrawer(),
-      body: Container(
-        padding: const EdgeInsets.all(5),
-        margin: EdgeInsets.only(top: 15),
-        child: AspectRatio(
-          aspectRatio: 1.618,
-          child: Card(
-            elevation: 0,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-            color: Colors.white,
-            child: BarChart(
-              BarChartData(
-                alignment: BarChartAlignment.spaceAround,
-                maxY: maxYearlyAmount > 0
-                    ? (maxYearlyAmount + minYearlyAmount.abs()) * 1.4
-                    : 0,
-                minY: minYearlyAmount < 0
-                    ? -(maxYearlyAmount + minYearlyAmount.abs()) * 1.4
-                    : 0,
-                titlesData: FlTitlesData(
-                  show: true,
-                  bottomTitles: SideTitles(
-                    showTitles: true,
-                    getTitles: (double value) {
-                      return value.toInt().toString();
-                    },
-                  ),
-                  leftTitles: SideTitles(showTitles: false),
+    return Container(
+      padding: const EdgeInsets.all(5),
+      margin: EdgeInsets.only(top: 15),
+      child: AspectRatio(
+        aspectRatio: 1.618,
+        child: Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          color: Colors.white,
+          child: BarChart(
+            BarChartData(
+              alignment: BarChartAlignment.spaceAround,
+              maxY: maxYearlyAmount > 0
+                  ? (maxYearlyAmount + minYearlyAmount.abs()) * 1.4
+                  : 0,
+              minY: minYearlyAmount < 0
+                  ? -(maxYearlyAmount + minYearlyAmount.abs()) * 1.4
+                  : 0,
+              titlesData: FlTitlesData(
+                show: true,
+                bottomTitles: SideTitles(
+                  showTitles: true,
+                  getTitles: (double value) {
+                    return value.toInt().toString();
+                  },
                 ),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border(
-                    bottom: BorderSide(),
-                    left: BorderSide(),
-                  ),
-                ),
-                axisTitleData: FlAxisTitleData(
-                    bottomTitle: AxisTitle(
-                      showTitle: true,
-                      titleText: 'Year',
-                      margin: 0,
-                    ),
-                    leftTitle: AxisTitle(
-                      showTitle: true,
-                      titleText: 'Amount',
-                    ),
-                    topTitle: AxisTitle(
-                      showTitle: true,
-                      titleText: 'Commulative Cash Flow',
-                      margin: 15,
-                      textStyle: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    )),
-                gridData: FlGridData(
-                  show: true,
-                  horizontalInterval:
-                      horizontalGridInterval == 0 ? 5 : horizontalGridInterval,
-                ),
-                barTouchData: BarTouchData(
-                  touchTooltipData: BarTouchTooltipData(
-                    tooltipMargin: 4,
-                    tooltipPadding: EdgeInsets.all(2),
-                    getTooltipItem: (
-                      BarChartGroupData group,
-                      int groupIndex,
-                      BarChartRodData rod,
-                      int rodIndex,
-                    ) {
-                      return BarTooltipItem(
-                        currencyFormat.format(rod.y),
-                        TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                barGroups: barGroupList,
+                leftTitles: SideTitles(showTitles: false),
               ),
+              borderData: FlBorderData(
+                show: true,
+                border: Border(
+                  bottom: BorderSide(),
+                  left: BorderSide(),
+                ),
+              ),
+              axisTitleData: FlAxisTitleData(
+                  bottomTitle: AxisTitle(
+                    showTitle: true,
+                    titleText: 'Year',
+                    margin: 0,
+                  ),
+                  leftTitle: AxisTitle(
+                    showTitle: true,
+                    titleText: 'Amount',
+                  ),
+                  topTitle: AxisTitle(
+                    showTitle: true,
+                    titleText: 'Commulative Cash Flow',
+                    margin: 15,
+                    textStyle: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  )),
+              gridData: FlGridData(
+                show: true,
+                horizontalInterval:
+                    horizontalGridInterval == 0 ? 5 : horizontalGridInterval,
+              ),
+              barTouchData: BarTouchData(
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipMargin: 4,
+                  tooltipPadding: EdgeInsets.all(2),
+                  getTooltipItem: (
+                    BarChartGroupData group,
+                    int groupIndex,
+                    BarChartRodData rod,
+                    int rodIndex,
+                  ) {
+                    return BarTooltipItem(
+                      currencyFormat.format(rod.y),
+                      TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              barGroups: barGroupList,
             ),
           ),
         ),

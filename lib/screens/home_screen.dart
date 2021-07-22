@@ -1,6 +1,8 @@
+import 'package:finsim/helpers/db_helper.dart';
+import 'package:finsim/widgets/cashflow_chart.dart';
+import 'package:finsim/widgets/welcome.dart';
 import 'package:flutter/material.dart';
 
-import 'package:finsim/screens/add_income_screen.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,8 +14,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var _isLoading = true;
+  var _isBlankStart = true;
   @override
   Widget build(BuildContext context) {
+    DBHelper.getIncome().then((incomeList) {
+      DBHelper.getExpenditure().then((expenditureList) {
+        if (incomeList.isNotEmpty || expenditureList.isNotEmpty) {
+          _isBlankStart = false;
+        }
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    });
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -25,36 +39,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       drawer: NavigationDrawer(),
-      body: Wrap(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 0),
-            child: Column(
-              children: [
-                Container(
-                  height: 320,
-                  child: Image.asset('assets/images/pig.png'),
-                ),
-                SizedBox(height: 30),
-                Text(
-                  'Welcome to Personal Finance Simulator. Please add your major income and expenditure details to get started',
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      AddIncomeScreen.routeName,
-                    );
-                  },
-                  child: Text('Continue'),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : _isBlankStart
+              ? Welcome()
+              : CashFlowChart(),
     );
   }
 }

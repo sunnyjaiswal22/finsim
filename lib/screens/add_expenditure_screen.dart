@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:finsim/helpers/db_helper.dart';
 import 'package:finsim/models/expenditure.dart';
+import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +23,15 @@ class AddExpenditureScreen extends StatefulWidget {
 class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
   @override
   Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context)!.settings.arguments;
+    var isBlankStart = false;
+    if (arguments != null) {
+      try {
+        isBlankStart = arguments as bool;
+      } catch (e) {
+        log('Can\'t convert arguments to bool');
+      }
+    }
     return Scaffold(
       appBar: FinSimAppBar.appbar(title: 'Add Expenditure'),
       drawer: NavigationDrawer(),
@@ -121,13 +133,24 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                 },
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  DBHelper.saveExpenditure(expenditure)
-                      .then((_) => Navigator.pop(context));
-                },
-                child: Text('Add Expenditure'),
-              ),
+              isBlankStart
+                  ? ElevatedButton(
+                      onPressed: () {
+                        DBHelper.saveExpenditure(expenditure)
+                            .then((_) => Navigator.pushReplacementNamed(
+                                  context,
+                                  HomeScreen.routeName,
+                                ));
+                      },
+                      child: Text('Continue'),
+                    )
+                  : ElevatedButton(
+                      onPressed: () {
+                        DBHelper.saveExpenditure(expenditure)
+                            .then((_) => Navigator.pop(context));
+                      },
+                      child: Text('Add Expenditure'),
+                    ),
             ],
           ),
         ),

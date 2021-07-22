@@ -33,6 +33,7 @@ dependencies:
   fl_chart: ^0.36.2
   charts_flutter: ^0.11.0
   intl: ^0.17.0
+  flutter_native_splash: ^1.1.8+4
 
 dev_dependencies:
   flutter_test:
@@ -84,3 +85,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_native_splash:
+  image: assets/images/logo_white.png
+  color: "#673ab7"

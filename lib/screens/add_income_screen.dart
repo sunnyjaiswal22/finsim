@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:finsim/helpers/db_helper.dart';
 import 'package:finsim/models/income.dart';
+import 'package:finsim/screens/add_expenditure_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +10,7 @@ import 'package:flutter/services.dart';
 
 enum IncomeFrequency { Once, Monthly, Yearly }
 final _formKey = GlobalKey<FormState>();
+
 Income income = Income();
 
 class AddIncomeScreen extends StatefulWidget {
@@ -20,6 +24,16 @@ class AddIncomeScreen extends StatefulWidget {
 class _AddIncomeScreenState extends State<AddIncomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context)!.settings.arguments;
+    var isBlankStart = false;
+    if (arguments != null) {
+      try {
+        isBlankStart = arguments as bool;
+        print('Setting isBlankStart to $isBlankStart');
+      } catch (e) {
+        log('Can\'t convert arguments to bool');
+      }
+    }
     return Scaffold(
       appBar: FinSimAppBar.appbar(title: 'Add Income'),
       drawer: NavigationDrawer(),
@@ -121,13 +135,25 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 },
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  DBHelper.saveIncome(income);
-                  Navigator.pop(context);
-                },
-                child: Text('Add Income'),
-              ),
+              isBlankStart
+                  ? ElevatedButton(
+                      onPressed: () {
+                        DBHelper.saveIncome(income)
+                            .then((_) => Navigator.pushReplacementNamed(
+                                  context,
+                                  AddExpenditureScreen.routeName,
+                                  arguments: true,
+                                ));
+                      },
+                      child: Text('Continue'),
+                    )
+                  : ElevatedButton(
+                      onPressed: () {
+                        DBHelper.saveIncome(income)
+                            .then((_) => Navigator.pop(context));
+                      },
+                      child: Text('Add Income'),
+                    ),
             ],
           ),
         ),

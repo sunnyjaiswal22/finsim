@@ -1,5 +1,5 @@
-import 'package:finsim/screens/dashboard_screen.dart';
 import 'package:finsim/screens/expenditure_sources_screen.dart';
+import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/screens/income_sources_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -18,22 +18,22 @@ class NavigationDrawer extends StatelessWidget {
           ListTile(
             title: Text('Home'),
             onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, DashboardScreen.routeName, (route) => false);
+              Navigator.pop(context);
+              Navigator.pushNamed(context, HomeScreen.routeName);
             },
           ),
           ListTile(
             title: Text('Current Income Sources'),
             onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, IncomeSourcesScreen.routeName, (route) => false);
+              Navigator.pop(context);
+              Navigator.pushNamed(context, IncomeSourcesScreen.routeName);
             },
           ),
           ListTile(
             title: Text('Current Expenditure Sources'),
             onTap: () {
-              Navigator.pushNamedAndRemoveUntil(context,
-                  ExpenditureSourcesScreen.routeName, (route) => false);
+              Navigator.pop(context);
+              Navigator.pushNamed(context, ExpenditureSourcesScreen.routeName);
             },
           ),
         ],
