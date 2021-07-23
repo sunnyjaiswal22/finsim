@@ -1,10 +1,12 @@
 import 'package:finsim/helpers/db_helper.dart';
+import 'package:finsim/models/IncomeModel.dart';
 import 'package:finsim/models/income.dart';
 import 'package:finsim/screens/add_income_screen.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:finsim/widgets/yearly_appreciation_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class IncomeSourcesScreen extends StatefulWidget {
   const IncomeSourcesScreen({Key? key}) : super(key: key);
@@ -15,20 +17,16 @@ class IncomeSourcesScreen extends StatefulWidget {
 }
 
 class _IncomeSourcesState extends State<IncomeSourcesScreen> {
-  List<Income> _incomeList = [];
-  var _isLoading = true;
+  late Future<List<Income>> futureIncomeList;
+
+  @override
+  void didChangeDependencies() {
+    final incomeModel = Provider.of<IncomeModel>(context);
+    futureIncomeList = incomeModel.items;
+  }
 
   @override
   Widget build(BuildContext context) {
-    DBHelper.getIncome().then(
-      (data) {
-        _incomeList = data;
-        setState(() {
-          _isLoading = false;
-        });
-      },
-    );
-
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -37,22 +35,21 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, AddIncomeScreen.routeName)
-                  .then((value) {
-                print("\n\nThen called\n\n");
-                setState(() {}); //Calling setState() to refresh screen on pop
-              });
+              Navigator.pushNamed(context, AddIncomeScreen.routeName);
             },
             icon: Icon(Icons.add),
           ),
         ],
       ),
       drawer: NavigationDrawer(),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
+      body: FutureBuilder<List<Income>>(
+          future: futureIncomeList,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return Text("Loading...");
+            }
+            final _incomeList = snapshot.data!;
+            return ListView.builder(
               itemCount: _incomeList.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
@@ -86,7 +83,8 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
                   ),
                 );
               },
-            ),
+            );
+          }),
     );
   }
 }

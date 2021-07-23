@@ -1,12 +1,14 @@
 import 'dart:developer';
 
 import 'package:finsim/helpers/db_helper.dart';
+import 'package:finsim/models/IncomeModel.dart';
 import 'package:finsim/models/income.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 enum IncomeFrequency { Once, Monthly, Yearly }
 final _formKey = GlobalKey<FormState>();
@@ -138,7 +140,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               isBlankStart
                   ? ElevatedButton(
                       onPressed: () {
-                        DBHelper.saveIncome(income)
+                        Provider.of<IncomeModel>(context, listen: false)
+                            .add(income)
                             .then((_) => Navigator.pushReplacementNamed(
                                   context,
                                   AddExpenditureScreen.routeName,
@@ -149,7 +152,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     )
                   : ElevatedButton(
                       onPressed: () {
-                        DBHelper.saveIncome(income)
+                        Provider.of<IncomeModel>(context, listen: false)
+                            .add(income)
                             .then((_) => Navigator.pop(context));
                       },
                       child: Text('Add Income'),
