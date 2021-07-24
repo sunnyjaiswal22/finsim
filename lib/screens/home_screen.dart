@@ -1,9 +1,13 @@
-import 'package:finsim/helpers/db_helper.dart';
+import 'dart:developer';
+
+import 'package:finsim/models/ExpenditureModel.dart';
+import 'package:finsim/models/IncomeModel.dart';
 import 'package:finsim/widgets/cashflow_chart.dart';
 import 'package:finsim/widgets/welcome.dart';
 import 'package:flutter/material.dart';
 
 import 'package:finsim/widgets/navigation_drawer.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,20 +18,41 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var _isLoading = true;
   var _isBlankStart = true;
+  var _isLoading = true;
+
   @override
-  Widget build(BuildContext context) {
-    DBHelper.getIncome().then((incomeList) {
-      DBHelper.getExpenditure().then((expenditureList) {
-        if (incomeList.isNotEmpty || expenditureList.isNotEmpty) {
-          _isBlankStart = false;
-        }
-        setState(() {
-          _isLoading = false;
+  void initState() {
+    //log("HomeScreen: Init state");
+    super.initState();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      //log('HomeScreen: InitState callback, loading data ...');
+      final incomeModel = Provider.of<IncomeModel>(context, listen: false);
+      final futureIncomeList = incomeModel.items;
+
+      final expenditureModel =
+          Provider.of<ExpenditureModel>(context, listen: false);
+      final futureExpenditureList = expenditureModel.items;
+
+      futureIncomeList.then((incomeList) {
+        futureExpenditureList.then((expenditureList) {
+          if (incomeList.isNotEmpty || expenditureList.isNotEmpty) {
+            setState(() {
+              _isBlankStart = false;
+            });
+          }
+          setState(() {
+            _isLoading = false;
+          });
+          //log('HomeScreen: Data loaded, _isBlankStart:$_isBlankStart, _isLoading: $_isLoading');
         });
       });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(

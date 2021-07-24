@@ -16,8 +16,9 @@ class IncomeSourcesScreen extends StatefulWidget {
 }
 
 class _IncomeSourcesState extends State<IncomeSourcesScreen> {
-  late Future<List<Income>> futureIncomeList;
   late IncomeModel incomeModel;
+  late Future<List<Income>> futureIncomeList;
+
   @override
   void didChangeDependencies() {
     incomeModel = Provider.of<IncomeModel>(context);

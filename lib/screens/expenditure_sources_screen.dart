@@ -17,8 +17,9 @@ class ExpenditureSourcesScreen extends StatefulWidget {
 }
 
 class _ExpenditureSourcesScreenState extends State<ExpenditureSourcesScreen> {
-  late Future<List<Expenditure>> futureExpenditureList;
   late ExpenditureModel expenditureModel;
+  late Future<List<Expenditure>> futureExpenditureList;
+
   @override
   void didChangeDependencies() {
     expenditureModel = Provider.of<ExpenditureModel>(context);

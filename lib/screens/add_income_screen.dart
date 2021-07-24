@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:finsim/helpers/db_helper.dart';
 import 'package:finsim/models/IncomeModel.dart';
 import 'package:finsim/models/income.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
