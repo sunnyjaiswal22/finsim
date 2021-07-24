@@ -1,7 +1,7 @@
-import 'dart:developer';
-
 import 'package:finsim/models/ExpenditureModel.dart';
 import 'package:finsim/models/IncomeModel.dart';
+import 'package:finsim/models/expenditure.dart';
+import 'package:finsim/models/income.dart';
 import 'package:finsim/widgets/cashflow_chart.dart';
 import 'package:finsim/widgets/welcome.dart';
 import 'package:flutter/material.dart';
@@ -18,37 +18,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var _isBlankStart = true;
-  var _isLoading = true;
+  late Future<List<Income>> futureIncomeList;
+  late Future<List<Expenditure>> futureExpenditureList;
 
   @override
-  void initState() {
-    //log("HomeScreen: Init state");
-    super.initState();
-
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      //log('HomeScreen: InitState callback, loading data ...');
-      final incomeModel = Provider.of<IncomeModel>(context, listen: false);
-      final futureIncomeList = incomeModel.items;
-
-      final expenditureModel =
-          Provider.of<ExpenditureModel>(context, listen: false);
-      final futureExpenditureList = expenditureModel.items;
-
-      futureIncomeList.then((incomeList) {
-        futureExpenditureList.then((expenditureList) {
-          if (incomeList.isNotEmpty || expenditureList.isNotEmpty) {
-            setState(() {
-              _isBlankStart = false;
-            });
-          }
-          setState(() {
-            _isLoading = false;
-          });
-          //log('HomeScreen: Data loaded, _isBlankStart:$_isBlankStart, _isLoading: $_isLoading');
-        });
-      });
-    });
+  void didChangeDependencies() {
+    final incomeModel = Provider.of<IncomeModel>(context);
+    futureIncomeList = incomeModel.items;
+    final expenditureModel = Provider.of<ExpenditureModel>(context);
+    futureExpenditureList = expenditureModel.items;
+    super.didChangeDependencies();
   }
 
   @override
@@ -64,13 +43,18 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       drawer: NavigationDrawer(),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : _isBlankStart
-              ? Welcome()
-              : CashFlowChart(),
+      body: FutureBuilder(
+        future: Future.wait([futureIncomeList, futureExpenditureList]),
+        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Center(child: CircularProgressIndicator());
+          }
+          List<Income> incomeList = snapshot.data![0];
+          List<Expenditure> expenditureList = snapshot.data![1];
+          final isBlankStart = incomeList.isEmpty && expenditureList.isEmpty;
+          return isBlankStart ? Welcome() : CashFlowChart();
+        },
+      ),
     );
   }
 }
