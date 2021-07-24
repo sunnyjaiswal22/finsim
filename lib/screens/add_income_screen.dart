@@ -124,7 +124,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               TextFormField(
                 decoration: const InputDecoration(
                     labelText: 'Yearly Appreciation Percentage',
-                    hintText: 'Change per annum (in percentage)'),
+                    hintText: 'Change per annum (%)'),
+                keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter appreciation percentage";
