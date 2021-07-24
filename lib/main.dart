@@ -1,3 +1,4 @@
+import 'package:finsim/models/ExpenditureModel.dart';
 import 'package:finsim/models/IncomeModel.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
 import 'package:finsim/screens/add_income_screen.dart';
@@ -14,6 +15,9 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => IncomeModel(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => ExpenditureModel(),
+        )
       ],
       child: MyApp(),
     ),

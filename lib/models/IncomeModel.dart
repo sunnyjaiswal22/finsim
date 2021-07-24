@@ -10,6 +10,11 @@ class IncomeModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> delete(int incomeId) async {
+    DBHelper.deleteIncome(incomeId);
+    notifyListeners();
+  }
+
   Future<List<Income>> get items async {
     final incomeList = await DBHelper.getIncome();
     return UnmodifiableListView(incomeList);

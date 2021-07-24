@@ -1,4 +1,3 @@
-import 'package:finsim/helpers/db_helper.dart';
 import 'package:finsim/models/IncomeModel.dart';
 import 'package:finsim/models/income.dart';
 import 'package:finsim/screens/add_income_screen.dart';
@@ -18,11 +17,12 @@ class IncomeSourcesScreen extends StatefulWidget {
 
 class _IncomeSourcesState extends State<IncomeSourcesScreen> {
   late Future<List<Income>> futureIncomeList;
-
+  late IncomeModel incomeModel;
   @override
   void didChangeDependencies() {
-    final incomeModel = Provider.of<IncomeModel>(context);
+    incomeModel = Provider.of<IncomeModel>(context);
     futureIncomeList = incomeModel.items;
+    super.didChangeDependencies();
   }
 
   @override
@@ -46,7 +46,7 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
           future: futureIncomeList,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
-              return Text("Loading...");
+              return Center(child: CircularProgressIndicator());
             }
             final _incomeList = snapshot.data!;
             return ListView.builder(
@@ -73,8 +73,7 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
                         onPressed: () {
                           setState(() {
                             var selectedIncome = _incomeList[index];
-                            _incomeList.removeAt(index);
-                            DBHelper.deleteIncome(selectedIncome.id);
+                            incomeModel.delete(selectedIncome.id);
                           });
                         },
                         icon: Icon(Icons.delete),

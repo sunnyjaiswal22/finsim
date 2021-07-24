@@ -1,12 +1,14 @@
 import 'dart:developer';
 
 import 'package:finsim/helpers/db_helper.dart';
+import 'package:finsim/models/ExpenditureModel.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 enum ExpenditureFrequency { Once, Monthly, Yearly }
 final _formKey = GlobalKey<FormState>();
@@ -136,7 +138,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
               isBlankStart
                   ? ElevatedButton(
                       onPressed: () {
-                        DBHelper.saveExpenditure(expenditure)
+                        Provider.of<ExpenditureModel>(context, listen: false)
+                            .add(expenditure)
                             .then((_) => Navigator.pushReplacementNamed(
                                   context,
                                   HomeScreen.routeName,
@@ -146,7 +149,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                     )
                   : ElevatedButton(
                       onPressed: () {
-                        DBHelper.saveExpenditure(expenditure)
+                        Provider.of<ExpenditureModel>(context, listen: false)
+                            .add(expenditure)
                             .then((_) => Navigator.pop(context));
                       },
                       child: Text('Add Expenditure'),
