@@ -1,5 +1,6 @@
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
+import 'package:finsim/models/investment.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 
@@ -20,6 +21,14 @@ class DBHelper {
                   frequency INTEGER, 
                   amount INTEGER, 
                   yearlyAppreciationPercentage INTEGER);''');
+    await db.execute('''CREATE TABLE investment (
+                  id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                  startDate TEXT,
+                  endDate TEXT,
+                  name TEXT, 
+                  frequency INTEGER, 
+                  amount INTEGER, 
+                  profitPercentage INTEGER);''');
     return;
   }
 
@@ -68,23 +77,39 @@ class DBHelper {
     return await db.delete('income', where: 'id = ?', whereArgs: [id]);
   }
 
+  static Future<int> deleteInvestment(int id) async {
+    final db = await getDatabase();
+
+    return await db.delete('investment', where: 'id = ?', whereArgs: [id]);
+  }
+
   static Future<List<Income>> getIncome() async {
-    final incomeMapList = await fetch('income');
-    List<Income> incomeList = [];
-    incomeMapList.forEach((incomeMap) {
-      incomeList.add(Income.fromMap(incomeMap));
+    final mapList = await fetch('income');
+    List<Income> list = [];
+    mapList.forEach((map) {
+      list.add(Income.fromMap(map));
     });
 
-    return incomeList;
+    return list;
   }
 
   static Future<List<Expenditure>> getExpenditure() async {
-    final expenditureMapList = await fetch('expenditure');
-    List<Expenditure> expenditureList = [];
-    expenditureMapList.forEach((expenditureMap) {
-      expenditureList.add(Expenditure.fromMap(expenditureMap));
+    final mapList = await fetch('expenditure');
+    List<Expenditure> list = [];
+    mapList.forEach((map) {
+      list.add(Expenditure.fromMap(map));
     });
 
-    return expenditureList;
+    return list;
+  }
+
+  static Future<List<Investment>> getInvestment() async {
+    final mapList = await fetch('investment');
+    List<Investment> list = [];
+    mapList.forEach((map) {
+      list.add(Investment.fromMap(map));
+    });
+
+    return list;
   }
 }

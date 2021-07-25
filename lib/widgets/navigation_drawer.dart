@@ -1,6 +1,7 @@
 import 'package:finsim/screens/expenditure_sources_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/screens/income_sources_screen.dart';
+import 'package:finsim/screens/investment_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationDrawer extends StatelessWidget {
@@ -34,6 +35,13 @@ class NavigationDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, ExpenditureSourcesScreen.routeName);
+            },
+          ),
+          ListTile(
+            title: Text('Investments'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, InvestmentListScreen.routeName);
             },
           ),
         ],
