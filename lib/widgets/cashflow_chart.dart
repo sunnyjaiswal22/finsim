@@ -23,6 +23,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
   var currencyFormat = new NumberFormat("#,##,##,###", "en_IN");
   late Future<List<Income>> futureIncomeList;
   late Future<List<Expenditure>> futureExpenditureList;
+  DateTime now = new DateTime.now();
 
   @override
   void didChangeDependencies() {
@@ -36,7 +37,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
   List<BarChartGroupData> generateBarChartGroupData(
       List<Income> incomeList, List<Expenditure> expenditureList) {
     List<BarChartGroupData> barGroupList = [];
-    DateTime now = new DateTime.now();
+
     var currentYear = now.year;
     var totalYearlyAmount = 0;
     for (var year = 0; year < 5; year++) {
@@ -184,7 +185,9 @@ class _CashFlowChartState extends State<CashFlowChart> {
                     bottomTitles: SideTitles(
                       showTitles: true,
                       getTitles: (double value) {
-                        return value.toInt().toString();
+                        return DateFormat('MMM').format(now) +
+                            ' ' +
+                            value.toInt().toString();
                       },
                     ),
                     leftTitles: SideTitles(showTitles: false),
