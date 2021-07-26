@@ -20,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Income>> futureIncomeList;
   late Future<List<Expenditure>> futureExpenditureList;
+  DateTime currentBackPressTime = DateTime.now();
 
   @override
   void didChangeDependencies() {
@@ -28,6 +29,22 @@ class _HomeScreenState extends State<HomeScreen> {
     final expenditureModel = Provider.of<ExpenditureModel>(context);
     futureExpenditureList = expenditureModel.items;
     super.didChangeDependencies();
+  }
+
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          "Press back again to exit",
+          textAlign: TextAlign.center,
+        ),
+        duration: Duration(seconds: 2),
+      ));
+      return Future.value(false);
+    }
+    return Future.value(true);
   }
 
   @override
@@ -43,17 +60,20 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       drawer: NavigationDrawer(),
-      body: FutureBuilder(
-        future: Future.wait([futureIncomeList, futureExpenditureList]),
-        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Center(child: CircularProgressIndicator());
-          }
-          List<Income> incomeList = snapshot.data![0];
-          List<Expenditure> expenditureList = snapshot.data![1];
-          final isBlankStart = incomeList.isEmpty && expenditureList.isEmpty;
-          return isBlankStart ? Welcome() : CashFlowChart();
-        },
+      body: WillPopScope(
+        onWillPop: onWillPop,
+        child: FutureBuilder(
+          future: Future.wait([futureIncomeList, futureExpenditureList]),
+          builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return Center(child: CircularProgressIndicator());
+            }
+            List<Income> incomeList = snapshot.data![0];
+            List<Expenditure> expenditureList = snapshot.data![1];
+            final isBlankStart = incomeList.isEmpty && expenditureList.isEmpty;
+            return isBlankStart ? Welcome() : CashFlowChart();
+          },
+        ),
       ),
     );
   }
