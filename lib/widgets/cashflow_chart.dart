@@ -39,7 +39,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
     DateTime now = new DateTime.now();
     var currentYear = now.year;
     var totalYearlyAmount = 0;
-    for (var year = 1; year <= 5; year++) {
+    for (var year = 0; year < 5; year++) {
       incomeList.forEach(
         (income) {
           if (income.frequency == IncomeFrequency.Once && year == 1) {
@@ -83,7 +83,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
       var barColor = totalYearlyAmount >= 0 ? Colors.green : Colors.red;
 
       var barChartGroupData = BarChartGroupData(
-        x: currentYear + year,
+        x: currentYear + year + 1,
         barRods: [
           BarChartRodData(
             y: totalYearlyAmount.toDouble(),
