@@ -121,21 +121,22 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   Text('Yearly'),
                 ],
               ),
-              TextFormField(
-                decoration: const InputDecoration(
-                    labelText: 'Yearly Appreciation Percentage',
-                    hintText: 'Change per annum (%)'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter appreciation percentage";
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  income.yearlyAppreciationPercentage = int.parse(value);
-                },
-              ),
+              if (income.frequency != IncomeFrequency.Once)
+                TextFormField(
+                  decoration: const InputDecoration(
+                      labelText: 'Yearly Appreciation Percentage',
+                      hintText: 'Change per annum (%)'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter appreciation percentage";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    income.yearlyAppreciationPercentage = int.parse(value);
+                  },
+                ),
               SizedBox(height: 20),
               isBlankStart
                   ? ElevatedButton(

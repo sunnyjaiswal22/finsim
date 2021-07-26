@@ -202,7 +202,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
                   axisTitleData: FlAxisTitleData(
                       bottomTitle: AxisTitle(
                         showTitle: true,
-                        titleText: 'Year',
+                        titleText: 'Time',
                         margin: 0,
                       ),
                       leftTitle: AxisTitle(
