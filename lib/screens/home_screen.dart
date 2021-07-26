@@ -62,17 +62,20 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: NavigationDrawer(),
       body: WillPopScope(
         onWillPop: onWillPop,
-        child: FutureBuilder(
-          future: Future.wait([futureIncomeList, futureExpenditureList]),
-          builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return Center(child: CircularProgressIndicator());
-            }
-            List<Income> incomeList = snapshot.data![0];
-            List<Expenditure> expenditureList = snapshot.data![1];
-            final isBlankStart = incomeList.isEmpty && expenditureList.isEmpty;
-            return isBlankStart ? Welcome() : CashFlowChart();
-          },
+        child: SingleChildScrollView(
+          child: FutureBuilder(
+            future: Future.wait([futureIncomeList, futureExpenditureList]),
+            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return Center(child: CircularProgressIndicator());
+              }
+              List<Income> incomeList = snapshot.data![0];
+              List<Expenditure> expenditureList = snapshot.data![1];
+              final isBlankStart =
+                  incomeList.isEmpty && expenditureList.isEmpty;
+              return isBlankStart ? Welcome() : CashFlowChart();
+            },
+          ),
         ),
       ),
     );

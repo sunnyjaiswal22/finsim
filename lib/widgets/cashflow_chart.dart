@@ -1,12 +1,8 @@
-import 'dart:math' as math;
-import 'dart:ui';
+import 'package:finsim/helpers/simulator.dart';
 import 'package:finsim/models/ExpenditureModel.dart';
 import 'package:finsim/models/IncomeModel.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
-import 'package:finsim/screens/add_expenditure_screen.dart'
-    show ExpenditureFrequency;
-import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -32,80 +28,6 @@ class _CashFlowChartState extends State<CashFlowChart> {
     final expenditureModel = Provider.of<ExpenditureModel>(context);
     futureExpenditureList = expenditureModel.items;
     super.didChangeDependencies();
-  }
-
-  List<BarChartGroupData> generateBarChartGroupData(
-      List<Income> incomeList, List<Expenditure> expenditureList) {
-    List<BarChartGroupData> barGroupList = [];
-
-    var currentYear = now.year;
-    var totalYearlyAmount = 0;
-    for (var year = 0; year < 5; year++) {
-      incomeList.forEach(
-        (income) {
-          if (income.frequency == IncomeFrequency.Once && year == 1) {
-            totalYearlyAmount += income.amount;
-          } else if (income.frequency == IncomeFrequency.Monthly) {
-            var yearlyAmount = income.amount * 12;
-            totalYearlyAmount += (yearlyAmount *
-                    math.pow(
-                        (1 + income.yearlyAppreciationPercentage / 100), year))
-                .toInt();
-          } else if (income.frequency == IncomeFrequency.Yearly) {
-            totalYearlyAmount += (income.amount *
-                    math.pow(
-                        (1 + income.yearlyAppreciationPercentage / 100), year))
-                .toInt();
-          }
-        },
-      );
-
-      expenditureList.forEach(
-        (expenditure) {
-          if (expenditure.frequency == ExpenditureFrequency.Once && year == 1) {
-            totalYearlyAmount -= expenditure.amount;
-          } else if (expenditure.frequency == ExpenditureFrequency.Monthly) {
-            var yearlyAmount = expenditure.amount * 12;
-            totalYearlyAmount -= (yearlyAmount *
-                    math.pow(
-                        (1 + expenditure.yearlyAppreciationPercentage / 100),
-                        year))
-                .toInt();
-          } else if (expenditure.frequency == ExpenditureFrequency.Yearly) {
-            totalYearlyAmount += (expenditure.amount *
-                    math.pow(
-                        (1 + expenditure.yearlyAppreciationPercentage / 100),
-                        year))
-                .toInt();
-          }
-        },
-      );
-
-      var barColor = totalYearlyAmount >= 0 ? Colors.green : Colors.red;
-
-      var barChartGroupData = BarChartGroupData(
-        x: currentYear + year + 1,
-        barRods: [
-          BarChartRodData(
-            y: totalYearlyAmount.toDouble(),
-            colors: [
-              barColor,
-              barColor,
-            ],
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(0),
-              topRight: Radius.circular(0),
-            ),
-            width: 30,
-          )
-        ],
-        //Not showing tooltip value in case of 0 amount as it overlaps with bottom titles
-        showingTooltipIndicators: totalYearlyAmount == 0 ? [] : [0],
-      );
-
-      barGroupList.add(barChartGroupData);
-    }
-    return barGroupList;
   }
 
   double getHorizontalGridInterval(
@@ -159,7 +81,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
         }
         List<Income> incomeList = snapshot.data![0];
         List<Expenditure> expenditureList = snapshot.data![1];
-        final barChartGroupDataList = generateBarChartGroupData(
+        final barChartGroupDataList = Simulator.simulate(
           incomeList,
           expenditureList,
         );

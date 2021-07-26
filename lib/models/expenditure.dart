@@ -7,6 +7,8 @@ class Expenditure {
   ExpenditureFrequency frequency;
   int amount;
   int yearlyAppreciationPercentage;
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime(2099, 1, 1);
 
   Expenditure({
     this.id = 0,
@@ -25,6 +27,8 @@ class Expenditure {
       'frequency': ExpenditureFrequency.values.indexOf(this.frequency),
       'amount': this.amount,
       'yearlyAppreciationPercentage': this.yearlyAppreciationPercentage,
+      'startDate': this.startDate.toIso8601String(),
+      'endDate': this.endDate.toIso8601String(),
     };
   }
 
@@ -37,6 +41,8 @@ class Expenditure {
     expenditure.amount = expenditureMap['amount'];
     expenditure.yearlyAppreciationPercentage =
         expenditureMap['yearlyAppreciationPercentage'];
+    expenditure.startDate = DateTime.parse(expenditureMap['startDate']);
+    expenditure.endDate = DateTime.parse(expenditureMap['endDate']);
 
     return expenditure;
   }

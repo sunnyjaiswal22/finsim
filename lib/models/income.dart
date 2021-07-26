@@ -6,6 +6,8 @@ class Income {
   IncomeFrequency frequency;
   int amount;
   int yearlyAppreciationPercentage;
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime(2099, 1, 1);
 
   Income({
     this.id = 0,
@@ -24,6 +26,8 @@ class Income {
       'frequency': IncomeFrequency.values.indexOf(this.frequency),
       'amount': this.amount,
       'yearlyAppreciationPercentage': this.yearlyAppreciationPercentage,
+      'startDate': this.startDate.toIso8601String(),
+      'endDate': this.endDate.toIso8601String(),
     };
   }
 
@@ -35,6 +39,8 @@ class Income {
     income.amount = incomeMap['amount'];
     income.yearlyAppreciationPercentage =
         incomeMap['yearlyAppreciationPercentage'];
+    income.startDate = DateTime.parse(incomeMap['startDate']);
+    income.endDate = DateTime.parse(incomeMap['endDate']);
 
     return income;
   }

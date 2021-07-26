@@ -14,13 +14,17 @@ class DBHelper {
                   name TEXT, 
                   frequency INTEGER, 
                   amount INTEGER, 
-                  yearlyAppreciationPercentage INTEGER);''');
+                  yearlyAppreciationPercentage INTEGER,
+                  startDate TEXT,
+                  endDate TEXT);''');
     await db.execute('''CREATE TABLE expenditure (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
                   frequency INTEGER, 
                   amount INTEGER, 
-                  yearlyAppreciationPercentage INTEGER);''');
+                  yearlyAppreciationPercentage INTEGER,
+                  startDate TEXT,
+                  endDate TEXT);''');
     await db.execute('''CREATE TABLE investment (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   startDate TEXT,
