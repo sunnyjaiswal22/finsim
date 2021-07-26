@@ -2,8 +2,8 @@ import 'package:finsim/screens/add_investment_screen.dart' show ReturnFrequency;
 
 class Investment {
   int id;
-  DateTime? startDate;
-  DateTime? endDate;
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now().add(Duration(days: 365));
   String name;
   ReturnFrequency frequency;
   int amount;
@@ -11,10 +11,8 @@ class Investment {
 
   Investment({
     this.id = 0,
-    this.startDate,
-    this.endDate,
     this.name = '',
-    this.frequency = ReturnFrequency.OnTermination,
+    this.frequency = ReturnFrequency.Termination,
     this.amount = 0,
     this.profitPercentage = 0,
   });
@@ -23,8 +21,8 @@ class Investment {
     return {
       //Not passing id in Map so that Sqflite will auto generate new id
       //'id': this.id,
-      'startDate': this.startDate!.toIso8601String(),
-      'endDate': this.endDate!.toIso8601String(),
+      'startDate': this.startDate.toIso8601String(),
+      'endDate': this.endDate.toIso8601String(),
       'name': this.name,
       //Storing enum index in database
       'frequency': ReturnFrequency.values.indexOf(this.frequency),
@@ -36,8 +34,8 @@ class Investment {
   static Investment fromMap(Map<String, dynamic> investmentMap) {
     var investment = Investment();
     investment.id = investmentMap['id'];
-    investment.startDate = DateTime.tryParse(investmentMap['startDate']);
-    investment.endDate = DateTime.tryParse(investmentMap['endDate']);
+    investment.startDate = DateTime.parse(investmentMap['startDate']);
+    investment.endDate = DateTime.parse(investmentMap['endDate']);
     investment.name = investmentMap['name'];
     investment.frequency = ReturnFrequency.values[investmentMap['frequency']];
     investment.amount = investmentMap['amount'];

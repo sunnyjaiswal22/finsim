@@ -4,19 +4,33 @@ class YearlyAppreciationInfo extends StatelessWidget {
   const YearlyAppreciationInfo({
     Key? key,
     required this.percentage,
+    required this.label,
+    this.reverseColors = false,
   }) : super(key: key);
 
-  final percentage;
+  final int percentage;
+  final String label;
+  final bool reverseColors;
 
   @override
   Widget build(BuildContext context) {
+    Color upColor, downColor;
+
+    if (!reverseColors) {
+      upColor = Colors.green;
+      downColor = Colors.red;
+    } else {
+      upColor = Colors.red;
+      downColor = Colors.green;
+    }
+
     var selectedColor;
     var selectedIcon;
     if (percentage > 0) {
-      selectedColor = Colors.green;
+      selectedColor = upColor;
       selectedIcon = Icons.moving;
     } else {
-      selectedColor = Colors.red;
+      selectedColor = downColor;
       selectedIcon = Icons.trending_down;
     }
 
@@ -27,7 +41,7 @@ class YearlyAppreciationInfo extends StatelessWidget {
               color: selectedColor,
             ),
             Text(
-              '$percentage% p.a.',
+              '$percentage% $label',
               style: TextStyle(color: selectedColor),
             ),
           ])

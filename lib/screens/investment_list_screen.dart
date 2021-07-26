@@ -58,12 +58,13 @@ class _InvestmentListScreenState extends State<InvestmentListScreen> {
                   title: Text(_investmentList[index].name),
                   subtitle: Row(
                     children: [
-                      Text(
-                        describeEnum(
+                      YearlyAppreciationInfo(
+                        percentage: _investmentList[index].profitPercentage,
+                        label: describeEnum(
                             _investmentList[index].frequency.toString()),
                       ),
-                      YearlyAppreciationInfo(
-                          percentage: _investmentList[index].profitPercentage),
+                      Text(
+                          '  ${_investmentList[index].startDate.year} - ${_investmentList[index].endDate.year}'),
                     ],
                   ),
                   trailing: Row(

@@ -62,8 +62,10 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
                         describeEnum(_incomeList[index].frequency.toString()),
                       ),
                       YearlyAppreciationInfo(
-                          percentage:
-                              _incomeList[index].yearlyAppreciationPercentage),
+                        percentage:
+                            _incomeList[index].yearlyAppreciationPercentage,
+                        label: 'p. a.',
+                      ),
                     ],
                   ),
                   trailing: Row(

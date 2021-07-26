@@ -68,8 +68,11 @@ class _ExpenditureSourcesScreenState extends State<ExpenditureSourcesScreen> {
                           ),
                         ),
                         YearlyAppreciationInfo(
-                            percentage: _expenditureList[index]
-                                .yearlyAppreciationPercentage),
+                          percentage: _expenditureList[index]
+                              .yearlyAppreciationPercentage,
+                          label: 'p. a.',
+                          reverseColors: true,
+                        ),
                       ],
                     ),
                     trailing: Row(
