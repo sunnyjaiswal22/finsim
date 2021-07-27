@@ -21,7 +21,7 @@ class Simulator {
     var statement = <Log>[];
     List<BarChartGroupData> barGroupList = [];
     for (DateTime date = simulationStartDate;
-        date.isBefore(simulationEndDate);
+        date.isBefore(simulationEndDate) || date.isSameDate(simulationEndDate);
         date = date.add(Duration(days: 1))) {
       incomeList.forEach((income) {
         var onceEvent = income.frequency == IncomeFrequency.Once &&
@@ -50,9 +50,16 @@ class Simulator {
           );
         }
 
+        var incomeDateDifference = income.startDate.difference(date).inDays;
         //Income year completed
-        if (income.startDate.difference(date).inDays % 365 == 0 &&
+        if (incomeDateDifference != 0 &&
+            incomeDateDifference % 365 == 0 &&
             income.yearlyAppreciationPercentage != 0) {
+          print(
+              'Income year completed::::::::::::::::: ${income.startDate} $date');
+          print(
+              'income.startDate.difference(date).inDays: ${income.startDate.difference(date).inDays}');
+
           int yearlyAppreciation =
               (income.amount * income.yearlyAppreciationPercentage ~/ 100);
           income.amount += yearlyAppreciation;
@@ -100,8 +107,11 @@ class Simulator {
           );
         }
 
+        var expenditureDateDifference =
+            expenditure.startDate.difference(date).inDays;
         //Expenditure year completed
-        if (expenditure.startDate.difference(date).inDays % 365 == 0 &&
+        if (expenditureDateDifference != 0 &&
+            expenditureDateDifference % 365 == 0 &&
             expenditure.yearlyAppreciationPercentage != 0) {
           int yearlyAppreciation = (expenditure.amount *
               expenditure.yearlyAppreciationPercentage ~/
@@ -127,7 +137,7 @@ class Simulator {
         var barColor = totalAmount >= 0 ? Colors.green : Colors.red;
 
         var barChartGroupData = BarChartGroupData(
-          x: date.year + 1,
+          x: date.year,
           barRods: [
             BarChartRodData(
               y: totalAmount.toDouble(),
