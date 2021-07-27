@@ -7,40 +7,39 @@ import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'custom_extensions.dart';
+import 'package:jiffy/jiffy.dart';
 
 class Simulator {
   static List<BarChartGroupData> simulate(
       List<Income> incomeList, List<Expenditure> expenditureList) {
-    DateTime now = DateTime.now();
-    DateTime simulationStartDate = DateTime(now.year, now.month, now.day);
-    DateTime simulationEndDate = simulationStartDate.add(
-      Duration(days: 5 * 365 + 2), //Adding 2 to componsate for leap years
-    );
+    Jiffy simulationStartDate = Jiffy().startOf(Units.DAY);
+    Jiffy simulationEndDate = Jiffy(simulationStartDate).add(years: 5);
+    print('${simulationStartDate.dateTime}, ${simulationEndDate.dateTime}');
     var totalAmount = 0;
     var statement = <Log>[];
     List<BarChartGroupData> barGroupList = [];
-    for (DateTime date = simulationStartDate;
-        date.isBefore(simulationEndDate) || date.isSameDate(simulationEndDate);
-        date = date.add(Duration(days: 1))) {
+    for (Jiffy date = Jiffy(simulationStartDate);
+        date.isSameOrBefore(simulationEndDate);
+        date.add(days: 1)) {
+      print('${date.dateTime}');
       incomeList.forEach((income) {
         var onceEvent = income.frequency == IncomeFrequency.Once &&
-            income.startDate.isSameDate(date);
+            date.isSame(income.startDate);
         var monthlyEvent = income.frequency == IncomeFrequency.Monthly &&
             date.day == income.startDate.day &&
-            income.startDate.isBefore(date) &&
-            income.endDate.isAfter(date);
-        var yearlyEvent = income.frequency == IncomeFrequency.Monthly &&
+            date.isBetween(income.startDate, income.endDate);
+        var yearlyEvent = income.frequency == IncomeFrequency.Yearly &&
             date.day == income.startDate.day &&
             date.month == income.startDate.month &&
-            income.startDate.isBefore(date) &&
-            income.endDate.isAfter(date);
+            date.isBetween(income.startDate, income.endDate);
+
+        print('$onceEvent $monthlyEvent $yearlyEvent');
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
           totalAmount += income.amount;
           statement.add(
             Log(
-              date: date,
+              date: date.dateTime,
               amount: income.amount,
               transactionType: TransactionType.Credit,
               message:
@@ -50,21 +49,22 @@ class Simulator {
           );
         }
 
-        var incomeDateDifference = income.startDate.difference(date).inDays;
         //Income year completed
-        if (incomeDateDifference != 0 &&
-            incomeDateDifference % 365 == 0 &&
+        if (date.isBetween(income.startDate, income.endDate) &&
+            date.day == income.startDate.day &&
+            date.month == income.startDate.month &&
+            date.year != income.startDate.year &&
             income.yearlyAppreciationPercentage != 0) {
           print(
               'Income year completed::::::::::::::::: ${income.startDate} $date');
           print(
-              'income.startDate.difference(date).inDays: ${income.startDate.difference(date).inDays}');
+              'income.startDate.difference(date).inDays: ${income.startDate.difference(date.dateTime).inDays}');
 
           int yearlyAppreciation =
               (income.amount * income.yearlyAppreciationPercentage ~/ 100);
           income.amount += yearlyAppreciation;
           statement.add(Log(
-            date: date,
+            date: date.dateTime,
             amount: 0,
             transactionType: TransactionType.Credit,
             message: describeEnum(income.frequency.toString()) +
@@ -79,24 +79,22 @@ class Simulator {
 
       expenditureList.forEach((expenditure) {
         var onceEvent = expenditure.frequency == ExpenditureFrequency.Once &&
-            expenditure.startDate.isSameDate(date);
+            date.isSame(expenditure.startDate);
         var monthlyEvent =
             expenditure.frequency == ExpenditureFrequency.Monthly &&
                 date.day == expenditure.startDate.day &&
-                expenditure.startDate.isBefore(date) &&
-                expenditure.endDate.isAfter(date);
+                date.isBetween(expenditure.startDate, expenditure.endDate);
         var yearlyEvent =
-            expenditure.frequency == ExpenditureFrequency.Monthly &&
+            expenditure.frequency == ExpenditureFrequency.Yearly &&
                 date.day == expenditure.startDate.day &&
                 date.month == expenditure.startDate.month &&
-                expenditure.startDate.isBefore(date) &&
-                expenditure.endDate.isAfter(date);
+                date.isBetween(expenditure.startDate, expenditure.endDate);
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
           totalAmount -= expenditure.amount;
           statement.add(
             Log(
-              date: date,
+              date: date.dateTime,
               amount: expenditure.amount,
               transactionType: TransactionType.Debit,
               message: expenditure.name +
@@ -107,18 +105,18 @@ class Simulator {
           );
         }
 
-        var expenditureDateDifference =
-            expenditure.startDate.difference(date).inDays;
         //Expenditure year completed
-        if (expenditureDateDifference != 0 &&
-            expenditureDateDifference % 365 == 0 &&
+        if (date.isBetween(expenditure.startDate, expenditure.endDate) &&
+            date.day == expenditure.startDate.day &&
+            date.month == expenditure.startDate.month &&
+            date.year != expenditure.startDate.year &&
             expenditure.yearlyAppreciationPercentage != 0) {
           int yearlyAppreciation = (expenditure.amount *
               expenditure.yearlyAppreciationPercentage ~/
               100);
           expenditure.amount += yearlyAppreciation;
           statement.add(Log(
-            date: date,
+            date: date.dateTime,
             amount: 0,
             transactionType: TransactionType.Debit,
             message: describeEnum(expenditure.frequency.toString()) +
@@ -132,8 +130,9 @@ class Simulator {
       });
 
       //Simulation year completed
-      if (simulationStartDate.difference(date).inDays % 365 == 0 &&
-          !simulationStartDate.isSameDate(date)) {
+      if (date.day == simulationStartDate.day &&
+          date.month == simulationStartDate.month &&
+          date.year != simulationStartDate.year) {
         var barColor = totalAmount >= 0 ? Colors.green : Colors.red;
 
         var barChartGroupData = BarChartGroupData(
