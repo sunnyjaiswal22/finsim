@@ -14,26 +14,22 @@ class Simulator {
       List<Income> incomeList, List<Expenditure> expenditureList) {
     Jiffy simulationStartDate = Jiffy().startOf(Units.DAY);
     Jiffy simulationEndDate = Jiffy(simulationStartDate).add(years: 5);
-    print('${simulationStartDate.dateTime}, ${simulationEndDate.dateTime}');
     var totalAmount = 0;
     var statement = <Log>[];
     List<BarChartGroupData> barGroupList = [];
     for (Jiffy date = Jiffy(simulationStartDate);
         date.isSameOrBefore(simulationEndDate);
         date.add(days: 1)) {
-      print('${date.dateTime}');
       incomeList.forEach((income) {
         var onceEvent = income.frequency == IncomeFrequency.Once &&
             date.isSame(income.startDate);
         var monthlyEvent = income.frequency == IncomeFrequency.Monthly &&
-            date.day == income.startDate.day &&
+            date.date == income.startDate.day &&
             date.isBetween(income.startDate, income.endDate);
         var yearlyEvent = income.frequency == IncomeFrequency.Yearly &&
-            date.day == income.startDate.day &&
+            date.date == income.startDate.day &&
             date.month == income.startDate.month &&
             date.isBetween(income.startDate, income.endDate);
-
-        print('$onceEvent $monthlyEvent $yearlyEvent');
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
           totalAmount += income.amount;
@@ -51,15 +47,10 @@ class Simulator {
 
         //Income year completed
         if (date.isBetween(income.startDate, income.endDate) &&
-            date.day == income.startDate.day &&
+            date.date == income.startDate.day &&
             date.month == income.startDate.month &&
             date.year != income.startDate.year &&
             income.yearlyAppreciationPercentage != 0) {
-          print(
-              'Income year completed::::::::::::::::: ${income.startDate} $date');
-          print(
-              'income.startDate.difference(date).inDays: ${income.startDate.difference(date.dateTime).inDays}');
-
           int yearlyAppreciation =
               (income.amount * income.yearlyAppreciationPercentage ~/ 100);
           income.amount += yearlyAppreciation;
@@ -82,11 +73,11 @@ class Simulator {
             date.isSame(expenditure.startDate);
         var monthlyEvent =
             expenditure.frequency == ExpenditureFrequency.Monthly &&
-                date.day == expenditure.startDate.day &&
+                date.date == expenditure.startDate.day &&
                 date.isBetween(expenditure.startDate, expenditure.endDate);
         var yearlyEvent =
             expenditure.frequency == ExpenditureFrequency.Yearly &&
-                date.day == expenditure.startDate.day &&
+                date.date == expenditure.startDate.day &&
                 date.month == expenditure.startDate.month &&
                 date.isBetween(expenditure.startDate, expenditure.endDate);
 
@@ -107,7 +98,7 @@ class Simulator {
 
         //Expenditure year completed
         if (date.isBetween(expenditure.startDate, expenditure.endDate) &&
-            date.day == expenditure.startDate.day &&
+            date.date == expenditure.startDate.day &&
             date.month == expenditure.startDate.month &&
             date.year != expenditure.startDate.year &&
             expenditure.yearlyAppreciationPercentage != 0) {
@@ -130,7 +121,7 @@ class Simulator {
       });
 
       //Simulation year completed
-      if (date.day == simulationStartDate.day &&
+      if (date.date == simulationStartDate.date &&
           date.month == simulationStartDate.month &&
           date.year != simulationStartDate.year) {
         var barColor = totalAmount >= 0 ? Colors.green : Colors.red;
