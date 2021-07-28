@@ -7,6 +7,7 @@ import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
 enum IncomeFrequency { Once, Monthly, Yearly }
@@ -24,6 +25,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
   Income income = Income();
   @override
   Widget build(BuildContext context) {
+    print('Building');
     final arguments = ModalRoute.of(context)!.settings.arguments;
     var isBlankStart = false;
     if (arguments != null) {
@@ -40,11 +42,11 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: income.startDate,
-          firstDate: DateTime(income.startDate.year - 10),
-          lastDate: DateTime(income.startDate.year + 10));
-      if (picked != null && picked != income.startDate) {
-        income.startDate = picked;
+          initialDate: Jiffy().dateTime,
+          firstDate: Jiffy().subtract(years: 10).dateTime,
+          lastDate: Jiffy().add(years: 10).dateTime);
+      if (picked != null && !Jiffy(picked).isSame(income.startDate)) {
+        income.startDate = Jiffy(picked).startOf(Units.DAY);
       }
     }
 
@@ -53,11 +55,11 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: income.endDate,
-          firstDate: DateTime(income.endDate.year - 10),
-          lastDate: DateTime(income.endDate.year + 10));
-      if (picked != null && picked != income.endDate) {
-        income.endDate = picked;
+          initialDate: Jiffy().dateTime,
+          firstDate: Jiffy().subtract(years: 10).dateTime,
+          lastDate: Jiffy().add(years: 10).dateTime);
+      if (picked != null && !Jiffy(picked).isSame(income.endDate)) {
+        income.endDate = Jiffy(picked).startOf(Units.DAY);
       }
     }
 
@@ -155,7 +157,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       children: [
                         Text('Start Date '),
                         SizedBox(width: 20),
-                        Text('${income.startDate.toLocal()}'.split(" ")[0]),
+                        Text('${income.startDate.format("yyyy-MM-dd")}'
+                            .split(" ")[0]),
                       ],
                     ),
                     TextButton(
@@ -171,7 +174,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       children: [
                         Text('End Date '),
                         SizedBox(width: 20),
-                        Text('${income.endDate.toLocal()}'.split(" ")[0]),
+                        Text('${income.endDate.format("yyyy-MM-dd")}'
+                            .split(" ")[0]),
                       ],
                     ),
                     TextButton(

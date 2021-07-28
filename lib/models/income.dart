@@ -1,4 +1,5 @@
 import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
+import 'package:jiffy/jiffy.dart';
 
 class Income {
   int id;
@@ -6,8 +7,8 @@ class Income {
   IncomeFrequency frequency;
   int amount;
   int yearlyAppreciationPercentage;
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime(2099, 1, 1);
+  Jiffy startDate = Jiffy();
+  Jiffy endDate = Jiffy({'year': 2099, 'month': 1, 'day': 1});
 
   Income({
     this.id = 0,
@@ -26,8 +27,8 @@ class Income {
       'frequency': IncomeFrequency.values.indexOf(this.frequency),
       'amount': this.amount,
       'yearlyAppreciationPercentage': this.yearlyAppreciationPercentage,
-      'startDate': this.startDate.toIso8601String(),
-      'endDate': this.endDate.toIso8601String(),
+      'startDate': this.startDate.format(), //ISO 8601 format
+      'endDate': this.endDate.format(), //ISO 8601 format
     };
   }
 
@@ -39,8 +40,8 @@ class Income {
     income.amount = incomeMap['amount'];
     income.yearlyAppreciationPercentage =
         incomeMap['yearlyAppreciationPercentage'];
-    income.startDate = DateTime.parse(incomeMap['startDate']);
-    income.endDate = DateTime.parse(incomeMap['endDate']);
+    income.startDate = Jiffy(incomeMap['startDate']);
+    income.endDate = Jiffy(incomeMap['endDate']);
 
     return income;
   }

@@ -24,10 +24,10 @@ class Simulator {
         var onceEvent = income.frequency == IncomeFrequency.Once &&
             date.isSame(income.startDate);
         var monthlyEvent = income.frequency == IncomeFrequency.Monthly &&
-            date.date == income.startDate.day &&
+            date.date == income.startDate.date &&
             date.isBetween(income.startDate, income.endDate);
         var yearlyEvent = income.frequency == IncomeFrequency.Yearly &&
-            date.date == income.startDate.day &&
+            date.date == income.startDate.date &&
             date.month == income.startDate.month &&
             date.isBetween(income.startDate, income.endDate);
 
@@ -47,7 +47,7 @@ class Simulator {
 
         //Income year completed
         if (date.isBetween(income.startDate, income.endDate) &&
-            date.date == income.startDate.day &&
+            date.date == income.startDate.date &&
             date.month == income.startDate.month &&
             date.year != income.startDate.year &&
             income.yearlyAppreciationPercentage != 0) {
@@ -73,11 +73,11 @@ class Simulator {
             date.isSame(expenditure.startDate);
         var monthlyEvent =
             expenditure.frequency == ExpenditureFrequency.Monthly &&
-                date.date == expenditure.startDate.day &&
+                date.date == expenditure.startDate.date &&
                 date.isBetween(expenditure.startDate, expenditure.endDate);
         var yearlyEvent =
             expenditure.frequency == ExpenditureFrequency.Yearly &&
-                date.date == expenditure.startDate.day &&
+                date.date == expenditure.startDate.date &&
                 date.month == expenditure.startDate.month &&
                 date.isBetween(expenditure.startDate, expenditure.endDate);
 
@@ -98,7 +98,7 @@ class Simulator {
 
         //Expenditure year completed
         if (date.isBetween(expenditure.startDate, expenditure.endDate) &&
-            date.date == expenditure.startDate.day &&
+            date.date == expenditure.startDate.date &&
             date.month == expenditure.startDate.month &&
             date.year != expenditure.startDate.year &&
             expenditure.yearlyAppreciationPercentage != 0) {

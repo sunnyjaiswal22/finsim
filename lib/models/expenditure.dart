@@ -1,5 +1,6 @@
 import 'package:finsim/screens/add_expenditure_screen.dart'
     show ExpenditureFrequency;
+import 'package:jiffy/jiffy.dart';
 
 class Expenditure {
   int id;
@@ -7,8 +8,8 @@ class Expenditure {
   ExpenditureFrequency frequency;
   int amount;
   int yearlyAppreciationPercentage;
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime(2099, 1, 1);
+  Jiffy startDate = Jiffy();
+  Jiffy endDate = Jiffy({'year': 2099, 'month': 1, 'day': 1});
 
   Expenditure({
     this.id = 0,
@@ -27,8 +28,8 @@ class Expenditure {
       'frequency': ExpenditureFrequency.values.indexOf(this.frequency),
       'amount': this.amount,
       'yearlyAppreciationPercentage': this.yearlyAppreciationPercentage,
-      'startDate': this.startDate.toIso8601String(),
-      'endDate': this.endDate.toIso8601String(),
+      'startDate': this.startDate.format(), //ISO 8601 format
+      'endDate': this.endDate.format(), //ISO 8601 format
     };
   }
 
@@ -41,8 +42,8 @@ class Expenditure {
     expenditure.amount = expenditureMap['amount'];
     expenditure.yearlyAppreciationPercentage =
         expenditureMap['yearlyAppreciationPercentage'];
-    expenditure.startDate = DateTime.parse(expenditureMap['startDate']);
-    expenditure.endDate = DateTime.parse(expenditureMap['endDate']);
+    expenditure.startDate = Jiffy(expenditureMap['startDate']);
+    expenditure.endDate = Jiffy(expenditureMap['endDate']);
 
     return expenditure;
   }

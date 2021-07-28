@@ -7,6 +7,7 @@ import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
 enum ExpenditureFrequency { Once, Monthly, Yearly }
@@ -40,11 +41,11 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: expenditure.startDate,
-          firstDate: DateTime(expenditure.startDate.year - 10),
-          lastDate: DateTime(expenditure.startDate.year + 10));
-      if (picked != null && picked != expenditure.startDate) {
-        expenditure.startDate = picked;
+          initialDate: Jiffy().dateTime,
+          firstDate: Jiffy().subtract(years: 10).dateTime,
+          lastDate: Jiffy().add(years: 10).dateTime);
+      if (picked != null && !Jiffy(picked).isSame(expenditure.endDate)) {
+        expenditure.startDate = Jiffy(picked).startOf(Units.DAY);
       }
     }
 
@@ -53,11 +54,11 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: expenditure.endDate,
-          firstDate: DateTime(expenditure.endDate.year - 10),
-          lastDate: DateTime(expenditure.endDate.year + 10));
-      if (picked != null && picked != expenditure.endDate) {
-        expenditure.endDate = picked;
+          initialDate: Jiffy().dateTime,
+          firstDate: Jiffy().subtract(years: 10).dateTime,
+          lastDate: Jiffy().add(years: 10).dateTime);
+      if (picked != null && !Jiffy(picked).isSame(expenditure.endDate)) {
+        expenditure.endDate = Jiffy(picked).startOf(Units.DAY);
       }
     }
 
@@ -170,8 +171,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                       children: [
                         Text('Start Date '),
                         SizedBox(width: 20),
-                        Text(
-                            '${expenditure.startDate.toLocal()}'.split(" ")[0]),
+                        Text('${expenditure.startDate.format("yyyy-MM-dd")}'
+                            .split(" ")[0]),
                       ],
                     ),
                     TextButton(
@@ -187,7 +188,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                       children: [
                         Text('End Date '),
                         SizedBox(width: 20),
-                        Text('${expenditure.endDate.toLocal()}'.split(" ")[0]),
+                        Text('${expenditure.endDate.format("yyyy-MM-dd")}'
+                            .split(" ")[0]),
                       ],
                     ),
                     TextButton(
