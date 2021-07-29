@@ -1,6 +1,6 @@
+import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
-import 'package:finsim/models/investment.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 
@@ -9,7 +9,7 @@ class DBHelper {
   static const version = 1;
 
   static Future<void> createDatabase(sql.Database db, version) async {
-    await db.execute('''CREATE TABLE income (
+    await db.execute('''CREATE TABLE IF NOT EXISTS income (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
                   frequency INTEGER, 
@@ -17,7 +17,7 @@ class DBHelper {
                   yearlyAppreciationPercentage INTEGER,
                   startDate TEXT,
                   endDate TEXT);''');
-    await db.execute('''CREATE TABLE expenditure (
+    await db.execute('''CREATE TABLE IF NOT EXISTS expenditure (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
                   frequency INTEGER, 
@@ -25,7 +25,7 @@ class DBHelper {
                   yearlyAppreciationPercentage INTEGER,
                   startDate TEXT,
                   endDate TEXT);''');
-    await db.execute('''CREATE TABLE investment (
+    await db.execute('''CREATE TABLE IF NOT EXISTS investment (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   startDate TEXT,
                   endDate TEXT,
@@ -33,6 +33,11 @@ class DBHelper {
                   frequency INTEGER, 
                   amount INTEGER, 
                   profitPercentage INTEGER);''');
+    await db.execute('''CREATE TABLE IF NOT EXISTS asset (
+                  id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                  name TEXT, 
+                  expenditure_id INTEGER,
+                  FOREIGN KEY(expenditure_id) REFERENCES expenditure(id));''');
     return;
   }
 
@@ -45,50 +50,78 @@ class DBHelper {
     );
   }
 
-  static Future<void> insert(String table, Map<String, Object> data) async {
-    final db = await getDatabase();
+  static Future<int> insert(
+    String table,
+    Map<String, Object> data, [
+    sql.Transaction? txn,
+  ]) async {
+    final db = txn != null ? txn : await getDatabase();
 
-    await db.insert(
+    return await db.insert(
       table,
       data,
       conflictAlgorithm: sql.ConflictAlgorithm.replace,
     );
   }
 
-  static Future<List<Map<String, dynamic>>> fetch(String table) async {
+  static Future<List<Map<String, dynamic>>> fetchWhere(
+    String table,
+    String? where,
+    List<Object?>? whereArgs,
+  ) async {
     final db = await getDatabase();
 
-    return db.query(table);
+    return db.query(table, where: where, whereArgs: whereArgs);
   }
 
-  static Future<void> saveIncome(Income income) async {
+  static Future<int> saveIncomeSource(Income income) async {
     return await insert('income', income.toMap());
   }
 
-  static Future<void> saveExpenditure(Expenditure expenditure) async {
-    return await insert('expenditure', expenditure.toMap());
+  static Future<int> saveExpenditure(
+    Expenditure expenditure, [
+    sql.Transaction? txn,
+  ]) async {
+    return await insert('expenditure', expenditure.toMap(), txn);
   }
 
-  static Future<int> deleteExpenditure(int id) async {
+  static Future<int> saveAsset(Asset asset) async {
     final db = await getDatabase();
+
+    return await db.transaction((txn) async {
+      asset.expenditure.id = await saveExpenditure(asset.expenditure, txn);
+      return await insert('asset', asset.toMap(), txn);
+    });
+  }
+
+  static Future<int> deleteExpenditure(int id, [sql.Transaction? txn]) async {
+    var db = txn != null ? txn : await getDatabase();
 
     return await db.delete('expenditure', where: 'id = ?', whereArgs: [id]);
   }
 
-  static Future<int> deleteIncome(int id) async {
+  static Future<int> deleteIncomeSource(int id) async {
     final db = await getDatabase();
 
     return await db.delete('income', where: 'id = ?', whereArgs: [id]);
   }
 
-  static Future<int> deleteInvestment(int id) async {
+  static Future<int> deleteAsset(Asset asset) async {
     final db = await getDatabase();
 
-    return await db.delete('investment', where: 'id = ?', whereArgs: [id]);
+    return await db.transaction((txn) async {
+      if (asset.expenditure.id != 0) {
+        deleteExpenditure(asset.expenditure.id, txn);
+      }
+
+      return await txn.delete('asset', where: 'id = ?', whereArgs: [asset.id]);
+    });
   }
 
-  static Future<List<Income>> getIncome() async {
-    final mapList = await fetch('income');
+  static Future<List<Income>> getIncomeSources() async {
+    final db = await getDatabase();
+
+    final mapList = await db.query('income');
     List<Income> list = [];
     mapList.forEach((map) {
       list.add(Income.fromMap(map));
@@ -97,8 +130,10 @@ class DBHelper {
     return list;
   }
 
-  static Future<List<Expenditure>> getExpenditure() async {
-    final mapList = await fetch('expenditure');
+  static Future<List<Expenditure>> getExpenditures() async {
+    final db = await getDatabase();
+
+    final mapList = await db.query('expenditure');
     List<Expenditure> list = [];
     mapList.forEach((map) {
       list.add(Expenditure.fromMap(map));
@@ -107,11 +142,23 @@ class DBHelper {
     return list;
   }
 
-  static Future<List<Investment>> getInvestment() async {
-    final mapList = await fetch('investment');
-    List<Investment> list = [];
-    mapList.forEach((map) {
-      list.add(Investment.fromMap(map));
+  static Future<Expenditure> getExpenditure(int id) async {
+    final mapList = await fetchWhere('expenditure', '"id" = ?', [id]);
+    final map = mapList[0];
+    return Expenditure.fromMap(map);
+  }
+
+  static Future<List<Asset>> getAssets() async {
+    final db = await getDatabase();
+
+    final mapList = await db.query('asset');
+    List<Asset> list = [];
+    mapList.forEach((map) async {
+      var asset = Asset.fromMap(map);
+      list.add(asset);
+      //Get Expenditure data
+      asset.expenditure =
+          await getExpenditure(int.parse(map['expenditure_id'].toString()));
     });
 
     return list;

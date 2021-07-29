@@ -77,7 +77,10 @@ class _CashFlowChartState extends State<CashFlowChart> {
       future: Future.wait([futureIncomeList, futureExpenditureList]),
       builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Center(child: CircularProgressIndicator());
+          return AspectRatio(
+            aspectRatio: 1.618,
+            child: Center(child: CircularProgressIndicator()),
+          );
         }
         List<Income> incomeList = snapshot.data![0];
         List<Expenditure> expenditureList = snapshot.data![1];

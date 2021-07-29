@@ -1,7 +1,7 @@
+import 'package:finsim/screens/asset_list_screen.dart';
 import 'package:finsim/screens/expenditure_sources_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/screens/income_sources_screen.dart';
-import 'package:finsim/screens/investment_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationDrawer extends StatelessWidget {
@@ -24,23 +24,20 @@ class NavigationDrawer extends StatelessWidget {
             ),
             ListTile(
               title: Text('Home'),
-              contentPadding: EdgeInsets.only(left: 20),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, HomeScreen.routeName);
               },
             ),
             ListTile(
-              title: Text('Income'),
-              contentPadding: EdgeInsets.only(left: 20),
+              title: Text('Income Sources'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, IncomeSourcesScreen.routeName);
               },
             ),
             ListTile(
-              title: Text('Expenditure'),
-              contentPadding: EdgeInsets.only(left: 20),
+              title: Text('Expenditures'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(
@@ -49,18 +46,23 @@ class NavigationDrawer extends StatelessWidget {
             ),
             ListTile(
               title: Text('Assets'),
-              contentPadding: EdgeInsets.only(left: 20),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, InvestmentListScreen.routeName);
+                Navigator.pushNamed(context, AssetListScreen.routeName);
               },
             ),
             ListTile(
               title: Text('Liabilities'),
-              contentPadding: EdgeInsets.only(left: 20),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, InvestmentListScreen.routeName);
+                Navigator.pushNamed(context, HomeScreen.routeName);
+              },
+            ),
+            ListTile(
+              title: Text('Statement'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, HomeScreen.routeName);
               },
             ),
           ],

@@ -67,7 +67,10 @@ class _HomeScreenState extends State<HomeScreen> {
             future: Future.wait([futureIncomeList, futureExpenditureList]),
             builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
-                return Center(child: CircularProgressIndicator());
+                return Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(child: CircularProgressIndicator()),
+                );
               }
               List<Income> incomeList = snapshot.data![0];
               List<Expenditure> expenditureList = snapshot.data![1];

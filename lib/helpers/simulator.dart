@@ -25,11 +25,11 @@ class Simulator {
             date.isSame(income.startDate);
         var monthlyEvent = income.frequency == IncomeFrequency.Monthly &&
             date.date == income.startDate.date &&
-            date.isBetween(income.startDate, income.endDate);
+            date.isSameOrBefore(income.endDate);
         var yearlyEvent = income.frequency == IncomeFrequency.Yearly &&
             date.date == income.startDate.date &&
             date.month == income.startDate.month &&
-            date.isBetween(income.startDate, income.endDate);
+            date.isSameOrBefore(income.endDate);
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
           totalAmount += income.amount;
@@ -74,12 +74,12 @@ class Simulator {
         var monthlyEvent =
             expenditure.frequency == ExpenditureFrequency.Monthly &&
                 date.date == expenditure.startDate.date &&
-                date.isBetween(expenditure.startDate, expenditure.endDate);
+                date.isSameOrBefore(expenditure.endDate);
         var yearlyEvent =
             expenditure.frequency == ExpenditureFrequency.Yearly &&
                 date.date == expenditure.startDate.date &&
                 date.month == expenditure.startDate.month &&
-                date.isBetween(expenditure.startDate, expenditure.endDate);
+                date.isSameOrBefore(expenditure.endDate);
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
           totalAmount -= expenditure.amount;
@@ -149,9 +149,9 @@ class Simulator {
         barGroupList.add(barChartGroupData);
       }
     }
-    statement.forEach((log) {
-      print(log);
-    });
+    // statement.forEach((log) {
+    //   print(log);
+    // });
     return barGroupList;
   }
 }

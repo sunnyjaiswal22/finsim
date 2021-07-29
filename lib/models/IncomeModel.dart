@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 
 class IncomeModel extends ChangeNotifier {
   Future<void> add(Income income) async {
-    await DBHelper.insert('income', income.toMap());
+    await DBHelper.saveIncomeSource(income);
     notifyListeners();
   }
 
   Future<void> delete(int incomeId) async {
-    DBHelper.deleteIncome(incomeId);
+    DBHelper.deleteIncomeSource(incomeId);
     notifyListeners();
   }
 
   Future<List<Income>> get items async {
-    final incomeList = await DBHelper.getIncome();
+    final incomeList = await DBHelper.getIncomeSources();
     return UnmodifiableListView(incomeList);
   }
 }

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class ExpenditureModel extends ChangeNotifier {
   Future<void> add(Expenditure expenditure) async {
-    await DBHelper.insert('expenditure', expenditure.toMap());
+    await DBHelper.saveExpenditure(expenditure);
     notifyListeners();
   }
 
@@ -16,7 +16,7 @@ class ExpenditureModel extends ChangeNotifier {
   }
 
   Future<List<Expenditure>> get items async {
-    final expenditureList = await DBHelper.getExpenditure();
+    final expenditureList = await DBHelper.getExpenditures();
     return UnmodifiableListView(expenditureList);
   }
 }
