@@ -1,7 +1,8 @@
-import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
+import 'package:finsim/screens/add_income_source_screen.dart'
+    show IncomeFrequency;
 import 'package:jiffy/jiffy.dart';
 
-class Income {
+class IncomeSource {
   int id;
   String name;
   IncomeFrequency frequency;
@@ -10,7 +11,7 @@ class Income {
   Jiffy startDate = Jiffy();
   Jiffy endDate = Jiffy({'year': 2099, 'month': 1, 'day': 1});
 
-  Income({
+  IncomeSource({
     this.id = 0,
     this.name = '',
     this.frequency = IncomeFrequency.Monthly,
@@ -21,7 +22,6 @@ class Income {
   Map<String, Object> toMap() {
     return {
       //Not passing id in Map so that Sqflite will auto generate new id
-      //'id': this.id,
       'name': this.name,
       //Storing enum index in database
       'frequency': IncomeFrequency.values.indexOf(this.frequency),
@@ -32,8 +32,8 @@ class Income {
     };
   }
 
-  static Income fromMap(Map<String, dynamic> incomeMap) {
-    var income = Income();
+  static IncomeSource fromMap(Map<String, dynamic> incomeMap) {
+    var income = IncomeSource();
     income.id = incomeMap['id'];
     income.name = incomeMap['name'];
     income.frequency = IncomeFrequency.values[incomeMap['frequency']];

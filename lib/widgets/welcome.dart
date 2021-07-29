@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:finsim/screens/add_income_screen.dart';
+import 'package:finsim/screens/add_income_source_screen.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({Key? key}) : super(key: key);
@@ -33,7 +33,7 @@ class _WelcomeState extends State<Welcome> {
                 onPressed: () {
                   Navigator.pushReplacementNamed(
                     context,
-                    AddIncomeScreen.routeName,
+                    AddIncomeSourceScreen.routeName,
                     arguments: true,
                   );
                 },

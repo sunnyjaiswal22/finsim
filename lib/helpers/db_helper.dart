@@ -1,6 +1,6 @@
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/expenditure.dart';
-import 'package:finsim/models/income.dart';
+import 'package:finsim/models/income_source.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 
@@ -74,7 +74,7 @@ class DBHelper {
     return db.query(table, where: where, whereArgs: whereArgs);
   }
 
-  static Future<int> saveIncomeSource(Income income) async {
+  static Future<int> saveIncomeSource(IncomeSource income) async {
     return await insert('income', income.toMap());
   }
 
@@ -118,13 +118,13 @@ class DBHelper {
     });
   }
 
-  static Future<List<Income>> getIncomeSources() async {
+  static Future<List<IncomeSource>> getIncomeSources() async {
     final db = await getDatabase();
 
     final mapList = await db.query('income');
-    List<Income> list = [];
+    List<IncomeSource> list = [];
     mapList.forEach((map) {
-      list.add(Income.fromMap(map));
+      list.add(IncomeSource.fromMap(map));
     });
 
     return list;

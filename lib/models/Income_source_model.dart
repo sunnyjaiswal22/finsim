@@ -1,11 +1,11 @@
 import 'dart:collection';
 
 import 'package:finsim/helpers/db_helper.dart';
-import 'package:finsim/models/income.dart';
+import 'package:finsim/models/income_source.dart';
 import 'package:flutter/material.dart';
 
-class IncomeModel extends ChangeNotifier {
-  Future<void> add(Income income) async {
+class IncomeSourceModel extends ChangeNotifier {
+  Future<void> add(IncomeSource income) async {
     await DBHelper.saveIncomeSource(income);
     notifyListeners();
   }
@@ -15,7 +15,7 @@ class IncomeModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Income>> get items async {
+  Future<List<IncomeSource>> get items async {
     final incomeList = await DBHelper.getIncomeSources();
     return UnmodifiableListView(incomeList);
   }

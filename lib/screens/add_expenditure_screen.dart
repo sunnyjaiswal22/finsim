@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:finsim/models/ExpenditureModel.dart';
+import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';

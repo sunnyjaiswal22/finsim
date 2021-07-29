@@ -1,28 +1,28 @@
-import 'package:finsim/models/IncomeModel.dart';
-import 'package:finsim/models/income.dart';
-import 'package:finsim/screens/add_income_screen.dart';
+import 'package:finsim/models/Income_source_model.dart';
+import 'package:finsim/models/income_source.dart';
+import 'package:finsim/screens/add_income_source_screen.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:finsim/widgets/yearly_appreciation_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class IncomeSourcesScreen extends StatefulWidget {
-  const IncomeSourcesScreen({Key? key}) : super(key: key);
+class IncomeSourceListScreen extends StatefulWidget {
+  const IncomeSourceListScreen({Key? key}) : super(key: key);
   static final routeName = 'income-sources-screen';
 
   @override
   _IncomeSourcesState createState() => _IncomeSourcesState();
 }
 
-class _IncomeSourcesState extends State<IncomeSourcesScreen> {
-  late IncomeModel incomeModel;
-  late Future<List<Income>> futureIncomeList;
+class _IncomeSourcesState extends State<IncomeSourceListScreen> {
+  late IncomeSourceModel incomeSourceModel;
+  late Future<List<IncomeSource>> futureIncomeList;
 
   @override
   void didChangeDependencies() {
-    incomeModel = Provider.of<IncomeModel>(context);
-    futureIncomeList = incomeModel.items;
+    incomeSourceModel = Provider.of<IncomeSourceModel>(context);
+    futureIncomeList = incomeSourceModel.items;
     super.didChangeDependencies();
   }
 
@@ -36,14 +36,14 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, AddIncomeScreen.routeName);
+              Navigator.pushNamed(context, AddIncomeSourceScreen.routeName);
             },
             icon: Icon(Icons.add),
           ),
         ],
       ),
       drawer: NavigationDrawer(),
-      body: FutureBuilder<List<Income>>(
+      body: FutureBuilder<List<IncomeSource>>(
           future: futureIncomeList,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
@@ -76,7 +76,7 @@ class _IncomeSourcesState extends State<IncomeSourcesScreen> {
                         onPressed: () {
                           setState(() {
                             var selectedIncome = _incomeList[index];
-                            incomeModel.delete(selectedIncome.id);
+                            incomeSourceModel.delete(selectedIncome.id);
                           });
                         },
                         icon: Icon(Icons.delete),

@@ -1,4 +1,4 @@
-import 'package:finsim/models/ExpenditureModel.dart';
+import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
@@ -7,16 +7,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ExpenditureSourcesScreen extends StatefulWidget {
-  const ExpenditureSourcesScreen({Key? key}) : super(key: key);
+class ExpenditureListScreen extends StatefulWidget {
+  const ExpenditureListScreen({Key? key}) : super(key: key);
   static final routeName = 'expenditure-sources-screen';
 
   @override
-  _ExpenditureSourcesScreenState createState() =>
-      _ExpenditureSourcesScreenState();
+  _ExpenditureListScreenState createState() => _ExpenditureListScreenState();
 }
 
-class _ExpenditureSourcesScreenState extends State<ExpenditureSourcesScreen> {
+class _ExpenditureListScreenState extends State<ExpenditureListScreen> {
   late ExpenditureModel expenditureModel;
   late Future<List<Expenditure>> futureExpenditureList;
 

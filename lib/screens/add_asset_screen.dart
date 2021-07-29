@@ -1,5 +1,5 @@
 import 'package:finsim/models/asset.dart';
-import 'package:finsim/models/assetModel.dart';
+import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
