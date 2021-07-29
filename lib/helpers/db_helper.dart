@@ -8,7 +8,7 @@ class DBHelper {
   static const dbName = 'finsim.db';
   static const version = 1;
 
-  static Future<void> createDatabase(sql.Database db, version) async {
+  static Future<void> _onCreate(sql.Database db, version) async {
     await db.execute('''CREATE TABLE IF NOT EXISTS income (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
@@ -41,11 +41,17 @@ class DBHelper {
     return;
   }
 
+  static Future<void> _onConfigure(sql.Database db) async {
+    // Add support for cascade delete
+    await db.execute("PRAGMA foreign_keys = ON");
+  }
+
   static Future<sql.Database> getDatabase() async {
     final dbPath = await sql.getDatabasesPath();
     return sql.openDatabase(
       path.join(dbPath, dbName),
-      onCreate: createDatabase,
+      onCreate: _onCreate,
+      onConfigure: _onConfigure,
       version: version,
     );
   }
@@ -110,11 +116,8 @@ class DBHelper {
     final db = await getDatabase();
 
     return await db.transaction((txn) async {
-      if (asset.expenditure.id != 0) {
-        deleteExpenditure(asset.expenditure.id, txn);
-      }
-
-      return await txn.delete('asset', where: 'id = ?', whereArgs: [asset.id]);
+      await txn.delete('asset', where: 'id = ?', whereArgs: [asset.id]);
+      return await deleteExpenditure(asset.expenditure.id, txn);
     });
   }
 
