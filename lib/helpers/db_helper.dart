@@ -24,15 +24,8 @@ class DBHelper {
                   amount INTEGER, 
                   yearlyAppreciationPercentage INTEGER,
                   startDate TEXT,
-                  endDate TEXT);''');
-    await db.execute('''CREATE TABLE IF NOT EXISTS investment (
-                  id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                  startDate TEXT,
                   endDate TEXT,
-                  name TEXT, 
-                  frequency INTEGER, 
-                  amount INTEGER, 
-                  profitPercentage INTEGER);''');
+                  belongsToAsset INTEGER);''');
     await db.execute('''CREATE TABLE IF NOT EXISTS asset (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
@@ -124,8 +117,8 @@ class DBHelper {
   static Future<List<IncomeSource>> getIncomeSources() async {
     final db = await getDatabase();
 
-    final mapList = await db.query('income');
     List<IncomeSource> list = [];
+    final mapList = await db.query('income');
     mapList.forEach((map) {
       list.add(IncomeSource.fromMap(map));
     });

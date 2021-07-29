@@ -3,21 +3,13 @@ import 'package:finsim/screens/add_income_source_screen.dart'
 import 'package:jiffy/jiffy.dart';
 
 class IncomeSource {
-  int id;
-  String name;
-  IncomeFrequency frequency;
-  int amount;
-  int yearlyAppreciationPercentage;
+  int id = 0;
+  String name = '';
+  IncomeFrequency frequency = IncomeFrequency.Monthly;
+  int amount = 0;
+  int yearlyAppreciationPercentage = 0;
   Jiffy startDate = Jiffy();
   Jiffy endDate = Jiffy({'year': 2099, 'month': 1, 'day': 1});
-
-  IncomeSource({
-    this.id = 0,
-    this.name = '',
-    this.frequency = IncomeFrequency.Monthly,
-    this.amount = 0,
-    this.yearlyAppreciationPercentage = 0,
-  });
 
   Map<String, Object> toMap() {
     return {

@@ -3,21 +3,14 @@ import 'package:finsim/screens/add_expenditure_screen.dart'
 import 'package:jiffy/jiffy.dart';
 
 class Expenditure {
-  int id;
-  String name;
-  ExpenditureFrequency frequency;
-  int amount;
-  int yearlyAppreciationPercentage;
+  int id = 0;
+  String name = '';
+  ExpenditureFrequency frequency = ExpenditureFrequency.Monthly;
+  int amount = 0;
+  int yearlyAppreciationPercentage = 0;
   Jiffy startDate = Jiffy();
   Jiffy endDate = Jiffy({'year': 2099, 'month': 1, 'day': 1});
-
-  Expenditure({
-    this.id = 0,
-    this.name = '',
-    this.frequency = ExpenditureFrequency.Monthly,
-    this.amount = 0,
-    this.yearlyAppreciationPercentage = 0,
-  });
+  bool belongsToAsset = false;
 
   Map<String, Object> toMap() {
     return {
@@ -29,6 +22,7 @@ class Expenditure {
       'yearlyAppreciationPercentage': this.yearlyAppreciationPercentage,
       'startDate': this.startDate.format(), //ISO 8601 format
       'endDate': this.endDate.format(), //ISO 8601 format
+      'belongsToAsset': belongsToAsset ? 1 : 0,
     };
   }
 
@@ -43,6 +37,8 @@ class Expenditure {
         expenditureMap['yearlyAppreciationPercentage'];
     expenditure.startDate = Jiffy(expenditureMap['startDate']);
     expenditure.endDate = Jiffy(expenditureMap['endDate']);
+    expenditure.belongsToAsset =
+        expenditureMap['belongsToAsset'] == 1 ? true : false;
 
     return expenditure;
   }

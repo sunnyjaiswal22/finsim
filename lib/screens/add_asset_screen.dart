@@ -20,9 +20,11 @@ class AddAssetScreen extends StatefulWidget {
 }
 
 class _AddAssetScreenState extends State<AddAssetScreen> {
-  Asset asset = Asset();
   @override
   Widget build(BuildContext context) {
+    Asset asset = Asset();
+    //Setting flag on expenditure so as not to show the delete button on expenditure list
+    asset.expenditure.belongsToAsset = true;
     Future<void> _selectStartDate(
       BuildContext context,
     ) async {
@@ -77,7 +79,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                   },
                   onChanged: (value) {
                     asset.name = value;
-                    asset.expenditure.name = value;
+                    asset.expenditure.name = 'Asset: ' + value;
                   },
                 ),
                 TextFormField(

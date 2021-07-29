@@ -31,7 +31,7 @@ class _ExpenditureListScreenState extends State<ExpenditureListScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Center(
-            child: Text('Current Expenditure Sources'),
+            child: Text('Expenditures'),
           ),
           actions: [
             IconButton(
@@ -78,15 +78,39 @@ class _ExpenditureListScreenState extends State<ExpenditureListScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(_expenditureList[index].amount.toString()),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              var selectedExpenditure = _expenditureList[index];
-                              expenditureModel.delete(selectedExpenditure.id);
-                            });
-                          },
-                          icon: Icon(Icons.delete),
-                        ),
+                        if (!_expenditureList[index].belongsToAsset)
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                var selectedExpenditure =
+                                    _expenditureList[index];
+                                expenditureModel.delete(selectedExpenditure.id);
+                              });
+                            },
+                            icon: Icon(Icons.delete),
+                          )
+                        else
+                          IconButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: Text(
+                                        'This expenditure belongs to an Asset. To delete this expenditure, please delete the corresponding Asset'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'OK'),
+                                        child: Text('OK'),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            icon: Icon(Icons.info),
+                          ),
                       ],
                     ),
                   );
