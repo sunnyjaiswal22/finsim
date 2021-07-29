@@ -156,13 +156,14 @@ class DBHelper {
 
     final mapList = await db.query('asset');
     List<Asset> list = [];
-    mapList.forEach((map) async {
+    for (var map in mapList) {
       var asset = Asset.fromMap(map);
       list.add(asset);
       //Get Expenditure data
-      asset.expenditure =
-          await getExpenditure(int.parse(map['expenditure_id'].toString()));
-    });
+      asset.expenditure = await getExpenditure(
+        int.parse(map['expenditure_id'].toString()),
+      );
+    }
 
     return list;
   }
