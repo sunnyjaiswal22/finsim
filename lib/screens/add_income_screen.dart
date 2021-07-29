@@ -25,7 +25,6 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
   Income income = Income();
   @override
   Widget build(BuildContext context) {
-    print('Building');
     final arguments = ModalRoute.of(context)!.settings.arguments;
     var isBlankStart = false;
     if (arguments != null) {
@@ -45,8 +44,11 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
           initialDate: Jiffy().dateTime,
           firstDate: Jiffy().subtract(years: 10).dateTime,
           lastDate: Jiffy().add(years: 10).dateTime);
+      print(picked);
       if (picked != null && !Jiffy(picked).isSame(income.startDate)) {
-        income.startDate = Jiffy(picked).startOf(Units.DAY);
+        setState(() {
+          income.startDate = Jiffy(picked);
+        });
       }
     }
 
@@ -59,7 +61,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
           firstDate: Jiffy().subtract(years: 10).dateTime,
           lastDate: Jiffy().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(income.endDate)) {
-        income.endDate = Jiffy(picked).startOf(Units.DAY);
+        setState(() {
+          income.endDate = Jiffy(picked);
+        });
       }
     }
 
@@ -157,8 +161,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       children: [
                         Text('Start Date '),
                         SizedBox(width: 20),
-                        Text('${income.startDate.format("yyyy-MM-dd")}'
-                            .split(" ")[0]),
+                        Text('${income.startDate.format("yyyy-MM-dd")}'),
                       ],
                     ),
                     TextButton(
@@ -174,8 +177,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       children: [
                         Text('End Date '),
                         SizedBox(width: 20),
-                        Text('${income.endDate.format("yyyy-MM-dd")}'
-                            .split(" ")[0]),
+                        Text('${income.endDate.format("yyyy-MM-dd")}'),
                       ],
                     ),
                     TextButton(

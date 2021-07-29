@@ -45,7 +45,9 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
           firstDate: Jiffy().subtract(years: 10).dateTime,
           lastDate: Jiffy().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(expenditure.endDate)) {
-        expenditure.startDate = Jiffy(picked).startOf(Units.DAY);
+        setState(() {
+          expenditure.startDate = Jiffy(picked);
+        });
       }
     }
 
@@ -58,7 +60,9 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
           firstDate: Jiffy().subtract(years: 10).dateTime,
           lastDate: Jiffy().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(expenditure.endDate)) {
-        expenditure.endDate = Jiffy(picked).startOf(Units.DAY);
+        setState(() {
+          expenditure.endDate = Jiffy(picked);
+        });
       }
     }
 
@@ -171,8 +175,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                       children: [
                         Text('Start Date '),
                         SizedBox(width: 20),
-                        Text('${expenditure.startDate.format("yyyy-MM-dd")}'
-                            .split(" ")[0]),
+                        Text('${expenditure.startDate.format("yyyy-MM-dd")}'),
                       ],
                     ),
                     TextButton(
@@ -188,8 +191,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                       children: [
                         Text('End Date '),
                         SizedBox(width: 20),
-                        Text('${expenditure.endDate.format("yyyy-MM-dd")}'
-                            .split(" ")[0]),
+                        Text('${expenditure.endDate.format("yyyy-MM-dd")}'),
                       ],
                     ),
                     TextButton(
