@@ -36,14 +36,16 @@ class _AddIncomeSourceScreenState extends State<AddIncomeSourceScreen> {
       }
     }
 
+    var currentDate = Jiffy().startOf(Units.DAY);
+
     Future<void> _selectStartDate(
       BuildContext context,
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: Jiffy().dateTime,
-          firstDate: Jiffy().subtract(years: 10).dateTime,
-          lastDate: Jiffy().add(years: 10).dateTime);
+          initialDate: currentDate.dateTime,
+          firstDate: currentDate.subtract(years: 10).dateTime,
+          lastDate: currentDate.add(years: 10).dateTime);
       print(picked);
       if (picked != null && !Jiffy(picked).isSame(income.startDate)) {
         setState(() {
@@ -57,9 +59,9 @@ class _AddIncomeSourceScreenState extends State<AddIncomeSourceScreen> {
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: Jiffy().dateTime,
-          firstDate: Jiffy().subtract(years: 10).dateTime,
-          lastDate: Jiffy().add(years: 10).dateTime);
+          initialDate: currentDate.dateTime,
+          firstDate: currentDate.subtract(years: 10).dateTime,
+          lastDate: currentDate.add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(income.endDate)) {
         setState(() {
           income.endDate = Jiffy(picked);
