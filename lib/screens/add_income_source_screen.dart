@@ -25,17 +25,15 @@ class _AddIncomeSourceScreenState extends State<AddIncomeSourceScreen> {
   IncomeSource income = IncomeSource();
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)!.settings.arguments;
     var isBlankStart = false;
+    var arguments = ModalRoute.of(context)!.settings.arguments;
     if (arguments != null) {
-      try {
-        isBlankStart = arguments as bool;
-        print('Setting isBlankStart to $isBlankStart');
-      } catch (e) {
-        log('Can\'t convert arguments to bool');
+      arguments = arguments as Map<String, dynamic>;
+      if (arguments['isBlankStart'] != null) {
+        isBlankStart = arguments['isBlankStart'];
       }
     }
-
+    print('isBlankStart: $isBlankStart');
     var currentDate = Jiffy().startOf(Units.DAY);
 
     Future<void> _selectStartDate(
@@ -212,7 +210,7 @@ class _AddIncomeSourceScreenState extends State<AddIncomeSourceScreen> {
                               .then((_) => Navigator.pushReplacementNamed(
                                     context,
                                     AddExpenditureScreen.routeName,
-                                    arguments: true,
+                                    arguments: {'isBlankStart': isBlankStart},
                                   ));
                         },
                         child: Text('Continue'),

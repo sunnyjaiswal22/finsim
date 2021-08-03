@@ -4,7 +4,7 @@ import 'package:finsim/screens/add_income_source_screen.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({Key? key}) : super(key: key);
-  static final routeName = '/';
+  static final routeName = 'welcome';
 
   @override
   _WelcomeState createState() => _WelcomeState();
@@ -34,7 +34,7 @@ class _WelcomeState extends State<Welcome> {
                   Navigator.pushReplacementNamed(
                     context,
                     AddIncomeSourceScreen.routeName,
-                    arguments: true,
+                    arguments: {'isBlankStart': true},
                   );
                 },
                 child: Text('Continue'),

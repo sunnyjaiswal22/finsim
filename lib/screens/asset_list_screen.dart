@@ -54,7 +54,15 @@ class _AssetListState extends State<AssetListScreen> {
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   key: ValueKey(_assetList[index].id),
+                  isThreeLine: true,
                   title: Text(_assetList[index].name),
+                  subtitle: Column(
+                    children: [
+                      Text('abc'),
+                      Text('xyz'),
+                      Text('123'),
+                    ],
+                  ),
                   // subtitle: Row(
                   //   children: [
                   //     Text(

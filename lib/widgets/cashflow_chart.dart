@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 class CashFlowChart extends StatefulWidget {
   const CashFlowChart({Key? key}) : super(key: key);
+  static final routeName = 'cashflow';
 
   @override
   _CashFlowChartState createState() => _CashFlowChartState();

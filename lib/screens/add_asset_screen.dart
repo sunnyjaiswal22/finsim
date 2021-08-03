@@ -20,9 +20,9 @@ class AddAssetScreen extends StatefulWidget {
 }
 
 class _AddAssetScreenState extends State<AddAssetScreen> {
+  Asset asset = Asset();
   @override
   Widget build(BuildContext context) {
-    Asset asset = Asset();
     //Setting flag on expenditure so as not to show the delete button on expenditure list
     asset.expenditure.belongsToAsset = true;
     Future<void> _selectStartDate(
@@ -37,6 +37,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
       if (picked != null &&
           !Jiffy(picked).isSame(asset.expenditure.startDate)) {
         setState(() {
+          print('Setting date');
           asset.expenditure.startDate = Jiffy(picked);
         });
       }
@@ -82,127 +83,31 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                     asset.expenditure.name = 'Asset: ' + value;
                   },
                 ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Amount',
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter amount";
-                    }
-                  },
-                  onChanged: (value) {
-                    asset.expenditure.amount =
-                        value.isEmpty ? 0 : int.parse(value);
-                  },
-                ),
                 SizedBox(height: 20),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text('Frequency:'),
-                    SizedBox(width: 10),
-                    SizedBox(
-                      width: 30,
-                      child: Radio<ExpenditureFrequency>(
-                        value: ExpenditureFrequency.Once,
-                        groupValue: asset.expenditure.frequency,
-                        onChanged: (ExpenditureFrequency? value) {
-                          setState(() {
-                            asset.expenditure.frequency = value!;
-                          });
-                        },
-                      ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.red.shade800),
+                      onPressed: () {
+                        Provider.of<AssetModel>(context, listen: false)
+                            .add(asset)
+                            .then((_) => Navigator.pop(context));
+                      },
+                      child: Text('Add Expenditure'),
                     ),
-                    Text('Once'),
-                    SizedBox(width: 15),
-                    SizedBox(
-                      width: 30,
-                      child: Radio<ExpenditureFrequency>(
-                        value: ExpenditureFrequency.Monthly,
-                        groupValue: asset.expenditure.frequency,
-                        onChanged: (ExpenditureFrequency? value) {
-                          setState(() {
-                            asset.expenditure.frequency = value!;
-                          });
-                        },
-                      ),
-                    ),
-                    Text('Monthly'),
-                    SizedBox(width: 15),
-                    SizedBox(
-                      width: 30,
-                      child: Radio<ExpenditureFrequency>(
-                        value: ExpenditureFrequency.Yearly,
-                        groupValue: asset.expenditure.frequency,
-                        onChanged: (ExpenditureFrequency? value) {
-                          setState(() {
-                            asset.expenditure.frequency = value!;
-                          });
-                        },
-                      ),
-                    ),
-                    Text('Yearly'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text('Start Date '),
-                        SizedBox(width: 20),
-                        Text(
-                            '${asset.expenditure.startDate.format("yyyy-MM-dd")}'),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () => _selectStartDate(context),
-                      child: Text('Select date'),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.green.shade800),
+                      onPressed: () {
+                        Provider.of<AssetModel>(context, listen: false)
+                            .add(asset)
+                            .then((_) => Navigator.pop(context));
+                      },
+                      child: Text('Add Income'),
                     ),
                   ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text('End Date '),
-                        SizedBox(width: 20),
-                        Text(
-                            '${asset.expenditure.endDate.format("yyyy-MM-dd")}'),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () => _selectEndDate(context),
-                      child: Text('Select date'),
-                    ),
-                  ],
-                ),
-                // TextFormField(
-                //   decoration: const InputDecoration(
-                //       labelText: 'Yearly Appreciation Percentage',
-                //       hintText: 'Change per annum (%)'),
-                //   keyboardType: TextInputType.number,
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return "Please enter appreciation percentage";
-                //     }
-                //     return null;
-                //   },
-                //   onChanged: (value) {
-                //     asset.yearlyAppreciationPercentage = int.parse(value);
-                //   },
-                // ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Provider.of<AssetModel>(context, listen: false)
-                        .add(asset)
-                        .then((_) => Navigator.pop(context));
-                  },
-                  child: Text('Add Asset'),
                 ),
               ],
             ),

@@ -26,13 +26,12 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)!.settings.arguments;
     var isBlankStart = false;
+    var arguments = ModalRoute.of(context)!.settings.arguments;
     if (arguments != null) {
-      try {
-        isBlankStart = arguments as bool;
-      } catch (e) {
-        log('Can\'t convert arguments to bool');
+      arguments = arguments as Map<String, dynamic>;
+      if (arguments['isBlankStart'] != null) {
+        isBlankStart = arguments['isBlankStart'];
       }
     }
     var currentDate = Jiffy().startOf(Units.DAY);
