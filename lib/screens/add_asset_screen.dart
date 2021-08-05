@@ -1,12 +1,8 @@
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
-import 'package:finsim/screens/add_expenditure_screen.dart'
-    show ExpenditureFrequency;
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
 final _formKey = GlobalKey<FormState>();
@@ -23,41 +19,6 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
   Asset asset = Asset();
   @override
   Widget build(BuildContext context) {
-    //Setting flag on expenditure so as not to show the delete button on expenditure list
-    asset.expenditure.belongsToAsset = true;
-    Future<void> _selectStartDate(
-      BuildContext context,
-    ) async {
-      final DateTime? picked = await showDatePicker(
-          context: context,
-          initialDate: Jiffy().dateTime,
-          firstDate: Jiffy().subtract(years: 10).dateTime,
-          lastDate: Jiffy().add(years: 10).dateTime);
-      print(picked);
-      if (picked != null &&
-          !Jiffy(picked).isSame(asset.expenditure.startDate)) {
-        setState(() {
-          print('Setting date');
-          asset.expenditure.startDate = Jiffy(picked);
-        });
-      }
-    }
-
-    Future<void> _selectEndDate(
-      BuildContext context,
-    ) async {
-      final DateTime? picked = await showDatePicker(
-          context: context,
-          initialDate: Jiffy().dateTime,
-          firstDate: Jiffy().subtract(years: 10).dateTime,
-          lastDate: Jiffy().add(years: 10).dateTime);
-      if (picked != null && !Jiffy(picked).isSame(asset.expenditure.endDate)) {
-        setState(() {
-          asset.expenditure.endDate = Jiffy(picked);
-        });
-      }
-    }
-
     return Scaffold(
       appBar: FinSimAppBar.appbar(title: 'Add Asset'),
       drawer: NavigationDrawer(),

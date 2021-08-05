@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/screens/home_screen.dart';
@@ -34,7 +32,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
         isBlankStart = arguments['isBlankStart'];
       }
     }
-    var currentDate = Jiffy().startOf(Units.DAY);
+    final currentDate = Jiffy().startOf(Units.DAY);
 
     Future<void> _selectStartDate(
       BuildContext context,
@@ -42,8 +40,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: currentDate.dateTime,
-          firstDate: currentDate.subtract(years: 10).dateTime,
-          lastDate: currentDate.add(years: 10).dateTime);
+          firstDate: currentDate.clone().subtract(years: 10).dateTime,
+          lastDate: currentDate.clone().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(expenditure.endDate)) {
         setState(() {
           expenditure.startDate = Jiffy(picked);
@@ -57,8 +55,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: currentDate.dateTime,
-          firstDate: currentDate.subtract(years: 10).dateTime,
-          lastDate: currentDate.add(years: 10).dateTime);
+          firstDate: currentDate.clone().subtract(years: 10).dateTime,
+          lastDate: currentDate.clone().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(expenditure.endDate)) {
         setState(() {
           expenditure.endDate = Jiffy(picked);
