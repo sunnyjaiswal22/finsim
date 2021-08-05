@@ -16,7 +16,8 @@ class DBHelper {
                   amount INTEGER, 
                   yearlyAppreciationPercentage INTEGER,
                   startDate TEXT,
-                  endDate TEXT);''');
+                  endDate TEXT,
+                  belongsToAsset INTEGER);''');
     await db.execute('''CREATE TABLE IF NOT EXISTS expenditure (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
@@ -29,7 +30,9 @@ class DBHelper {
     await db.execute('''CREATE TABLE IF NOT EXISTS asset (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
+                  yearlyAppreciationPercentage INTEGER,
                   expenditure_id INTEGER,
+                  income_id INTEGER,
                   FOREIGN KEY(expenditure_id) REFERENCES expenditure(id));''');
     return;
   }
@@ -73,8 +76,11 @@ class DBHelper {
     return db.query(table, where: where, whereArgs: whereArgs);
   }
 
-  static Future<int> saveIncomeSource(IncomeSource income) async {
-    return await insert('income', income.toMap());
+  static Future<int> saveIncomeSource(
+    IncomeSource income, [
+    sql.Transaction? txn,
+  ]) async {
+    return await insert('income', income.toMap(), txn);
   }
 
   static Future<int> saveExpenditure(
@@ -89,6 +95,7 @@ class DBHelper {
 
     return await db.transaction((txn) async {
       asset.expenditure.id = await saveExpenditure(asset.expenditure, txn);
+      asset.income.id = await saveIncomeSource(asset.income, txn);
       return await insert('asset', asset.toMap(), txn);
     });
   }
@@ -144,6 +151,12 @@ class DBHelper {
     return Expenditure.fromMap(map);
   }
 
+  static Future<IncomeSource> getIncomeSource(int id) async {
+    final mapList = await fetchWhere('income', '"id" = ?', [id]);
+    final map = mapList[0];
+    return IncomeSource.fromMap(map);
+  }
+
   static Future<List<Asset>> getAssets() async {
     final db = await getDatabase();
 
@@ -155,6 +168,10 @@ class DBHelper {
       //Get Expenditure data
       asset.expenditure = await getExpenditure(
         int.parse(map['expenditure_id'].toString()),
+      );
+      //Get Income data
+      asset.income = await getIncomeSource(
+        int.parse(map['income_id'].toString()),
       );
     }
 

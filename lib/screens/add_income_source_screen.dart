@@ -1,6 +1,9 @@
 import 'package:finsim/models/Income_source_model.dart';
+import 'package:finsim/models/asset.dart';
+import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/models/income_source.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
+import 'package:finsim/screens/asset_list_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +24,7 @@ class AddIncomeSourceScreen extends StatefulWidget {
 
 class _AddIncomeSourceScreenState extends State<AddIncomeSourceScreen> {
   IncomeSource income = IncomeSource();
+  late Asset asset;
   @override
   Widget build(BuildContext context) {
     var isBlankStart = false;
@@ -29,6 +33,13 @@ class _AddIncomeSourceScreenState extends State<AddIncomeSourceScreen> {
       arguments = arguments as Map<String, dynamic>;
       if (arguments['isBlankStart'] != null) {
         isBlankStart = arguments['isBlankStart'];
+      }
+      if (arguments['asset'] != null) {
+        asset = arguments['asset'];
+        income = asset.income;
+        income.name = asset.name;
+        income.frequency = IncomeFrequency.Once;
+        income.belongsToAsset = true;
       }
     }
     final currentDate = Jiffy().startOf(Units.DAY);
@@ -83,6 +94,7 @@ class _AddIncomeSourceScreenState extends State<AddIncomeSourceScreen> {
                     }
                     return null;
                   },
+                  initialValue: income.name,
                   onChanged: (value) {
                     income.name = value;
                   },
@@ -198,27 +210,38 @@ class _AddIncomeSourceScreenState extends State<AddIncomeSourceScreen> {
                   },
                 ),
                 SizedBox(height: 20),
-                isBlankStart
-                    ? ElevatedButton(
-                        onPressed: () {
-                          Provider.of<IncomeSourceModel>(context, listen: false)
-                              .add(income)
-                              .then((_) => Navigator.pushReplacementNamed(
-                                    context,
-                                    AddExpenditureScreen.routeName,
-                                    arguments: {'isBlankStart': isBlankStart},
-                                  ));
-                        },
-                        child: Text('Continue'),
-                      )
-                    : ElevatedButton(
-                        onPressed: () {
-                          Provider.of<IncomeSourceModel>(context, listen: false)
-                              .add(income)
-                              .then((_) => Navigator.pop(context));
-                        },
-                        child: Text('Add Income'),
-                      ),
+                if (isBlankStart)
+                  ElevatedButton(
+                    onPressed: () {
+                      Provider.of<IncomeSourceModel>(context, listen: false)
+                          .add(income)
+                          .then((_) => Navigator.pushReplacementNamed(
+                                context,
+                                AddExpenditureScreen.routeName,
+                                arguments: {'isBlankStart': isBlankStart},
+                              ));
+                    },
+                    child: Text('Continue'),
+                  )
+                else if (income.belongsToAsset)
+                  ElevatedButton(
+                    onPressed: () {
+                      Provider.of<AssetModel>(context, listen: false)
+                          .add(asset)
+                          .then((_) => Navigator.popUntil(context,
+                              ModalRoute.withName(AssetListScreen.routeName)));
+                    },
+                    child: Text('Save Asset'),
+                  )
+                else
+                  ElevatedButton(
+                    onPressed: () {
+                      Provider.of<IncomeSourceModel>(context, listen: false)
+                          .add(income)
+                          .then((_) => Navigator.pop(context));
+                    },
+                    child: Text('Add Income'),
+                  ),
               ],
             ),
           ),

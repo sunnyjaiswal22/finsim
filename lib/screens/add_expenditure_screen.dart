@@ -1,5 +1,7 @@
+import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/expenditure.dart';
+import 'package:finsim/screens/add_income_source_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
@@ -20,16 +22,24 @@ class AddExpenditureScreen extends StatefulWidget {
 }
 
 class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
-  Expenditure expenditure = Expenditure();
+  var expenditure = Expenditure();
 
   @override
   Widget build(BuildContext context) {
     var isBlankStart = false;
+    late Asset asset;
     var arguments = ModalRoute.of(context)!.settings.arguments;
     if (arguments != null) {
       arguments = arguments as Map<String, dynamic>;
       if (arguments['isBlankStart'] != null) {
         isBlankStart = arguments['isBlankStart'];
+      }
+      if (arguments['asset'] != null) {
+        asset = arguments['asset'];
+        expenditure = asset.expenditure;
+        expenditure.name = asset.name;
+        expenditure.frequency = ExpenditureFrequency.Once;
+        expenditure.belongsToAsset = true;
       }
     }
     final currentDate = Jiffy().startOf(Units.DAY);
@@ -84,6 +94,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                     }
                     return null;
                   },
+                  initialValue: expenditure.name,
                   onChanged: (value) {
                     expenditure.name = value;
                   },
@@ -199,26 +210,37 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                   ],
                 ),
                 SizedBox(height: 20),
-                isBlankStart
-                    ? ElevatedButton(
-                        onPressed: () {
-                          Provider.of<ExpenditureModel>(context, listen: false)
-                              .add(expenditure)
-                              .then((_) => Navigator.pushReplacementNamed(
-                                    context,
-                                    HomeScreen.routeName,
-                                  ));
-                        },
-                        child: Text('Continue'),
-                      )
-                    : ElevatedButton(
-                        onPressed: () {
-                          Provider.of<ExpenditureModel>(context, listen: false)
-                              .add(expenditure)
-                              .then((_) => Navigator.pop(context));
-                        },
-                        child: Text('Add Expenditure'),
-                      ),
+                if (isBlankStart)
+                  ElevatedButton(
+                    onPressed: () {
+                      Provider.of<ExpenditureModel>(context, listen: false)
+                          .add(expenditure)
+                          .then((_) => Navigator.pushReplacementNamed(
+                                context,
+                                HomeScreen.routeName,
+                              ));
+                    },
+                    child: Text('Continue'),
+                  )
+                else if (expenditure.belongsToAsset)
+                  ElevatedButton(
+                    onPressed: () {
+                      //Go back to Asset screen
+                      Navigator.pushNamed(
+                          context, AddIncomeSourceScreen.routeName,
+                          arguments: {'asset': asset});
+                    },
+                    child: Text('Proceed to Add Income'),
+                  )
+                else
+                  ElevatedButton(
+                    onPressed: () {
+                      Provider.of<ExpenditureModel>(context, listen: false)
+                          .add(expenditure)
+                          .then((_) => Navigator.pop(context));
+                    },
+                    child: Text('Add Expenditure'),
+                  ),
               ],
             ),
           ),

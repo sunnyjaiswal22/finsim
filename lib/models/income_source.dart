@@ -10,6 +10,7 @@ class IncomeSource {
   int yearlyAppreciationPercentage = 0;
   Jiffy startDate = Jiffy().startOf(Units.DAY);
   Jiffy endDate = Jiffy({'year': 2099, 'month': 1, 'day': 1});
+  bool belongsToAsset = false;
 
   Map<String, Object> toMap() {
     return {
@@ -21,6 +22,7 @@ class IncomeSource {
       'yearlyAppreciationPercentage': this.yearlyAppreciationPercentage,
       'startDate': this.startDate.format(), //ISO 8601 format
       'endDate': this.endDate.format(), //ISO 8601 format
+      'belongsToAsset': belongsToAsset ? 1 : 0,
     };
   }
 
@@ -34,6 +36,7 @@ class IncomeSource {
         incomeMap['yearlyAppreciationPercentage'];
     income.startDate = Jiffy(incomeMap['startDate']);
     income.endDate = Jiffy(incomeMap['endDate']);
+    income.belongsToAsset = incomeMap['belongsToAsset'] == 1 ? true : false;
 
     return income;
   }
