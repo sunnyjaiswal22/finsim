@@ -25,8 +25,8 @@ class NavigationDrawer extends StatelessWidget {
             ListTile(
               title: Text('Home'),
               onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, HomeScreen.routeName);
+                Navigator.popUntil(
+                    context, ModalRoute.withName(HomeScreen.routeName));
               },
             ),
             ListTile(
