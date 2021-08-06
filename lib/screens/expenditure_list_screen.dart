@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class ExpenditureListScreen extends StatefulWidget {
   const ExpenditureListScreen({Key? key}) : super(key: key);
-  static final routeName = 'expenditure-sources-screen';
+  static final routeName = 'expenditure-list-screen';
 
   @override
   _ExpenditureListScreenState createState() => _ExpenditureListScreenState();

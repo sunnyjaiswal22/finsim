@@ -1,8 +1,7 @@
-import 'package:finsim/screens/add_income_source_screen.dart'
-    show IncomeFrequency;
+import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
 import 'package:jiffy/jiffy.dart';
 
-class IncomeSource {
+class Income {
   int id = 0;
   String name = '';
   IncomeFrequency frequency = IncomeFrequency.Monthly;
@@ -26,8 +25,8 @@ class IncomeSource {
     };
   }
 
-  static IncomeSource fromMap(Map<String, dynamic> incomeMap) {
-    var income = IncomeSource();
+  static Income fromMap(Map<String, dynamic> incomeMap) {
+    var income = Income();
     income.id = incomeMap['id'];
     income.name = incomeMap['name'];
     income.frequency = IncomeFrequency.values[incomeMap['frequency']];

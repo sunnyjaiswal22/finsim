@@ -1,12 +1,12 @@
 import 'package:finsim/models/expenditure.dart';
-import 'package:finsim/models/income_source.dart';
+import 'package:finsim/models/income.dart';
 
 class Asset {
   int id = 0;
   String name = '';
   int yearlyAppreciationPercentage = 0;
   Expenditure expenditure = Expenditure();
-  IncomeSource income = IncomeSource();
+  Income income = Income();
 
   Map<String, Object> toMap() {
     return {

@@ -1,6 +1,6 @@
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/expenditure.dart';
-import 'package:finsim/models/income_source.dart';
+import 'package:finsim/models/income.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 
@@ -33,7 +33,8 @@ class DBHelper {
                   yearlyAppreciationPercentage INTEGER,
                   expenditure_id INTEGER,
                   income_id INTEGER,
-                  FOREIGN KEY(expenditure_id) REFERENCES expenditure(id));''');
+                  FOREIGN KEY(expenditure_id) REFERENCES expenditure(id),
+                  FOREIGN KEY(income_id) REFERENCES income(id));''');
     return;
   }
 
@@ -76,8 +77,8 @@ class DBHelper {
     return db.query(table, where: where, whereArgs: whereArgs);
   }
 
-  static Future<int> saveIncomeSource(
-    IncomeSource income, [
+  static Future<int> saveIncome(
+    Income income, [
     sql.Transaction? txn,
   ]) async {
     return await insert('income', income.toMap(), txn);
@@ -95,7 +96,7 @@ class DBHelper {
 
     return await db.transaction((txn) async {
       asset.expenditure.id = await saveExpenditure(asset.expenditure, txn);
-      asset.income.id = await saveIncomeSource(asset.income, txn);
+      asset.income.id = await saveIncome(asset.income, txn);
       return await insert('asset', asset.toMap(), txn);
     });
   }
@@ -106,7 +107,7 @@ class DBHelper {
     return await db.delete('expenditure', where: 'id = ?', whereArgs: [id]);
   }
 
-  static Future<int> deleteIncomeSource(int id) async {
+  static Future<int> deleteIncome(int id) async {
     final db = await getDatabase();
 
     return await db.delete('income', where: 'id = ?', whereArgs: [id]);
@@ -121,13 +122,13 @@ class DBHelper {
     });
   }
 
-  static Future<List<IncomeSource>> getIncomeSources() async {
+  static Future<List<Income>> getIncomes() async {
     final db = await getDatabase();
 
-    List<IncomeSource> list = [];
+    List<Income> list = [];
     final mapList = await db.query('income');
     mapList.forEach((map) {
-      list.add(IncomeSource.fromMap(map));
+      list.add(Income.fromMap(map));
     });
 
     return list;
@@ -151,10 +152,10 @@ class DBHelper {
     return Expenditure.fromMap(map);
   }
 
-  static Future<IncomeSource> getIncomeSource(int id) async {
+  static Future<Income> getIncome(int id) async {
     final mapList = await fetchWhere('income', '"id" = ?', [id]);
     final map = mapList[0];
-    return IncomeSource.fromMap(map);
+    return Income.fromMap(map);
   }
 
   static Future<List<Asset>> getAssets() async {
@@ -170,7 +171,7 @@ class DBHelper {
         int.parse(map['expenditure_id'].toString()),
       );
       //Get Income data
-      asset.income = await getIncomeSource(
+      asset.income = await getIncome(
         int.parse(map['income_id'].toString()),
       );
     }

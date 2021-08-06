@@ -1,13 +1,13 @@
 import 'package:finsim/models/expenditure_model.dart';
-import 'package:finsim/models/Income_source_model.dart';
+import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/screens/add_asset_screen.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
-import 'package:finsim/screens/add_income_source_screen.dart';
+import 'package:finsim/screens/add_income_screen.dart';
 import 'package:finsim/screens/asset_list_screen.dart';
 import 'package:finsim/screens/expenditure_list_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
-import 'package:finsim/screens/income_source_list_screen.dart';
+import 'package:finsim/screens/income_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => IncomeSourceModel(),
+          create: (context) => IncomeModel(),
         ),
         ChangeNotifierProvider(
           create: (context) => ExpenditureModel(),
@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => HomeScreen(),
-        AddIncomeSourceScreen.routeName: (context) => AddIncomeSourceScreen(),
-        IncomeSourceListScreen.routeName: (context) => IncomeSourceListScreen(),
+        AddIncomeScreen.routeName: (context) => AddIncomeScreen(),
+        IncomeListScreen.routeName: (context) => IncomeListScreen(),
         AddExpenditureScreen.routeName: (context) => AddExpenditureScreen(),
         ExpenditureListScreen.routeName: (context) => ExpenditureListScreen(),
         AssetListScreen.routeName: (context) => AssetListScreen(),

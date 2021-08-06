@@ -1,8 +1,8 @@
 import 'package:finsim/helpers/simulator.dart';
 import 'package:finsim/models/expenditure_model.dart';
-import 'package:finsim/models/Income_source_model.dart';
+import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/expenditure.dart';
-import 'package:finsim/models/income_source.dart';
+import 'package:finsim/models/income.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +18,13 @@ class CashFlowChart extends StatefulWidget {
 
 class _CashFlowChartState extends State<CashFlowChart> {
   var currencyFormat = new NumberFormat("#,##,##,###", "en_IN");
-  late Future<List<IncomeSource>> futureIncomeList;
+  late Future<List<Income>> futureIncomeList;
   late Future<List<Expenditure>> futureExpenditureList;
   DateTime now = new DateTime.now();
 
   @override
   void didChangeDependencies() {
-    final incomeModel = Provider.of<IncomeSourceModel>(context);
+    final incomeModel = Provider.of<IncomeModel>(context);
     futureIncomeList = incomeModel.items;
     final expenditureModel = Provider.of<ExpenditureModel>(context);
     futureExpenditureList = expenditureModel.items;
@@ -83,7 +83,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
             child: Center(child: CircularProgressIndicator()),
           );
         }
-        List<IncomeSource> incomeList = snapshot.data![0];
+        List<Income> incomeList = snapshot.data![0];
         List<Expenditure> expenditureList = snapshot.data![1];
         final barChartGroupDataList = Simulator.simulate(
           incomeList,

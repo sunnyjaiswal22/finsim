@@ -1,7 +1,7 @@
-import 'package:finsim/models/Income_source_model.dart';
+import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
-import 'package:finsim/models/income_source.dart';
+import 'package:finsim/models/income.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
 import 'package:finsim/screens/asset_list_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
@@ -14,16 +14,16 @@ import 'package:provider/provider.dart';
 enum IncomeFrequency { Once, Monthly, Yearly }
 final _formKey = GlobalKey<FormState>();
 
-class AddIncomeSourceScreen extends StatefulWidget {
-  const AddIncomeSourceScreen({Key? key}) : super(key: key);
+class AddIncomeScreen extends StatefulWidget {
+  const AddIncomeScreen({Key? key}) : super(key: key);
   static final routeName = 'add-income-screen';
 
   @override
-  _AddIncomeSourceScreenState createState() => _AddIncomeSourceScreenState();
+  _AddIncomeScreenState createState() => _AddIncomeScreenState();
 }
 
-class _AddIncomeSourceScreenState extends State<AddIncomeSourceScreen> {
-  IncomeSource income = IncomeSource();
+class _AddIncomeScreenState extends State<AddIncomeScreen> {
+  Income income = Income();
   late Asset asset;
   @override
   Widget build(BuildContext context) {
@@ -213,7 +213,7 @@ class _AddIncomeSourceScreenState extends State<AddIncomeSourceScreen> {
                 if (isBlankStart)
                   ElevatedButton(
                     onPressed: () {
-                      Provider.of<IncomeSourceModel>(context, listen: false)
+                      Provider.of<IncomeModel>(context, listen: false)
                           .add(income)
                           .then((_) => Navigator.pushReplacementNamed(
                                 context,
@@ -236,7 +236,7 @@ class _AddIncomeSourceScreenState extends State<AddIncomeSourceScreen> {
                 else
                   ElevatedButton(
                     onPressed: () {
-                      Provider.of<IncomeSourceModel>(context, listen: false)
+                      Provider.of<IncomeModel>(context, listen: false)
                           .add(income)
                           .then((_) => Navigator.pop(context));
                     },

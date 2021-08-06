@@ -1,10 +1,9 @@
 import 'package:finsim/models/log.dart';
 import 'package:finsim/models/expenditure.dart';
-import 'package:finsim/models/income_source.dart';
+import 'package:finsim/models/income.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart'
     show ExpenditureFrequency;
-import 'package:finsim/screens/add_income_source_screen.dart'
-    show IncomeFrequency;
+import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,7 @@ import 'package:jiffy/jiffy.dart';
 
 class Simulator {
   static List<BarChartGroupData> simulate(
-      List<IncomeSource> incomeList, List<Expenditure> expenditureList) {
+      List<Income> incomeList, List<Expenditure> expenditureList) {
     Jiffy simulationStartDate = Jiffy().startOf(Units.DAY);
     Jiffy simulationEndDate = Jiffy(simulationStartDate).add(years: 5);
     var totalAmount = 0;
