@@ -8,15 +8,15 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CashFlowChart extends StatefulWidget {
-  const CashFlowChart({Key? key}) : super(key: key);
-  static final routeName = 'cashflow-chart';
+class AssetChart extends StatefulWidget {
+  const AssetChart({Key? key}) : super(key: key);
+  static final routeName = 'asset-chart';
 
   @override
-  _CashFlowChartState createState() => _CashFlowChartState();
+  _AssetChartState createState() => _AssetChartState();
 }
 
-class _CashFlowChartState extends State<CashFlowChart> {
+class _AssetChartState extends State<AssetChart> {
   var currencyFormat = new NumberFormat("#,##,##,###", "en_IN");
   DateTime now = new DateTime.now();
 
@@ -130,7 +130,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
                           ),
                           topTitle: AxisTitle(
                             showTitle: true,
-                            titleText: 'Savings',
+                            titleText: 'Assets',
                             margin: 15,
                             textStyle: TextStyle(
                               fontSize: 16,

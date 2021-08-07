@@ -1,8 +1,9 @@
-import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
-import 'package:finsim/models/income.dart';
-import 'package:finsim/screens/add_expenditure_screen.dart';
+import 'package:finsim/models/expenditure.dart';
+import 'package:finsim/screens/add_expenditure_screen.dart'
+    show ExpenditureFrequency;
+import 'package:finsim/screens/add_income_screen.dart';
 import 'package:finsim/screens/list_asset_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
@@ -11,36 +12,24 @@ import 'package:flutter/services.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
-enum IncomeFrequency { Once, Monthly, Yearly }
 final _formKey = GlobalKey<FormState>();
 
-class AddIncomeScreen extends StatefulWidget {
-  const AddIncomeScreen({Key? key}) : super(key: key);
-  static final routeName = 'add-income-screen';
+class AddInvestmentScreen extends StatefulWidget {
+  const AddInvestmentScreen({Key? key}) : super(key: key);
+  static final routeName = 'add-investment-screen';
 
   @override
-  _AddIncomeScreenState createState() => _AddIncomeScreenState();
+  _AddInvestmentScreenState createState() => _AddInvestmentScreenState();
 }
 
-class _AddIncomeScreenState extends State<AddIncomeScreen> {
-  Income income = Income();
-  late Asset asset;
+class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
   @override
   Widget build(BuildContext context) {
-    var isBlankStart = false;
     var arguments = ModalRoute.of(context)!.settings.arguments;
-    if (arguments != null) {
-      arguments = arguments as Map<String, dynamic>;
-      if (arguments['isBlankStart'] != null) {
-        isBlankStart = arguments['isBlankStart'];
-      }
-      if (arguments['asset'] != null) {
-        asset = arguments['asset'];
-        income = asset.income;
-        income.name = asset.name;
-        income.belongsToAsset = true;
-      }
-    }
+    arguments = arguments as Map<String, dynamic>;
+    Asset asset = arguments['asset'];
+    asset.expenditure.belongsToAsset = true;
+
     final currentDate = Jiffy().startOf(Units.DAY);
 
     Future<void> _selectStartDate(
@@ -51,9 +40,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
           initialDate: currentDate.dateTime,
           firstDate: currentDate.clone().subtract(years: 10).dateTime,
           lastDate: currentDate.clone().add(years: 10).dateTime);
-      if (picked != null && !Jiffy(picked).isSame(income.startDate)) {
+      if (picked != null && !Jiffy(picked).isSame(asset.expenditure.endDate)) {
         setState(() {
-          income.startDate = Jiffy(picked);
+          asset.expenditure.startDate = Jiffy(picked);
         });
       }
     }
@@ -66,15 +55,15 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
           initialDate: currentDate.dateTime,
           firstDate: currentDate.clone().subtract(years: 10).dateTime,
           lastDate: currentDate.clone().add(years: 10).dateTime);
-      if (picked != null && !Jiffy(picked).isSame(income.endDate)) {
+      if (picked != null && !Jiffy(picked).isSame(asset.expenditure.endDate)) {
         setState(() {
-          income.endDate = Jiffy(picked);
+          asset.expenditure.endDate = Jiffy(picked);
         });
       }
     }
 
     return Scaffold(
-      appBar: FinSimAppBar.appbar(title: 'Add Income'),
+      appBar: FinSimAppBar.appbar(title: 'Add Investment'),
       drawer: NavigationDrawer(),
       body: SingleChildScrollView(
         child: Padding(
@@ -85,17 +74,17 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               children: [
                 TextFormField(
                   decoration: const InputDecoration(
-                    labelText: 'Source of Income',
+                    labelText: 'Investment Name',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter source of income";
+                      return "Please enter investment name";
                     }
                     return null;
                   },
-                  initialValue: income.name,
+                  initialValue: asset.expenditure.name,
                   onChanged: (value) {
-                    income.name = value;
+                    asset.expenditure.name = value;
                   },
                 ),
                 TextFormField(
@@ -110,7 +99,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     }
                   },
                   onChanged: (value) {
-                    income.amount = value.isEmpty ? 0 : int.parse(value);
+                    asset.expenditure.amount =
+                        value.isEmpty ? 0 : int.parse(value);
                   },
                 ),
                 SizedBox(height: 20),
@@ -120,12 +110,12 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     SizedBox(width: 10),
                     SizedBox(
                       width: 30,
-                      child: Radio<IncomeFrequency>(
-                        value: IncomeFrequency.Once,
-                        groupValue: income.frequency,
-                        onChanged: (IncomeFrequency? value) {
+                      child: Radio<ExpenditureFrequency>(
+                        value: ExpenditureFrequency.Once,
+                        groupValue: asset.expenditure.frequency,
+                        onChanged: (ExpenditureFrequency? value) {
                           setState(() {
-                            income.frequency = value!;
+                            asset.expenditure.frequency = value!;
                           });
                         },
                       ),
@@ -134,12 +124,15 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     SizedBox(width: 15),
                     SizedBox(
                       width: 30,
-                      child: Radio<IncomeFrequency>(
-                        value: IncomeFrequency.Monthly,
-                        groupValue: income.frequency,
-                        onChanged: (IncomeFrequency? value) {
+                      child: Radio<ExpenditureFrequency>(
+                        value: ExpenditureFrequency.Monthly,
+                        groupValue: asset.expenditure.frequency,
+                        onChanged: (ExpenditureFrequency? value) {
+                          print('Inside $value');
                           setState(() {
-                            income.frequency = value!;
+                            print('Before: ${asset.expenditure.frequency}');
+                            asset.expenditure.frequency = value!;
+                            print('After: ${asset.expenditure.frequency}');
                           });
                         },
                       ),
@@ -148,12 +141,12 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     SizedBox(width: 15),
                     SizedBox(
                       width: 30,
-                      child: Radio<IncomeFrequency>(
-                        value: IncomeFrequency.Yearly,
-                        groupValue: income.frequency,
-                        onChanged: (IncomeFrequency? value) {
+                      child: Radio<ExpenditureFrequency>(
+                        value: ExpenditureFrequency.Yearly,
+                        groupValue: asset.expenditure.frequency,
+                        onChanged: (ExpenditureFrequency? value) {
                           setState(() {
-                            income.frequency = value!;
+                            asset.expenditure.frequency = value!;
                           });
                         },
                       ),
@@ -161,6 +154,17 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     Text('Yearly'),
                   ],
                 ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Yearly Appreciation (%)',
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    asset.expenditure.yearlyAppreciationPercentage =
+                        int.parse(value);
+                  },
+                ),
+                SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -168,7 +172,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       children: [
                         Text('Start Date '),
                         SizedBox(width: 20),
-                        Text('${income.startDate.format("yyyy-MM-dd")}'),
+                        Text(
+                            '${asset.expenditure.startDate.format("yyyy-MM-dd")}'),
                       ],
                     ),
                     TextButton(
@@ -177,7 +182,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     ),
                   ],
                 ),
-                if (income.frequency != IncomeFrequency.Once)
+                if (asset.expenditure.frequency != ExpenditureFrequency.Once)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -185,7 +190,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                         children: [
                           Text('End Date '),
                           SizedBox(width: 20),
-                          Text('${income.endDate.format("yyyy-MM-dd")}'),
+                          Text(
+                              '${asset.expenditure.endDate.format("yyyy-MM-dd")}'),
                         ],
                       ),
                       TextButton(
@@ -194,45 +200,22 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       ),
                     ],
                   ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Yearly Appreciation (%)',
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    income.yearlyAppreciationPercentage = int.parse(value);
-                  },
-                ),
                 SizedBox(height: 20),
-                if (isBlankStart)
+                if (asset.generatesIncome)
                   ElevatedButton(
                     onPressed: () {
-                      Provider.of<IncomeModel>(context, listen: false)
-                          .add(income)
-                          .then((_) => Navigator.pushReplacementNamed(
-                                context,
-                                AddExpenditureScreen.routeName,
-                                arguments: {'isBlankStart': isBlankStart},
-                              ));
+                      Navigator.pushNamed(context, AddIncomeScreen.routeName,
+                          arguments: {'asset': asset});
                     },
-                    child: Text('Continue'),
+                    child: Text('Proceed to Add Income'),
                   )
-                else if (income.belongsToAsset)
+                else
                   ElevatedButton(
                     onPressed: () {
                       Provider.of<AssetModel>(context, listen: false)
                           .add(asset)
                           .then((_) => Navigator.popUntil(context,
                               ModalRoute.withName(ListAssetScreen.routeName)));
-                    },
-                    child: Text('Save Asset'),
-                  )
-                else
-                  ElevatedButton(
-                    onPressed: () {
-                      Provider.of<IncomeModel>(context, listen: false)
-                          .add(income)
-                          .then((_) => Navigator.pop(context));
                     },
                     child: Text('Submit'),
                   ),

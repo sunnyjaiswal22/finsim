@@ -3,6 +3,7 @@ import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
 import 'package:finsim/widgets/cashflow_chart.dart';
+import 'package:finsim/widgets/dashboard.dart';
 import 'package:finsim/widgets/welcome.dart';
 import 'package:flutter/material.dart';
 
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
               List<Expenditure> expenditureList = snapshot.data![1];
               final isBlankStart =
                   incomeList.isEmpty && expenditureList.isEmpty;
-              return isBlankStart ? Welcome() : CashFlowChart();
+              return isBlankStart ? Welcome() : Dashboard();
             },
           ),
         ),

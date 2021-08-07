@@ -2,6 +2,7 @@ import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/screens/add_asset_screen.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
+import 'package:finsim/widgets/yearly_appreciation_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -54,11 +55,27 @@ class _ListAssetState extends State<ListAssetScreen> {
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   key: ValueKey(_assetList[index].id),
-                  isThreeLine: true,
                   leading: Icon(Icons.account_balance),
-                  title: Text(_assetList[index].name),
-                  subtitle: Text(
-                      'Investment: ${_assetList[index].expenditure.amount} Income: ${_assetList[index].income.amount} Yearly Appreciation: ${_assetList[index].yearlyAppreciationPercentage}'),
+                  title: Row(
+                    children: [
+                      Text(_assetList[index].name),
+                      YearlyAppreciationInfo(
+                        percentage:
+                            _assetList[index].yearlyAppreciationPercentage,
+                        label: 'p. a.',
+                      )
+                    ],
+                  ),
+                  subtitle: Wrap(
+                    children: [
+                      Text('Investment ' +
+                          describeEnum(_assetList[index]
+                              .expenditure
+                              .frequency
+                              .toString()) +
+                          (_assetList[index].generatesIncome ? '' : '')),
+                    ],
+                  ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

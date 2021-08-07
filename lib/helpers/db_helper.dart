@@ -32,6 +32,7 @@ class DBHelper {
                   name TEXT, 
                   yearlyAppreciationPercentage INTEGER,
                   expenditure_id INTEGER,
+                  generatesIncome INTEGER,
                   income_id INTEGER,
                   FOREIGN KEY(expenditure_id) REFERENCES expenditure(id),
                   FOREIGN KEY(income_id) REFERENCES income(id));''');

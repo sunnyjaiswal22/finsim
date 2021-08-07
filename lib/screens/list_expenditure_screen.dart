@@ -28,14 +28,14 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
             ),
             actions: [
               IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, AddExpenditureScreen.routeName)
-                      .then((value) {
-                    setState(
-                        () {}); //Calling setState() to refresh screen on pop
-                  });
-                },
                 icon: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    AddExpenditureScreen.routeName,
+                    arguments: {'isBlankStart': false},
+                  );
+                },
               ),
             ],
           ),

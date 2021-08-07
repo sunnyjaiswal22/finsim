@@ -1,5 +1,5 @@
 import 'package:finsim/models/asset.dart';
-import 'package:finsim/screens/add_expenditure_screen.dart';
+import 'package:finsim/screens/add_investment_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
@@ -43,21 +43,47 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                     asset.expenditure.name = 'Asset: ' + value;
                   },
                 ),
-                SizedBox(height: 20),
                 TextFormField(
-                  decoration: const InputDecoration(
-                      labelText: 'Yearly Appreciation Percentage',
-                      hintText: 'Change per annum (%)'),
+                  decoration:
+                      const InputDecoration(labelText: 'Yearly Profit (%)'),
                   keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter appreciation percentage";
-                    }
-                    return null;
-                  },
                   onChanged: (value) {
                     asset.yearlyAppreciationPercentage = int.parse(value);
                   },
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Text('Generates regular income '),
+                    SizedBox(width: 15),
+                    SizedBox(
+                      width: 30,
+                      child: Radio<bool>(
+                        value: true,
+                        groupValue: asset.generatesIncome,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            asset.generatesIncome = value!;
+                          });
+                        },
+                      ),
+                    ),
+                    Text('Yes'),
+                    SizedBox(width: 15),
+                    SizedBox(
+                      width: 30,
+                      child: Radio<bool>(
+                        value: false,
+                        groupValue: asset.generatesIncome,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            asset.generatesIncome = value!;
+                          });
+                        },
+                      ),
+                    ),
+                    Text('No'),
+                  ],
                 ),
                 SizedBox(height: 20),
                 Row(
@@ -67,11 +93,11 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                       onPressed: () {
                         Navigator.pushNamed(
                           context,
-                          AddExpenditureScreen.routeName,
+                          AddInvestmentScreen.routeName,
                           arguments: {'asset': asset},
                         );
                       },
-                      child: Text('Proceed to Add Expenditure'),
+                      child: Text('Proceed to add Investment'),
                     ),
                   ],
                 ),

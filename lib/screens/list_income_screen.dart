@@ -28,10 +28,14 @@ class _ListIncomeState extends State<ListIncomeScreen> {
             ),
             actions: [
               IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, AddIncomeScreen.routeName);
-                },
                 icon: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    AddIncomeScreen.routeName,
+                    arguments: {'isBlankStart': false},
+                  );
+                },
               ),
             ],
           ),

@@ -26,22 +26,10 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var isBlankStart = false;
-    late Asset asset;
     var arguments = ModalRoute.of(context)!.settings.arguments;
-    if (arguments != null) {
-      arguments = arguments as Map<String, dynamic>;
-      if (arguments['isBlankStart'] != null) {
-        isBlankStart = arguments['isBlankStart'];
-      }
-      if (arguments['asset'] != null) {
-        asset = arguments['asset'];
-        expenditure = asset.expenditure;
-        expenditure.name = asset.name;
-        expenditure.frequency = ExpenditureFrequency.Once;
-        expenditure.belongsToAsset = true;
-      }
-    }
+    arguments = arguments as Map<String, dynamic>;
+    var isBlankStart = arguments['isBlankStart'];
+
     final currentDate = Jiffy().startOf(Units.DAY);
 
     Future<void> _selectStartDate(
@@ -164,15 +152,9 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
-                      labelText: 'Yearly Appreciation Percentage',
-                      hintText: 'Change per annum (%)'),
+                    labelText: 'Yearly Appreciation (%)',
+                  ),
                   keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter appreciation percentage";
-                    }
-                    return null;
-                  },
                   onChanged: (value) {
                     expenditure.yearlyAppreciationPercentage = int.parse(value);
                   },
@@ -193,22 +175,23 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text('End Date '),
-                        SizedBox(width: 20),
-                        Text('${expenditure.endDate.format("yyyy-MM-dd")}'),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () => _selectEndDate(context),
-                      child: Text('Select date'),
-                    ),
-                  ],
-                ),
+                if (expenditure.frequency != ExpenditureFrequency.Once)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text('End Date '),
+                          SizedBox(width: 20),
+                          Text('${expenditure.endDate.format("yyyy-MM-dd")}'),
+                        ],
+                      ),
+                      TextButton(
+                        onPressed: () => _selectEndDate(context),
+                        child: Text('Select date'),
+                      ),
+                    ],
+                  ),
                 SizedBox(height: 20),
                 if (isBlankStart)
                   ElevatedButton(
@@ -222,15 +205,6 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                     },
                     child: Text('Continue'),
                   )
-                else if (expenditure.belongsToAsset)
-                  ElevatedButton(
-                    onPressed: () {
-                      //Go back to Asset screen
-                      Navigator.pushNamed(context, AddIncomeScreen.routeName,
-                          arguments: {'asset': asset});
-                    },
-                    child: Text('Proceed to Add Income'),
-                  )
                 else
                   ElevatedButton(
                     onPressed: () {
@@ -238,7 +212,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                           .add(expenditure)
                           .then((_) => Navigator.pop(context));
                     },
-                    child: Text('Add Expenditure'),
+                    child: Text('Submit'),
                   ),
               ],
             ),
