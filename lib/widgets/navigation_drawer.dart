@@ -1,7 +1,7 @@
-import 'package:finsim/screens/asset_list_screen.dart';
-import 'package:finsim/screens/expenditure_list_screen.dart';
+import 'package:finsim/screens/list_asset_screen.dart';
+import 'package:finsim/screens/list_expenditure_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
-import 'package:finsim/screens/income_list_screen.dart';
+import 'package:finsim/screens/list_income_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationDrawer extends StatelessWidget {
@@ -33,21 +33,21 @@ class NavigationDrawer extends StatelessWidget {
               title: Text('Income Sources'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, IncomeListScreen.routeName);
+                Navigator.pushNamed(context, ListIncomeScreen.routeName);
               },
             ),
             ListTile(
               title: Text('Expenditures'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, ExpenditureListScreen.routeName);
+                Navigator.pushNamed(context, ListExpenditureScreen.routeName);
               },
             ),
             ListTile(
               title: Text('Assets'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, AssetListScreen.routeName);
+                Navigator.pushNamed(context, ListAssetScreen.routeName);
               },
             ),
             ListTile(

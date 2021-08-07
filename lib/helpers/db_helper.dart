@@ -107,8 +107,8 @@ class DBHelper {
     return await db.delete('expenditure', where: 'id = ?', whereArgs: [id]);
   }
 
-  static Future<int> deleteIncome(int id) async {
-    final db = await getDatabase();
+  static Future<int> deleteIncome(int id, [sql.Transaction? txn]) async {
+    final db = txn != null ? txn : await getDatabase();
 
     return await db.delete('income', where: 'id = ?', whereArgs: [id]);
   }
@@ -117,8 +117,15 @@ class DBHelper {
     final db = await getDatabase();
 
     return await db.transaction((txn) async {
-      await txn.delete('asset', where: 'id = ?', whereArgs: [asset.id]);
-      return await deleteExpenditure(asset.expenditure.id, txn);
+      var deleteStatus =
+          await txn.delete('asset', where: 'id = ?', whereArgs: [asset.id]);
+      if (asset.expenditure.id != 0) {
+        await deleteExpenditure(asset.expenditure.id, txn);
+      }
+      if (asset.income.id != 0) {
+        await deleteIncome(asset.income.id, txn);
+      }
+      return deleteStatus;
     });
   }
 

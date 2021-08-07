@@ -4,10 +4,10 @@ import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/screens/add_asset_screen.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
 import 'package:finsim/screens/add_income_screen.dart';
-import 'package:finsim/screens/asset_list_screen.dart';
-import 'package:finsim/screens/expenditure_list_screen.dart';
+import 'package:finsim/screens/list_asset_screen.dart';
+import 'package:finsim/screens/list_expenditure_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
-import 'package:finsim/screens/income_list_screen.dart';
+import 'package:finsim/screens/list_income_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,10 +42,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => HomeScreen(),
         AddIncomeScreen.routeName: (context) => AddIncomeScreen(),
-        IncomeListScreen.routeName: (context) => IncomeListScreen(),
+        ListIncomeScreen.routeName: (context) => ListIncomeScreen(),
         AddExpenditureScreen.routeName: (context) => AddExpenditureScreen(),
-        ExpenditureListScreen.routeName: (context) => ExpenditureListScreen(),
-        AssetListScreen.routeName: (context) => AssetListScreen(),
+        ListExpenditureScreen.routeName: (context) => ListExpenditureScreen(),
+        ListAssetScreen.routeName: (context) => ListAssetScreen(),
         AddAssetScreen.routeName: (context) => AddAssetScreen(),
       },
     );

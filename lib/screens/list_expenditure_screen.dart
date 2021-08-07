@@ -1,3 +1,4 @@
+import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
@@ -7,47 +8,40 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ExpenditureListScreen extends StatefulWidget {
-  const ExpenditureListScreen({Key? key}) : super(key: key);
+class ListExpenditureScreen extends StatefulWidget {
+  const ListExpenditureScreen({Key? key}) : super(key: key);
   static final routeName = 'expenditure-list-screen';
 
   @override
-  _ExpenditureListScreenState createState() => _ExpenditureListScreenState();
+  _ListExpenditureScreenState createState() => _ListExpenditureScreenState();
 }
 
-class _ExpenditureListScreenState extends State<ExpenditureListScreen> {
-  late ExpenditureModel expenditureModel;
-  late Future<List<Expenditure>> futureExpenditureList;
-
-  @override
-  void didChangeDependencies() {
-    expenditureModel = Provider.of<ExpenditureModel>(context);
-    futureExpenditureList = expenditureModel.items;
-    super.didChangeDependencies();
-  }
-
+class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Center(
-            child: Text('Expenditures'),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, AddExpenditureScreen.routeName)
-                    .then((value) {
-                  setState(() {}); //Calling setState() to refresh screen on pop
-                });
-              },
-              icon: Icon(Icons.add),
+    return Consumer2<ExpenditureModel, AssetModel>(
+      builder: (context, expenditureModel, assetModel, _) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Center(
+              child: Text('Expenditures'),
             ),
-          ],
-        ),
-        drawer: NavigationDrawer(),
-        body: FutureBuilder<List<Expenditure>>(
-            future: futureExpenditureList,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, AddExpenditureScreen.routeName)
+                      .then((value) {
+                    setState(
+                        () {}); //Calling setState() to refresh screen on pop
+                  });
+                },
+                icon: Icon(Icons.add),
+              ),
+            ],
+          ),
+          drawer: NavigationDrawer(),
+          body: FutureBuilder<List<Expenditure>>(
+            future: expenditureModel.items,
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
                 return Center(child: CircularProgressIndicator());
@@ -116,6 +110,10 @@ class _ExpenditureListScreenState extends State<ExpenditureListScreen> {
                   );
                 },
               );
-            }));
+            },
+          ),
+        );
+      },
+    );
   }
 }

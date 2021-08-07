@@ -6,15 +6,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AssetListScreen extends StatefulWidget {
-  const AssetListScreen({Key? key}) : super(key: key);
+class ListAssetScreen extends StatefulWidget {
+  const ListAssetScreen({Key? key}) : super(key: key);
   static final routeName = 'assets-list-screen';
 
   @override
-  _AssetListState createState() => _AssetListState();
+  _ListAssetState createState() => _ListAssetState();
 }
 
-class _AssetListState extends State<AssetListScreen> {
+class _ListAssetState extends State<ListAssetScreen> {
   late AssetModel assetModel;
   late Future<List<Asset>> futureAssetList;
 
@@ -55,26 +55,10 @@ class _AssetListState extends State<AssetListScreen> {
                 return ListTile(
                   key: ValueKey(_assetList[index].id),
                   isThreeLine: true,
+                  leading: Icon(Icons.account_balance),
                   title: Text(_assetList[index].name),
-                  subtitle: Column(
-                    children: [
-                      Text('abc'),
-                      Text('xyz'),
-                      Text('123'),
-                    ],
-                  ),
-                  // subtitle: Row(
-                  //   children: [
-                  //     Text(
-                  //       describeEnum(_assetList[index].frequency.toString()),
-                  //     ),
-                  //     YearlyAppreciationInfo(
-                  //       percentage:
-                  //           _assetList[index].yearlyAppreciationPercentage,
-                  //       label: 'p. a.',
-                  //     ),
-                  //   ],
-                  // ),
+                  subtitle: Text(
+                      'Investment: ${_assetList[index].expenditure.amount} Income: ${_assetList[index].income.amount} Yearly Appreciation: ${_assetList[index].yearlyAppreciationPercentage}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

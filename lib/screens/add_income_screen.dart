@@ -3,7 +3,7 @@ import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/models/income.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
-import 'package:finsim/screens/asset_list_screen.dart';
+import 'package:finsim/screens/list_asset_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
@@ -229,7 +229,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       Provider.of<AssetModel>(context, listen: false)
                           .add(asset)
                           .then((_) => Navigator.popUntil(context,
-                              ModalRoute.withName(AssetListScreen.routeName)));
+                              ModalRoute.withName(ListAssetScreen.routeName)));
                     },
                     child: Text('Save Asset'),
                   )
