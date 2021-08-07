@@ -32,7 +32,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
       if (picked != null && !Jiffy(picked).isSame(asset.startDate)) {
         setState(() {
           asset.startDate = Jiffy(picked);
-          asset.expenditure.startDate = Jiffy(picked);
+          asset.investment.startDate = Jiffy(picked);
           asset.income.startDate = Jiffy(picked);
         });
       }
@@ -49,7 +49,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
       if (picked != null && !Jiffy(picked).isSame(asset.endDate)) {
         setState(() {
           asset.endDate = Jiffy(picked);
-          asset.expenditure.endDate = Jiffy(picked);
+          asset.investment.endDate = Jiffy(picked);
           asset.income.endDate = Jiffy(picked);
         });
       }
@@ -77,7 +77,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                   },
                   onChanged: (value) {
                     asset.name = value;
-                    asset.expenditure.name = 'Asset: ' + value;
+                    asset.investment.name = 'Asset: ' + value;
                     asset.income.name = 'Asset: ' + value;
                   },
                 ),

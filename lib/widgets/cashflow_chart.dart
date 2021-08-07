@@ -1,4 +1,6 @@
 import 'package:finsim/helpers/simulator.dart';
+import 'package:finsim/models/asset.dart';
+import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/expenditure.dart';
@@ -63,10 +65,14 @@ class _CashFlowChartState extends State<CashFlowChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<IncomeModel, ExpenditureModel>(
-      builder: (context, incomeModel, expenditureModel, _) {
+    return Consumer3<IncomeModel, ExpenditureModel, AssetModel>(
+      builder: (context, incomeModel, expenditureModel, assetModel, _) {
         return FutureBuilder(
-          future: Future.wait([incomeModel.items, expenditureModel.items]),
+          future: Future.wait([
+            incomeModel.items,
+            expenditureModel.items,
+            assetModel.items,
+          ]),
           builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return AspectRatio(
@@ -76,10 +82,12 @@ class _CashFlowChartState extends State<CashFlowChart> {
             }
             List<Income> incomeList = snapshot.data![0];
             List<Expenditure> expenditureList = snapshot.data![1];
+            List<Asset> assetList = snapshot.data![2];
             final barChartGroupDataList = Simulator.simulate(
               incomeList,
               expenditureList,
-            );
+              assetList,
+            )['savings']!;
             final horizontalGridInterval =
                 getHorizontalGridInterval(barChartGroupDataList);
             return Container(

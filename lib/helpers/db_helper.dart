@@ -33,10 +33,10 @@ class DBHelper {
                   startDate TEXT, 
                   endDate TEXT, 
                   yearlyAppreciationPercentage INTEGER, 
-                  expenditure_id INTEGER, 
+                  investment_id INTEGER, 
                   generatesIncome INTEGER, 
                   income_id INTEGER, 
-                  FOREIGN KEY(expenditure_id) REFERENCES expenditure(id), 
+                  FOREIGN KEY(investment_id) REFERENCES expenditure(id), 
                   FOREIGN KEY(income_id) REFERENCES income(id));''');
     return;
   }
@@ -98,8 +98,10 @@ class DBHelper {
     final db = await getDatabase();
 
     return await db.transaction((txn) async {
-      asset.expenditure.id = await saveExpenditure(asset.expenditure, txn);
-      asset.income.id = await saveIncome(asset.income, txn);
+      asset.investment.id = await saveExpenditure(asset.investment, txn);
+      if (asset.income.id != 0) {
+        asset.income.id = await saveIncome(asset.income, txn);
+      }
       return await insert('asset', asset.toMap(), txn);
     });
   }
@@ -122,9 +124,7 @@ class DBHelper {
     return await db.transaction((txn) async {
       var deleteStatus =
           await txn.delete('asset', where: 'id = ?', whereArgs: [asset.id]);
-      if (asset.expenditure.id != 0) {
-        await deleteExpenditure(asset.expenditure.id, txn);
-      }
+      await deleteExpenditure(asset.investment.id, txn);
       if (asset.income.id != 0) {
         await deleteIncome(asset.income.id, txn);
       }
@@ -177,13 +177,15 @@ class DBHelper {
       var asset = Asset.fromMap(map);
       list.add(asset);
       //Get Expenditure data
-      asset.expenditure = await getExpenditure(
-        int.parse(map['expenditure_id'].toString()),
+      asset.investment = await getExpenditure(
+        int.parse(map['investment_id'].toString()),
       );
       //Get Income data
-      asset.income = await getIncome(
-        int.parse(map['income_id'].toString()),
-      );
+      if (map['income_id'] != null) {
+        asset.income = await getIncome(
+          int.parse(map['income_id'].toString()),
+        );
+      }
     }
 
     return list;

@@ -1,7 +1,5 @@
-import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/expenditure.dart';
-import 'package:finsim/screens/add_income_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';

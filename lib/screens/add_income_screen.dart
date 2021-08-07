@@ -38,7 +38,6 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
         asset = arguments['asset'];
         income = asset.income;
         income.name = asset.name;
-        income.belongsToAsset = true;
       }
     }
     final currentDate = Jiffy().startOf(Units.DAY);

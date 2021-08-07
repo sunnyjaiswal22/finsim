@@ -1,6 +1,5 @@
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
-import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart'
     show ExpenditureFrequency;
 import 'package:finsim/screens/add_income_screen.dart';
@@ -28,7 +27,6 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
     var arguments = ModalRoute.of(context)!.settings.arguments;
     arguments = arguments as Map<String, dynamic>;
     Asset asset = arguments['asset'];
-    asset.expenditure.belongsToAsset = true;
 
     final currentDate = Jiffy().startOf(Units.DAY);
 
@@ -40,9 +38,9 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
           initialDate: currentDate.dateTime,
           firstDate: currentDate.clone().subtract(years: 10).dateTime,
           lastDate: currentDate.clone().add(years: 10).dateTime);
-      if (picked != null && !Jiffy(picked).isSame(asset.expenditure.endDate)) {
+      if (picked != null && !Jiffy(picked).isSame(asset.investment.endDate)) {
         setState(() {
-          asset.expenditure.startDate = Jiffy(picked);
+          asset.investment.startDate = Jiffy(picked);
         });
       }
     }
@@ -55,9 +53,9 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
           initialDate: currentDate.dateTime,
           firstDate: currentDate.clone().subtract(years: 10).dateTime,
           lastDate: currentDate.clone().add(years: 10).dateTime);
-      if (picked != null && !Jiffy(picked).isSame(asset.expenditure.endDate)) {
+      if (picked != null && !Jiffy(picked).isSame(asset.investment.endDate)) {
         setState(() {
-          asset.expenditure.endDate = Jiffy(picked);
+          asset.investment.endDate = Jiffy(picked);
         });
       }
     }
@@ -82,9 +80,9 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                     }
                     return null;
                   },
-                  initialValue: asset.expenditure.name,
+                  initialValue: asset.investment.name,
                   onChanged: (value) {
-                    asset.expenditure.name = value;
+                    asset.investment.name = value;
                   },
                 ),
                 TextFormField(
@@ -99,7 +97,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                     }
                   },
                   onChanged: (value) {
-                    asset.expenditure.amount =
+                    asset.investment.amount =
                         value.isEmpty ? 0 : int.parse(value);
                   },
                 ),
@@ -112,10 +110,10 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                       width: 30,
                       child: Radio<ExpenditureFrequency>(
                         value: ExpenditureFrequency.Once,
-                        groupValue: asset.expenditure.frequency,
+                        groupValue: asset.investment.frequency,
                         onChanged: (ExpenditureFrequency? value) {
                           setState(() {
-                            asset.expenditure.frequency = value!;
+                            asset.investment.frequency = value!;
                           });
                         },
                       ),
@@ -126,13 +124,13 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                       width: 30,
                       child: Radio<ExpenditureFrequency>(
                         value: ExpenditureFrequency.Monthly,
-                        groupValue: asset.expenditure.frequency,
+                        groupValue: asset.investment.frequency,
                         onChanged: (ExpenditureFrequency? value) {
                           print('Inside $value');
                           setState(() {
-                            print('Before: ${asset.expenditure.frequency}');
-                            asset.expenditure.frequency = value!;
-                            print('After: ${asset.expenditure.frequency}');
+                            print('Before: ${asset.investment.frequency}');
+                            asset.investment.frequency = value!;
+                            print('After: ${asset.investment.frequency}');
                           });
                         },
                       ),
@@ -143,10 +141,10 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                       width: 30,
                       child: Radio<ExpenditureFrequency>(
                         value: ExpenditureFrequency.Yearly,
-                        groupValue: asset.expenditure.frequency,
+                        groupValue: asset.investment.frequency,
                         onChanged: (ExpenditureFrequency? value) {
                           setState(() {
-                            asset.expenditure.frequency = value!;
+                            asset.investment.frequency = value!;
                           });
                         },
                       ),
@@ -160,7 +158,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                   ),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
-                    asset.expenditure.yearlyAppreciationPercentage =
+                    asset.investment.yearlyAppreciationPercentage =
                         int.parse(value);
                   },
                 ),
@@ -173,7 +171,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                         Text('Start Date '),
                         SizedBox(width: 20),
                         Text(
-                            '${asset.expenditure.startDate.format("yyyy-MM-dd")}'),
+                            '${asset.investment.startDate.format("yyyy-MM-dd")}'),
                       ],
                     ),
                     TextButton(
@@ -182,7 +180,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                     ),
                   ],
                 ),
-                if (asset.expenditure.frequency != ExpenditureFrequency.Once)
+                if (asset.investment.frequency != ExpenditureFrequency.Once)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -191,7 +189,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                           Text('End Date '),
                           SizedBox(width: 20),
                           Text(
-                              '${asset.expenditure.endDate.format("yyyy-MM-dd")}'),
+                              '${asset.investment.endDate.format("yyyy-MM-dd")}'),
                         ],
                       ),
                       TextButton(

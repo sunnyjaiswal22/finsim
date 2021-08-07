@@ -9,25 +9,34 @@ class Asset {
   Jiffy startDate = Jiffy().startOf(Units.DAY);
   Jiffy endDate = Jiffy({'year': 2099, 'month': 1, 'day': 1});
   int yearlyAppreciationPercentage = 0;
-  Expenditure expenditure = Expenditure();
+  Expenditure investment = Expenditure();
   bool generatesIncome = false;
   Income income = Income();
 
   Asset() {
-    this.expenditure.frequency = ExpenditureFrequency.Once;
+    this.investment.frequency = ExpenditureFrequency.Once;
+    this.investment.belongsToAsset = true;
+    this.income.belongsToAsset = true;
   }
 
   Map<String, Object> toMap() {
-    return {
+    var map = {
       //Not passing id in Map so that Sqflite will auto generate new id
       'name': this.name,
       'startDate': this.startDate.format(), //ISO 8601 format
       'endDate': this.endDate.format(), //ISO 8601 format
       'yearlyAppreciationPercentage': this.yearlyAppreciationPercentage,
-      'expenditure_id': this.expenditure.id,
+      'investment_id': this.investment.id,
       'generatesIncome': this.generatesIncome ? 1 : 0,
       'income_id': this.income.id,
     };
+
+    //Not saving income_id if not available, so as not to break foreign key
+    if (map['income_id'] == 0) {
+      map.remove('income_id');
+    }
+
+    return map;
   }
 
   static Asset fromMap(Map<String, dynamic> assetMap) {
@@ -39,7 +48,7 @@ class Asset {
     asset.yearlyAppreciationPercentage =
         assetMap['yearlyAppreciationPercentage'];
     asset.generatesIncome = assetMap['generatesIncome'] == 1 ? true : false;
-    //Expenditure and income already set and mapped
+    //Investment and income already set and mapped
     return asset;
   }
 }
