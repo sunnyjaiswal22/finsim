@@ -69,15 +69,38 @@ class _ListIncomeState extends State<ListIncomeScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(_incomeList[index].amount.toString()),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              var selectedIncome = _incomeList[index];
-                              incomeModel.delete(selectedIncome.id);
-                            });
-                          },
-                          icon: Icon(Icons.delete),
-                        ),
+                        if (!_incomeList[index].belongsToAsset)
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              setState(() {
+                                var selectedIncome = _incomeList[index];
+                                incomeModel.delete(selectedIncome.id);
+                              });
+                            },
+                          )
+                        else
+                          IconButton(
+                            icon: Icon(Icons.info),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: Text(
+                                        'This income belongs to an Asset. To delete this income, please delete the corresponding Asset'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'OK'),
+                                        child: Text('OK'),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
                       ],
                     ),
                   );

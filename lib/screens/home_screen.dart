@@ -1,3 +1,4 @@
+import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/expenditure.dart';
@@ -19,18 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<Income>> futureIncomeList;
-  late Future<List<Expenditure>> futureExpenditureList;
   DateTime currentBackPressTime = DateTime.now();
-
-  @override
-  void didChangeDependencies() {
-    final incomeModel = Provider.of<IncomeModel>(context);
-    futureIncomeList = incomeModel.items;
-    final expenditureModel = Provider.of<ExpenditureModel>(context);
-    futureExpenditureList = expenditureModel.items;
-    super.didChangeDependencies();
-  }
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
@@ -50,38 +40,43 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Image.asset(
-            'assets/images/logo_white.png',
-            fit: BoxFit.contain,
-            height: 32,
+    return Consumer3<IncomeModel, ExpenditureModel, AssetModel>(
+      builder: (context, incomeModel, expenditureModel, assetModel, _) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Center(
+              child: Image.asset(
+                'assets/images/logo_white.png',
+                fit: BoxFit.contain,
+                height: 32,
+              ),
+            ),
           ),
-        ),
-      ),
-      drawer: NavigationDrawer(),
-      body: WillPopScope(
-        onWillPop: onWillPop,
-        child: SingleChildScrollView(
-          child: FutureBuilder(
-            future: Future.wait([futureIncomeList, futureExpenditureList]),
-            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-              List<Income> incomeList = snapshot.data![0];
-              List<Expenditure> expenditureList = snapshot.data![1];
-              final isBlankStart =
-                  incomeList.isEmpty && expenditureList.isEmpty;
-              return isBlankStart ? Welcome() : Dashboard();
-            },
+          drawer: NavigationDrawer(),
+          body: WillPopScope(
+            onWillPop: onWillPop,
+            child: SingleChildScrollView(
+              child: FutureBuilder(
+                future:
+                    Future.wait([incomeModel.items, expenditureModel.items]),
+                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  List<Income> incomeList = snapshot.data![0];
+                  List<Expenditure> expenditureList = snapshot.data![1];
+                  final isBlankStart =
+                      incomeList.isEmpty && expenditureList.isEmpty;
+                  return isBlankStart ? Welcome() : Dashboard();
+                },
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -14,27 +14,29 @@ class DBHelper {
                   name TEXT, 
                   frequency INTEGER, 
                   amount INTEGER, 
-                  yearlyAppreciationPercentage INTEGER,
-                  startDate TEXT,
-                  endDate TEXT,
+                  yearlyAppreciationPercentage INTEGER, 
+                  startDate TEXT, 
+                  endDate TEXT, 
                   belongsToAsset INTEGER);''');
     await db.execute('''CREATE TABLE IF NOT EXISTS expenditure (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
                   frequency INTEGER, 
                   amount INTEGER, 
-                  yearlyAppreciationPercentage INTEGER,
-                  startDate TEXT,
-                  endDate TEXT,
+                  yearlyAppreciationPercentage INTEGER, 
+                  startDate TEXT, 
+                  endDate TEXT, 
                   belongsToAsset INTEGER);''');
     await db.execute('''CREATE TABLE IF NOT EXISTS asset (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
-                  yearlyAppreciationPercentage INTEGER,
-                  expenditure_id INTEGER,
-                  generatesIncome INTEGER,
-                  income_id INTEGER,
-                  FOREIGN KEY(expenditure_id) REFERENCES expenditure(id),
+                  startDate TEXT, 
+                  endDate TEXT, 
+                  yearlyAppreciationPercentage INTEGER, 
+                  expenditure_id INTEGER, 
+                  generatesIncome INTEGER, 
+                  income_id INTEGER, 
+                  FOREIGN KEY(expenditure_id) REFERENCES expenditure(id), 
                   FOREIGN KEY(income_id) REFERENCES income(id));''');
     return;
   }

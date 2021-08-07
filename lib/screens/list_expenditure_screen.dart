@@ -74,6 +74,7 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                         Text(_expenditureList[index].amount.toString()),
                         if (!_expenditureList[index].belongsToAsset)
                           IconButton(
+                            icon: Icon(Icons.delete),
                             onPressed: () {
                               setState(() {
                                 var selectedExpenditure =
@@ -81,10 +82,10 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                                 expenditureModel.delete(selectedExpenditure.id);
                               });
                             },
-                            icon: Icon(Icons.delete),
                           )
                         else
                           IconButton(
+                            icon: Icon(Icons.info),
                             onPressed: () {
                               showDialog(
                                 context: context,
@@ -103,7 +104,6 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                                 },
                               );
                             },
-                            icon: Icon(Icons.info),
                           ),
                       ],
                     ),

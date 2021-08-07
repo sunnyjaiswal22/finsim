@@ -14,7 +14,8 @@ class Simulator {
       List<Income> incomeList, List<Expenditure> expenditureList) {
     Jiffy simulationStartDate = Jiffy().startOf(Units.DAY);
     Jiffy simulationEndDate = Jiffy(simulationStartDate).add(years: 5);
-    var totalAmount = 0;
+    var totalSavings = 0;
+    var totalInvestments = 0;
     var statement = <Log>[];
     List<BarChartGroupData> barGroupList = [];
     for (Jiffy date = Jiffy(simulationStartDate);
@@ -32,7 +33,7 @@ class Simulator {
             date.isSameOrBefore(income.endDate);
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
-          totalAmount += income.amount;
+          totalSavings += income.amount;
           statement.add(
             Log(
               date: date.dateTime,
@@ -40,7 +41,7 @@ class Simulator {
               transactionType: TransactionType.Credit,
               message:
                   income.name + '-' + describeEnum(income.frequency.toString()),
-              balance: totalAmount,
+              balance: totalSavings,
             ),
           );
         }
@@ -63,7 +64,7 @@ class Simulator {
                 income.name +
                 ': Appreciated by: ' +
                 yearlyAppreciation.toString(),
-            balance: totalAmount,
+            balance: totalSavings,
           ));
         }
       });
@@ -82,7 +83,10 @@ class Simulator {
                 date.isSameOrBefore(expenditure.endDate);
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
-          totalAmount -= expenditure.amount;
+          totalSavings -= expenditure.amount;
+          if (expenditure.belongsToAsset) {
+            totalInvestments += expenditure.amount;
+          }
           statement.add(
             Log(
               date: date.dateTime,
@@ -91,7 +95,7 @@ class Simulator {
               message: expenditure.name +
                   '-' +
                   describeEnum(expenditure.frequency.toString()),
-              balance: totalAmount,
+              balance: totalSavings,
             ),
           );
         }
@@ -115,7 +119,7 @@ class Simulator {
                 expenditure.name +
                 ': Appreciated by: ' +
                 yearlyAppreciation.toString(),
-            balance: totalAmount,
+            balance: totalSavings,
           ));
         }
       });
@@ -124,13 +128,13 @@ class Simulator {
       if (date.date == simulationStartDate.date &&
           date.month == simulationStartDate.month &&
           date.year != simulationStartDate.year) {
-        var barColor = totalAmount >= 0 ? Colors.green : Colors.red;
+        var barColor = totalSavings >= 0 ? Colors.green : Colors.red;
 
         var barChartGroupData = BarChartGroupData(
           x: date.year,
           barRods: [
             BarChartRodData(
-              y: totalAmount.toDouble(),
+              y: totalSavings.toDouble(),
               colors: [
                 barColor,
                 barColor,
@@ -143,7 +147,7 @@ class Simulator {
             )
           ],
           //Not showing tooltip value in case of 0 amount as it overlaps with bottom titles
-          showingTooltipIndicators: totalAmount == 0 ? [] : [0],
+          showingTooltipIndicators: totalSavings == 0 ? [] : [0],
         );
 
         barGroupList.add(barChartGroupData);
