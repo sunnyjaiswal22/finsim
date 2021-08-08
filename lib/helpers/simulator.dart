@@ -36,6 +36,7 @@ class Simulator {
     var totalSavings = 0;
     var totalInvestments = 0;
     var incomeAmountMap = <int, int>{};
+    var expenditureAmountMap = <int, int>{};
     var assetInvestmentMap = <int, int>{};
     var statementList = <StatementEntry>[];
     List<BarChartGroupData> savingsBarGroupList = [];
@@ -102,6 +103,10 @@ class Simulator {
 
       //******************** EXPENDITURE ********************//
       expenditureList.forEach((expenditure) {
+        //Storing amount in another variable so as to not modify the original object
+        if (!expenditureAmountMap.containsKey(expenditure.id)) {
+          expenditureAmountMap[expenditure.id] = expenditure.amount;
+        }
         var onceEvent = expenditure.frequency == ExpenditureFrequency.Once &&
             date.isSame(expenditure.startDate);
         var monthlyEvent =
@@ -115,11 +120,11 @@ class Simulator {
                 date.isSameOrBefore(expenditure.endDate);
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
-          totalSavings -= expenditure.amount;
+          totalSavings -= expenditureAmountMap[expenditure.id]!;
           statementList.add(
             StatementEntry(
               date: date.clone(),
-              amount: expenditure.amount,
+              amount: expenditureAmountMap[expenditure.id]!,
               transactionType: TransactionType.Debit,
               message: expenditure.name +
                   '-' +
@@ -135,10 +140,11 @@ class Simulator {
             date.month == expenditure.startDate.month &&
             date.year != expenditure.startDate.year &&
             expenditure.yearlyAppreciationPercentage != 0) {
-          int yearlyAppreciation = (expenditure.amount *
+          int yearlyAppreciation = (expenditureAmountMap[expenditure.id]! *
               expenditure.yearlyAppreciationPercentage ~/
               100);
-          expenditure.amount += yearlyAppreciation;
+          expenditureAmountMap[expenditure.id] =
+              expenditureAmountMap[expenditure.id]! + yearlyAppreciation;
           statementList.add(StatementEntry(
             date: date.clone(),
             amount: 0,
@@ -175,17 +181,6 @@ class Simulator {
           }
           assetInvestmentMap[asset.id] =
               assetInvestmentMap[asset.id]! + asset.investment.amount;
-          statementList.add(
-            StatementEntry(
-              date: date.clone(),
-              amount: asset.investment.amount,
-              transactionType: TransactionType.Debit,
-              message: asset.investment.name +
-                  '-' +
-                  describeEnum(asset.investment.frequency.toString()),
-              balance: totalInvestments,
-            ),
-          );
         }
 
         //Asset Investment year completed
@@ -195,10 +190,11 @@ class Simulator {
             date.month == asset.investment.startDate.month &&
             date.year != asset.investment.startDate.year &&
             asset.investment.yearlyAppreciationPercentage != 0) {
-          int yearlyAppreciation = (asset.investment.amount *
+          int yearlyAppreciation = (assetInvestmentMap[asset.id]! *
               asset.investment.yearlyAppreciationPercentage ~/
               100);
-          asset.investment.amount += yearlyAppreciation;
+          assetInvestmentMap[asset.id] =
+              assetInvestmentMap[asset.id]! + yearlyAppreciation;
           statementList.add(StatementEntry(
             date: date.clone(),
             amount: 0,
