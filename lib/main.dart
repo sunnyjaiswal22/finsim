@@ -9,6 +9,7 @@ import 'package:finsim/screens/list_asset_screen.dart';
 import 'package:finsim/screens/list_expenditure_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/screens/list_income_screen.dart';
+import 'package:finsim/screens/statement_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         ListAssetScreen.routeName: (context) => ListAssetScreen(),
         AddAssetScreen.routeName: (context) => AddAssetScreen(),
         AddInvestmentScreen.routeName: (context) => AddInvestmentScreen(),
+        StatementScreen.routeName: (context) => StatementScreen(),
       },
     );
   }

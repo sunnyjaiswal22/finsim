@@ -16,7 +16,7 @@ import 'package:jiffy/jiffy.dart';
 class Simulator {
   static var globalCache = Cache();
 
-  static Map<String, List<BarChartGroupData>> simulate(
+  static Map<String, Object> simulate(
     List<Income> incomeList,
     List<Expenditure> expenditureList,
     List<Asset> assetList,
@@ -37,7 +37,7 @@ class Simulator {
     var totalInvestments = 0;
     var incomeAmountMap = <int, int>{};
     var assetInvestmentMap = <int, int>{};
-    var statement = <StatementEntry>[];
+    var statementList = <StatementEntry>[];
     List<BarChartGroupData> savingsBarGroupList = [];
     List<BarChartGroupData> assetsBarGroupList = [];
 
@@ -63,9 +63,9 @@ class Simulator {
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
           totalSavings += incomeAmountMap[income.id]!;
-          statement.add(
+          statementList.add(
             StatementEntry(
-              date: date.dateTime,
+              date: date.clone(),
               amount: incomeAmountMap[income.id]!,
               transactionType: TransactionType.Credit,
               message:
@@ -86,8 +86,8 @@ class Simulator {
               100);
           incomeAmountMap[income.id] =
               incomeAmountMap[income.id]! + yearlyAppreciation;
-          statement.add(StatementEntry(
-            date: date.dateTime,
+          statementList.add(StatementEntry(
+            date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Credit,
             message: describeEnum(income.frequency.toString()) +
@@ -116,9 +116,9 @@ class Simulator {
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
           totalSavings -= expenditure.amount;
-          statement.add(
+          statementList.add(
             StatementEntry(
-              date: date.dateTime,
+              date: date.clone(),
               amount: expenditure.amount,
               transactionType: TransactionType.Debit,
               message: expenditure.name +
@@ -139,8 +139,8 @@ class Simulator {
               expenditure.yearlyAppreciationPercentage ~/
               100);
           expenditure.amount += yearlyAppreciation;
-          statement.add(StatementEntry(
-            date: date.dateTime,
+          statementList.add(StatementEntry(
+            date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Debit,
             message: describeEnum(expenditure.frequency.toString()) +
@@ -175,9 +175,9 @@ class Simulator {
           }
           assetInvestmentMap[asset.id] =
               assetInvestmentMap[asset.id]! + asset.investment.amount;
-          statement.add(
+          statementList.add(
             StatementEntry(
-              date: date.dateTime,
+              date: date.clone(),
               amount: asset.investment.amount,
               transactionType: TransactionType.Debit,
               message: asset.investment.name +
@@ -199,8 +199,8 @@ class Simulator {
               asset.investment.yearlyAppreciationPercentage ~/
               100);
           asset.investment.amount += yearlyAppreciation;
-          statement.add(StatementEntry(
-            date: date.dateTime,
+          statementList.add(StatementEntry(
+            date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Debit,
             message: describeEnum(asset.investment.frequency.toString()) +
@@ -275,7 +275,11 @@ class Simulator {
     // statement.forEach((log) {
     //   print(log);
     // });
-    var result = {'savings': savingsBarGroupList, 'assets': assetsBarGroupList};
+    var result = {
+      'savings': savingsBarGroupList,
+      'assets': assetsBarGroupList,
+      'statementList': statementList,
+    };
 
     //Caching input and result for future, for optimization
     globalCache.addObject('incomeList', incomeList);

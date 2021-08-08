@@ -88,8 +88,8 @@ class _AssetChartState extends State<AssetChart> {
               expenditureList,
               assetList,
             )['assets']!;
-            final horizontalGridInterval =
-                getHorizontalGridInterval(barChartGroupDataList);
+            final horizontalGridInterval = getHorizontalGridInterval(
+                barChartGroupDataList as List<BarChartGroupData>);
             return Container(
               padding: const EdgeInsets.all(5),
               margin: EdgeInsets.only(top: 15),

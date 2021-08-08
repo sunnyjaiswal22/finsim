@@ -2,6 +2,7 @@ import 'package:finsim/screens/list_asset_screen.dart';
 import 'package:finsim/screens/list_expenditure_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/screens/list_income_screen.dart';
+import 'package:finsim/screens/statement_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationDrawer extends StatelessWidget {
@@ -61,7 +62,7 @@ class NavigationDrawer extends StatelessWidget {
               title: Text('Statement'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, HomeScreen.routeName);
+                Navigator.pushNamed(context, StatementScreen.routeName);
               },
             ),
           ],

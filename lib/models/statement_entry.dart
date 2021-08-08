@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:jiffy/jiffy.dart';
 
 enum TransactionType { Credit, Debit }
 
 class StatementEntry {
-  DateTime date;
+  Jiffy date;
   int amount;
   TransactionType transactionType;
   String message;
