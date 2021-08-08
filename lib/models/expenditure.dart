@@ -1,5 +1,6 @@
 import 'package:finsim/screens/add_expenditure_screen.dart'
     show ExpenditureFrequency;
+import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
 class Expenditure {
@@ -9,7 +10,8 @@ class Expenditure {
   int amount = 0;
   int yearlyAppreciationPercentage = 0;
   Jiffy startDate = Jiffy().startOf(Units.DAY);
-  Jiffy endDate = Jiffy({'year': 2099, 'month': 1, 'day': 1});
+  Jiffy endDate =
+      Jiffy({'year': 2099, 'month': 1, 'day': 1}).startOf(Units.DAY);
   bool belongsToAsset = false;
 
   Map<String, Object> toMap() {
@@ -26,20 +28,41 @@ class Expenditure {
     };
   }
 
-  static Expenditure fromMap(Map<String, dynamic> expenditureMap) {
-    var expenditure = Expenditure();
-    expenditure.id = expenditureMap['id'];
-    expenditure.name = expenditureMap['name'];
-    expenditure.frequency =
-        ExpenditureFrequency.values[expenditureMap['frequency']];
-    expenditure.amount = expenditureMap['amount'];
-    expenditure.yearlyAppreciationPercentage =
-        expenditureMap['yearlyAppreciationPercentage'];
-    expenditure.startDate = Jiffy(expenditureMap['startDate']);
-    expenditure.endDate = Jiffy(expenditureMap['endDate']);
-    expenditure.belongsToAsset =
-        expenditureMap['belongsToAsset'] == 1 ? true : false;
+  static Expenditure fromMap(Map<String, dynamic> map) {
+    var e = Expenditure();
+    e.id = map['id'];
+    e.name = map['name'];
+    e.frequency = ExpenditureFrequency.values[map['frequency']];
+    e.amount = map['amount'];
+    e.yearlyAppreciationPercentage = map['yearlyAppreciationPercentage'];
+    e.startDate = Jiffy(map['startDate']);
+    e.endDate = Jiffy(map['endDate']);
+    e.belongsToAsset = map['belongsToAsset'] == 1 ? true : false;
 
-    return expenditure;
+    return e;
   }
+
+  @override
+  operator ==(o) =>
+      o is Expenditure &&
+      o.id == id &&
+      o.name == name &&
+      o.frequency == frequency &&
+      o.amount == amount &&
+      o.yearlyAppreciationPercentage == yearlyAppreciationPercentage &&
+      o.startDate.dateTime == startDate.dateTime &&
+      o.endDate.dateTime == endDate.dateTime &&
+      o.belongsToAsset == belongsToAsset;
+
+  @override
+  int get hashCode => hashValues(
+        id,
+        name,
+        frequency,
+        amount,
+        yearlyAppreciationPercentage,
+        startDate.dateTime,
+        endDate.dateTime,
+        belongsToAsset,
+      );
 }

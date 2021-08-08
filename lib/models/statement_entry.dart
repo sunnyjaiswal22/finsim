@@ -2,14 +2,14 @@ import 'package:flutter/foundation.dart';
 
 enum TransactionType { Credit, Debit }
 
-class Log {
+class StatementEntry {
   DateTime date;
   int amount;
   TransactionType transactionType;
   String message;
   int balance;
 
-  Log({
+  StatementEntry({
     required this.date,
     required this.amount,
     required this.transactionType,

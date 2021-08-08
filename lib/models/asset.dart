@@ -1,13 +1,15 @@
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
 class Asset {
   int id = 0;
   String name = '';
   Jiffy startDate = Jiffy().startOf(Units.DAY);
-  Jiffy endDate = Jiffy({'year': 2099, 'month': 1, 'day': 1});
+  Jiffy endDate =
+      Jiffy({'year': 2099, 'month': 1, 'day': 1}).startOf(Units.DAY);
   int yearlyAppreciationPercentage = 0;
   Expenditure investment = Expenditure();
   bool generatesIncome = false;
@@ -39,16 +41,39 @@ class Asset {
     return map;
   }
 
-  static Asset fromMap(Map<String, dynamic> assetMap) {
-    var asset = Asset();
-    asset.id = assetMap['id'];
-    asset.name = assetMap['name'];
-    asset.startDate = Jiffy(assetMap['startDate']);
-    asset.endDate = Jiffy(assetMap['endDate']);
-    asset.yearlyAppreciationPercentage =
-        assetMap['yearlyAppreciationPercentage'];
-    asset.generatesIncome = assetMap['generatesIncome'] == 1 ? true : false;
+  static Asset fromMap(Map<String, dynamic> map) {
+    var a = Asset();
+    a.id = map['id'];
+    a.name = map['name'];
+    a.startDate = Jiffy(map['startDate']);
+    a.endDate = Jiffy(map['endDate']);
+    a.yearlyAppreciationPercentage = map['yearlyAppreciationPercentage'];
+    a.generatesIncome = map['generatesIncome'] == 1 ? true : false;
     //Investment and income already set and mapped
-    return asset;
+    return a;
   }
+
+  @override
+  operator ==(o) =>
+      o is Asset &&
+      o.id == id &&
+      o.name == name &&
+      o.startDate.dateTime == startDate.dateTime &&
+      o.endDate.dateTime == endDate.dateTime &&
+      o.yearlyAppreciationPercentage == yearlyAppreciationPercentage &&
+      o.generatesIncome == generatesIncome &&
+      o.investment == investment &&
+      o.income == income;
+
+  @override
+  int get hashCode => hashValues(
+        id,
+        name,
+        startDate.dateTime,
+        endDate.dateTime,
+        yearlyAppreciationPercentage,
+        generatesIncome,
+        investment,
+        income,
+      );
 }

@@ -1,5 +1,8 @@
+import 'dart:developer';
+
+import 'package:finsim/helpers/cache.dart';
 import 'package:finsim/models/asset.dart';
-import 'package:finsim/models/log.dart';
+import 'package:finsim/models/statement_entry.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart'
@@ -11,17 +14,30 @@ import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
 class Simulator {
+  static var globalCache = Cache();
+
   static Map<String, List<BarChartGroupData>> simulate(
     List<Income> incomeList,
     List<Expenditure> expenditureList,
     List<Asset> assetList,
   ) {
+    //Check if result exists in cache for the given input, return if present
+    if (listEquals(incomeList, globalCache.getObject('incomeList')) &&
+        listEquals(expenditureList, globalCache.getObject('expenditureList')) &&
+        listEquals(assetList, globalCache.getObject('assetList')) &&
+        globalCache.getObject('result') != null) {
+      log("Simulation result returned from cache");
+      return globalCache.getObject('result');
+    }
+
+    log("Simulating ...");
     Jiffy simulationStartDate = Jiffy().startOf(Units.DAY);
     Jiffy simulationEndDate = Jiffy(simulationStartDate).add(years: 5);
     var totalSavings = 0;
     var totalInvestments = 0;
+    var incomeAmountMap = <int, int>{};
     var assetInvestmentMap = <int, int>{};
-    var statement = <Log>[];
+    var statement = <StatementEntry>[];
     List<BarChartGroupData> savingsBarGroupList = [];
     List<BarChartGroupData> assetsBarGroupList = [];
 
@@ -31,6 +47,10 @@ class Simulator {
         date.add(days: 1)) {
       //******************** INCOME ********************//
       incomeList.forEach((income) {
+        //Storing amount in another variable so as to not modify the original object
+        if (!incomeAmountMap.containsKey(income.id)) {
+          incomeAmountMap[income.id] = income.amount;
+        }
         var onceEvent = income.frequency == IncomeFrequency.Once &&
             date.isSame(income.startDate);
         var monthlyEvent = income.frequency == IncomeFrequency.Monthly &&
@@ -42,11 +62,11 @@ class Simulator {
             date.isSameOrBefore(income.endDate);
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
-          totalSavings += income.amount;
+          totalSavings += incomeAmountMap[income.id]!;
           statement.add(
-            Log(
+            StatementEntry(
               date: date.dateTime,
-              amount: income.amount,
+              amount: incomeAmountMap[income.id]!,
               transactionType: TransactionType.Credit,
               message:
                   income.name + '-' + describeEnum(income.frequency.toString()),
@@ -61,10 +81,12 @@ class Simulator {
             date.month == income.startDate.month &&
             date.year != income.startDate.year &&
             income.yearlyAppreciationPercentage != 0) {
-          int yearlyAppreciation =
-              (income.amount * income.yearlyAppreciationPercentage ~/ 100);
-          income.amount += yearlyAppreciation;
-          statement.add(Log(
+          int yearlyAppreciation = (incomeAmountMap[income.id]! *
+              income.yearlyAppreciationPercentage ~/
+              100);
+          incomeAmountMap[income.id] =
+              incomeAmountMap[income.id]! + yearlyAppreciation;
+          statement.add(StatementEntry(
             date: date.dateTime,
             amount: 0,
             transactionType: TransactionType.Credit,
@@ -95,7 +117,7 @@ class Simulator {
         if (onceEvent || monthlyEvent || yearlyEvent) {
           totalSavings -= expenditure.amount;
           statement.add(
-            Log(
+            StatementEntry(
               date: date.dateTime,
               amount: expenditure.amount,
               transactionType: TransactionType.Debit,
@@ -117,7 +139,7 @@ class Simulator {
               expenditure.yearlyAppreciationPercentage ~/
               100);
           expenditure.amount += yearlyAppreciation;
-          statement.add(Log(
+          statement.add(StatementEntry(
             date: date.dateTime,
             amount: 0,
             transactionType: TransactionType.Debit,
@@ -154,7 +176,7 @@ class Simulator {
           assetInvestmentMap[asset.id] =
               assetInvestmentMap[asset.id]! + asset.investment.amount;
           statement.add(
-            Log(
+            StatementEntry(
               date: date.dateTime,
               amount: asset.investment.amount,
               transactionType: TransactionType.Debit,
@@ -177,7 +199,7 @@ class Simulator {
               asset.investment.yearlyAppreciationPercentage ~/
               100);
           asset.investment.amount += yearlyAppreciation;
-          statement.add(Log(
+          statement.add(StatementEntry(
             date: date.dateTime,
             amount: 0,
             transactionType: TransactionType.Debit,
@@ -253,6 +275,13 @@ class Simulator {
     // statement.forEach((log) {
     //   print(log);
     // });
-    return {'savings': savingsBarGroupList, 'assets': assetsBarGroupList};
+    var result = {'savings': savingsBarGroupList, 'assets': assetsBarGroupList};
+
+    //Caching input and result for future, for optimization
+    globalCache.addObject('incomeList', incomeList);
+    globalCache.addObject('expenditureList', expenditureList);
+    globalCache.addObject('assetList', assetList);
+    globalCache.addObject('result', result);
+    return result;
   }
 }

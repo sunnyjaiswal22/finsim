@@ -1,4 +1,5 @@
 import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
+import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
 class Income {
@@ -8,7 +9,8 @@ class Income {
   int amount = 0;
   int yearlyAppreciationPercentage = 0;
   Jiffy startDate = Jiffy().startOf(Units.DAY);
-  Jiffy endDate = Jiffy({'year': 2099, 'month': 1, 'day': 1});
+  Jiffy endDate =
+      Jiffy({'year': 2099, 'month': 1, 'day': 1}).startOf(Units.DAY);
   bool belongsToAsset = false;
 
   Map<String, Object> toMap() {
@@ -25,18 +27,41 @@ class Income {
     };
   }
 
-  static Income fromMap(Map<String, dynamic> incomeMap) {
-    var income = Income();
-    income.id = incomeMap['id'];
-    income.name = incomeMap['name'];
-    income.frequency = IncomeFrequency.values[incomeMap['frequency']];
-    income.amount = incomeMap['amount'];
-    income.yearlyAppreciationPercentage =
-        incomeMap['yearlyAppreciationPercentage'];
-    income.startDate = Jiffy(incomeMap['startDate']);
-    income.endDate = Jiffy(incomeMap['endDate']);
-    income.belongsToAsset = incomeMap['belongsToAsset'] == 1 ? true : false;
+  static Income fromMap(Map<String, dynamic> map) {
+    var i = Income();
+    i.id = map['id'];
+    i.name = map['name'];
+    i.frequency = IncomeFrequency.values[map['frequency']];
+    i.amount = map['amount'];
+    i.yearlyAppreciationPercentage = map['yearlyAppreciationPercentage'];
+    i.startDate = Jiffy(map['startDate']);
+    i.endDate = Jiffy(map['endDate']);
+    i.belongsToAsset = map['belongsToAsset'] == 1 ? true : false;
 
-    return income;
+    return i;
   }
+
+  @override
+  operator ==(o) =>
+      o is Income &&
+      o.id == id &&
+      o.name == name &&
+      o.frequency == frequency &&
+      o.amount == amount &&
+      o.yearlyAppreciationPercentage == yearlyAppreciationPercentage &&
+      o.startDate.dateTime == startDate.dateTime &&
+      o.endDate.dateTime == endDate.dateTime &&
+      o.belongsToAsset == belongsToAsset;
+
+  @override
+  int get hashCode => hashValues(
+        id,
+        name,
+        frequency,
+        amount,
+        yearlyAppreciationPercentage,
+        startDate.dateTime,
+        endDate.dateTime,
+        belongsToAsset,
+      );
 }
