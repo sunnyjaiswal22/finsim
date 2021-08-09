@@ -59,7 +59,8 @@ class StatementScreen extends StatelessWidget {
                                     : Colors.red.shade900,
                           ),
                         ),
-                        subtitle: Text('${describeEnum(item.transactionType)}'),
+                        subtitle: Text(
+                            '${describeEnum(item.transactionType)} ${item.details}'),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [

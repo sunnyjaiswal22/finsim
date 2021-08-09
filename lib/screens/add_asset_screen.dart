@@ -81,6 +81,14 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                     asset.income.name = 'Asset: ' + value;
                   },
                 ),
+                TextFormField(
+                  decoration:
+                      const InputDecoration(labelText: 'Yearly Profit (%)'),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    asset.yearlyAppreciationPercentage = int.parse(value);
+                  },
+                ),
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -114,15 +122,6 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                     ),
                   ],
                 ),
-                TextFormField(
-                  decoration:
-                      const InputDecoration(labelText: 'Yearly Profit (%)'),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    asset.yearlyAppreciationPercentage = int.parse(value);
-                  },
-                ),
-                SizedBox(height: 20),
                 Row(
                   children: [
                     Text('Generates regular income '),

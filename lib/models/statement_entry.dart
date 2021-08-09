@@ -8,6 +8,7 @@ class StatementEntry {
   int amount;
   TransactionType transactionType;
   String message;
+  String details;
   int balance;
 
   StatementEntry({
@@ -15,6 +16,7 @@ class StatementEntry {
     required this.amount,
     required this.transactionType,
     required this.message,
+    required this.details,
     required this.balance,
   });
 
@@ -27,6 +29,8 @@ class StatementEntry {
         describeEnum(this.transactionType.toString() +
             ' - ' +
             this.message +
+            ' - ' +
+            this.details +
             ' - ' +
             this.balance.toString());
   }

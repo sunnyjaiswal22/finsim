@@ -69,8 +69,8 @@ class Simulator {
               date: date.clone(),
               amount: incomeAmountMap[income.id]!,
               transactionType: TransactionType.Credit,
-              message:
-                  income.name + '-' + describeEnum(income.frequency.toString()),
+              message: income.name,
+              details: describeEnum(income.frequency.toString()),
               balance: totalSavings,
             ),
           );
@@ -91,11 +91,10 @@ class Simulator {
             date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Credit,
-            message: describeEnum(income.frequency.toString()) +
-                '-' +
-                income.name +
+            message: income.name +
                 ': Appreciated by: ' +
                 yearlyAppreciation.toString(),
+            details: describeEnum(income.frequency.toString()),
             balance: totalSavings,
           ));
         }
@@ -126,9 +125,8 @@ class Simulator {
               date: date.clone(),
               amount: expenditureAmountMap[expenditure.id]!,
               transactionType: TransactionType.Debit,
-              message: expenditure.name +
-                  '-' +
-                  describeEnum(expenditure.frequency.toString()),
+              message: expenditure.name,
+              details: describeEnum(expenditure.frequency.toString()),
               balance: totalSavings,
             ),
           );
@@ -149,11 +147,10 @@ class Simulator {
             date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Debit,
-            message: describeEnum(expenditure.frequency.toString()) +
-                '-' +
-                expenditure.name +
+            message: expenditure.name +
                 ': Appreciated by: ' +
                 yearlyAppreciation.toString(),
+            details: describeEnum(expenditure.frequency.toString()),
             balance: totalSavings,
           ));
         }
@@ -161,60 +158,55 @@ class Simulator {
 
       //******************** ASSET ********************//
       assetList.forEach((asset) {
-        var onceEvent =
-            asset.investment.frequency == ExpenditureFrequency.Once &&
-                date.isSame(asset.investment.startDate);
-        var monthlyEvent =
-            asset.investment.frequency == ExpenditureFrequency.Monthly &&
-                date.date == asset.investment.startDate.date &&
-                date.isSameOrBefore(asset.investment.endDate);
-        var yearlyEvent =
-            asset.investment.frequency == ExpenditureFrequency.Yearly &&
-                date.date == asset.investment.startDate.date &&
-                date.month == asset.investment.startDate.month &&
-                date.isSameOrBefore(asset.investment.endDate);
+        //Storing amount in another variable so as to not modify the original object
+        if (!assetInvestmentMap.containsKey(asset.id)) {
+          assetInvestmentMap[asset.id] = asset.investment.amount;
+        }
 
-        if (onceEvent || monthlyEvent || yearlyEvent) {
-          totalInvestments += asset.investment.amount;
-          if (!assetInvestmentMap.containsKey(asset.id)) {
-            assetInvestmentMap[asset.id] = 0;
-          }
-          assetInvestmentMap[asset.id] =
-              assetInvestmentMap[asset.id]! + asset.investment.amount;
+        //Asset created
+        if (date.isSame(asset.startDate)) {
+          print('${date.format("dd-MM-yyy")} is same');
+          totalInvestments += assetInvestmentMap[asset.id]!;
         }
 
         //Asset Investment year completed
-        if (date.isBetween(
-                asset.investment.startDate, asset.investment.endDate) &&
-            date.date == asset.investment.startDate.date &&
-            date.month == asset.investment.startDate.month &&
-            date.year != asset.investment.startDate.year &&
-            asset.investment.yearlyAppreciationPercentage != 0) {
+        if (date.isBetween(asset.startDate, asset.endDate) &&
+            date.date == asset.startDate.date &&
+            date.month == asset.startDate.month &&
+            date.year != asset.startDate.year &&
+            asset.yearlyAppreciationPercentage != 0) {
           int yearlyAppreciation = (assetInvestmentMap[asset.id]! *
-              asset.investment.yearlyAppreciationPercentage ~/
+              asset.yearlyAppreciationPercentage ~/
               100);
           assetInvestmentMap[asset.id] =
               assetInvestmentMap[asset.id]! + yearlyAppreciation;
+          //totalInvestments += assetInvestmentMap[asset.id]!;
           statementList.add(StatementEntry(
             date: date.clone(),
             amount: 0,
-            transactionType: TransactionType.Debit,
-            message: describeEnum(asset.investment.frequency.toString()) +
-                '-' +
-                asset.investment.name +
+            transactionType: TransactionType.Credit,
+            message: asset.investment.name +
                 ': Appreciated by: ' +
                 yearlyAppreciation.toString(),
-            balance: totalInvestments,
+            details: describeEnum(asset.investment.frequency.toString()),
+            balance: totalSavings,
           ));
         }
 
         //Asset end date reached
         if (date.isSame(asset.endDate)) {
-          if (assetInvestmentMap.containsKey(asset.id)) {
-            totalSavings += assetInvestmentMap[asset.id]!;
-            totalInvestments -= assetInvestmentMap[asset.id]!;
-            assetInvestmentMap[asset.id] = 0;
-          }
+          var assetValue = assetInvestmentMap[asset.id]!;
+          totalSavings += assetValue;
+          totalInvestments -= assetValue;
+          assetInvestmentMap[asset.id] = 0;
+          statementList.add(StatementEntry(
+            date: date.clone(),
+            amount: assetValue,
+            transactionType: TransactionType.Credit,
+            message: asset.name + ': Diluted',
+            details: describeEnum(asset.investment.frequency.toString()),
+            balance: totalSavings,
+          ));
         }
       });
 
