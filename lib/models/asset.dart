@@ -7,9 +7,8 @@ import 'package:jiffy/jiffy.dart';
 class Asset {
   int id = 0;
   String name = '';
-  Jiffy startDate = Jiffy().startOf(Units.DAY);
-  Jiffy endDate =
-      Jiffy({'year': 2099, 'month': 1, 'day': 1}).startOf(Units.DAY);
+  Jiffy startDate = Jiffy().startOf(Units.MONTH);
+  Jiffy endDate = Jiffy().startOf(Units.MONTH).add(years: 1);
   int yearlyAppreciationPercentage = 0;
   Expenditure investment = Expenditure();
   bool generatesIncome = false;

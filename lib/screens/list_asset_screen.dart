@@ -45,37 +45,37 @@ class _ListAssetState extends State<ListAssetScreen> {
                 return ListView.builder(
                   itemCount: _assetList.length,
                   itemBuilder: (BuildContext context, int index) {
+                    var item = _assetList[index];
                     return ListTile(
-                      key: ValueKey(_assetList[index].id),
+                      key: ValueKey(item.id),
                       leading: Icon(Icons.account_balance),
                       title: Row(
                         children: [
-                          Text(_assetList[index].name),
+                          Text(item.name),
                           YearlyAppreciationInfo(
-                            percentage:
-                                _assetList[index].yearlyAppreciationPercentage,
+                            percentage: item.yearlyAppreciationPercentage,
                             label: 'p. a.',
                           )
                         ],
                       ),
                       subtitle: Wrap(
                         children: [
+                          Text('${item.startDate.format("MMM yyyy")}'),
+                          Text(' - ${item.endDate.format("MMM yyyy")} '),
                           Text('Investment ' +
-                              describeEnum(_assetList[index]
-                                  .investment
-                                  .frequency
-                                  .toString()) +
-                              (_assetList[index].generatesIncome ? '' : '')),
+                              describeEnum(
+                                  item.investment.frequency.toString()) +
+                              (item.generatesIncome ? '' : '')),
                         ],
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(_assetList[index].investment.amount.toString()),
+                          Text(item.investment.amount.toString()),
                           IconButton(
                             onPressed: () {
                               setState(() {
-                                var selectedAsset = _assetList[index];
+                                var selectedAsset = item;
                                 assetModel.delete(selectedAsset);
                               });
                             },

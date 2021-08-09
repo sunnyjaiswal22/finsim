@@ -40,16 +40,16 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
         income.name = asset.name;
       }
     }
-    final currentDate = Jiffy().startOf(Units.DAY);
+    final initialDate = Jiffy().startOf(Units.MONTH);
 
     Future<void> _selectStartDate(
       BuildContext context,
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: currentDate.dateTime,
-          firstDate: currentDate.clone().subtract(years: 10).dateTime,
-          lastDate: currentDate.clone().add(years: 10).dateTime);
+          initialDate: initialDate.dateTime,
+          firstDate: initialDate.clone().subtract(years: 10).dateTime,
+          lastDate: initialDate.clone().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(income.startDate)) {
         setState(() {
           income.startDate = Jiffy(picked);
@@ -62,9 +62,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: currentDate.dateTime,
-          firstDate: currentDate.clone().subtract(years: 10).dateTime,
-          lastDate: currentDate.clone().add(years: 10).dateTime);
+          initialDate: initialDate.dateTime,
+          firstDate: initialDate.clone().subtract(years: 10).dateTime,
+          lastDate: initialDate.clone().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(income.endDate)) {
         setState(() {
           income.endDate = Jiffy(picked);
@@ -167,7 +167,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       children: [
                         Text('Start Date '),
                         SizedBox(width: 20),
-                        Text('${income.startDate.format("yyyy-MM-dd")}'),
+                        Text(
+                            '${income.startDate.format("dd-MM-yyyy hh:mm:ss")}'),
                       ],
                     ),
                     TextButton(
@@ -182,9 +183,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     children: [
                       Row(
                         children: [
-                          Text('End Date '),
+                          Text('End Date   '),
                           SizedBox(width: 20),
-                          Text('${income.endDate.format("yyyy-MM-dd")}'),
+                          Text('${income.endDate.format("dd-MM-yyyy")}'),
                         ],
                       ),
                       TextButton(
@@ -193,15 +194,16 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       ),
                     ],
                   ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Yearly Appreciation (%)',
+                if (income.frequency != IncomeFrequency.Once)
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Yearly Appreciation (%)',
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      income.yearlyAppreciationPercentage = int.parse(value);
+                    },
                   ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    income.yearlyAppreciationPercentage = int.parse(value);
-                  },
-                ),
                 SizedBox(height: 20),
                 if (isBlankStart)
                   ElevatedButton(

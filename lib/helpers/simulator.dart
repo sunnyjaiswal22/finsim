@@ -22,13 +22,13 @@ class Simulator {
     List<Asset> assetList,
   ) {
     //Check if result exists in cache for the given input, return if present
-    if (listEquals(incomeList, globalCache.getObject('incomeList')) &&
-        listEquals(expenditureList, globalCache.getObject('expenditureList')) &&
-        listEquals(assetList, globalCache.getObject('assetList')) &&
-        globalCache.getObject('result') != null) {
-      log("Simulation result returned from cache");
-      return globalCache.getObject('result');
-    }
+    // if (listEquals(incomeList, globalCache.getObject('incomeList')) &&
+    //     listEquals(expenditureList, globalCache.getObject('expenditureList')) &&
+    //     listEquals(assetList, globalCache.getObject('assetList')) &&
+    //     globalCache.getObject('result') != null) {
+    //   log("Simulation result returned from cache");
+    //   return globalCache.getObject('result');
+    // }
 
     log("Simulating ...");
     Jiffy simulationStartDate = Jiffy().startOf(Units.DAY);

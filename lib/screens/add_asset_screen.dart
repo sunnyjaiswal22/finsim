@@ -19,16 +19,16 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
   Asset asset = Asset();
   @override
   Widget build(BuildContext context) {
-    final currentDate = Jiffy().startOf(Units.DAY);
+    final initialDate = Jiffy().startOf(Units.MONTH);
 
     Future<void> _selectStartDate(
       BuildContext context,
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: currentDate.dateTime,
-          firstDate: currentDate.clone().subtract(years: 10).dateTime,
-          lastDate: currentDate.clone().add(years: 10).dateTime);
+          initialDate: initialDate.dateTime,
+          firstDate: initialDate.clone().subtract(years: 10).dateTime,
+          lastDate: initialDate.clone().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(asset.startDate)) {
         setState(() {
           asset.startDate = Jiffy(picked);
@@ -43,9 +43,9 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: currentDate.dateTime,
-          firstDate: currentDate.clone().subtract(years: 10).dateTime,
-          lastDate: currentDate.clone().add(years: 10).dateTime);
+          initialDate: initialDate.dateTime,
+          firstDate: initialDate.clone().subtract(years: 10).dateTime,
+          lastDate: initialDate.clone().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(asset.endDate)) {
         setState(() {
           asset.endDate = Jiffy(picked);
@@ -89,7 +89,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                       children: [
                         Text('Start Date '),
                         SizedBox(width: 20),
-                        Text('${asset.startDate.format("yyyy-MM-dd")}'),
+                        Text('${asset.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
                     TextButton(
@@ -105,7 +105,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                       children: [
                         Text('End Date   '),
                         SizedBox(width: 20),
-                        Text('${asset.endDate.format("yyyy-MM-dd")}'),
+                        Text('${asset.endDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
                     TextButton(

@@ -152,16 +152,17 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                     Text('Yearly'),
                   ],
                 ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Yearly Appreciation (%)',
+                if (asset.investment.frequency != ExpenditureFrequency.Once)
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Yearly Appreciation (%)',
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      asset.investment.yearlyAppreciationPercentage =
+                          int.parse(value);
+                    },
                   ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    asset.investment.yearlyAppreciationPercentage =
-                        int.parse(value);
-                  },
-                ),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -171,7 +172,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                         Text('Start Date '),
                         SizedBox(width: 20),
                         Text(
-                            '${asset.investment.startDate.format("yyyy-MM-dd")}'),
+                            '${asset.investment.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
                     TextButton(
@@ -189,7 +190,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                           Text('End Date '),
                           SizedBox(width: 20),
                           Text(
-                              '${asset.investment.endDate.format("yyyy-MM-dd")}'),
+                              '${asset.investment.endDate.format("dd-MM-yyyy")}'),
                         ],
                       ),
                       TextButton(

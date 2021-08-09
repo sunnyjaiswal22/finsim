@@ -8,9 +8,8 @@ class Income {
   IncomeFrequency frequency = IncomeFrequency.Monthly;
   int amount = 0;
   int yearlyAppreciationPercentage = 0;
-  Jiffy startDate = Jiffy().startOf(Units.DAY);
-  Jiffy endDate =
-      Jiffy({'year': 2099, 'month': 1, 'day': 1}).startOf(Units.DAY);
+  Jiffy startDate = Jiffy().startOf(Units.MONTH);
+  Jiffy endDate = Jiffy().startOf(Units.MONTH).add(years: 100);
   bool belongsToAsset = false;
 
   Map<String, Object> toMap() {

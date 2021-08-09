@@ -28,16 +28,16 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
     arguments = arguments as Map<String, dynamic>;
     var isBlankStart = arguments['isBlankStart'];
 
-    final currentDate = Jiffy().startOf(Units.DAY);
+    final initialDate = Jiffy().startOf(Units.MONTH);
 
     Future<void> _selectStartDate(
       BuildContext context,
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: currentDate.dateTime,
-          firstDate: currentDate.clone().subtract(years: 10).dateTime,
-          lastDate: currentDate.clone().add(years: 10).dateTime);
+          initialDate: initialDate.dateTime,
+          firstDate: initialDate.clone().subtract(years: 10).dateTime,
+          lastDate: initialDate.clone().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(expenditure.endDate)) {
         setState(() {
           expenditure.startDate = Jiffy(picked);
@@ -50,9 +50,9 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: currentDate.dateTime,
-          firstDate: currentDate.clone().subtract(years: 10).dateTime,
-          lastDate: currentDate.clone().add(years: 10).dateTime);
+          initialDate: initialDate.dateTime,
+          firstDate: initialDate.clone().subtract(years: 10).dateTime,
+          lastDate: initialDate.clone().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(expenditure.endDate)) {
         setState(() {
           expenditure.endDate = Jiffy(picked);
@@ -148,15 +148,17 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                     Text('Yearly'),
                   ],
                 ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Yearly Appreciation (%)',
+                if (expenditure.frequency != ExpenditureFrequency.Once)
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Yearly Appreciation (%)',
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      expenditure.yearlyAppreciationPercentage =
+                          int.parse(value);
+                    },
                   ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    expenditure.yearlyAppreciationPercentage = int.parse(value);
-                  },
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -164,7 +166,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                       children: [
                         Text('Start Date '),
                         SizedBox(width: 20),
-                        Text('${expenditure.startDate.format("yyyy-MM-dd")}'),
+                        Text('${expenditure.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
                     TextButton(
@@ -181,7 +183,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                         children: [
                           Text('End Date '),
                           SizedBox(width: 20),
-                          Text('${expenditure.endDate.format("yyyy-MM-dd")}'),
+                          Text('${expenditure.endDate.format("dd-MM-yyyy")}'),
                         ],
                       ),
                       TextButton(
