@@ -2,6 +2,7 @@ import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/models/income.dart';
 import 'package:finsim/screens/add_income_screen.dart';
+import 'package:finsim/widgets/empty_list_info.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:finsim/widgets/yearly_appreciation_info.dart';
 import 'package:flutter/foundation.dart';
@@ -47,65 +48,68 @@ class _ListIncomeState extends State<ListIncomeScreen> {
                 return Center(child: CircularProgressIndicator());
               }
               final _incomeList = snapshot.data!;
-              return ListView.builder(
-                itemCount: _incomeList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    key: ValueKey(_incomeList[index].id),
-                    title: Text(_incomeList[index].name),
-                    subtitle: Row(
-                      children: [
-                        Text(
-                          describeEnum(_incomeList[index].frequency.toString()),
-                        ),
-                        YearlyAppreciationInfo(
-                          percentage:
-                              _incomeList[index].yearlyAppreciationPercentage,
-                          label: 'p. a.',
-                        ),
-                      ],
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(_incomeList[index].amount.toString()),
-                        if (!_incomeList[index].belongsToAsset)
-                          IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              setState(() {
-                                var selectedIncome = _incomeList[index];
-                                incomeModel.delete(selectedIncome.id);
-                              });
-                            },
-                          )
-                        else
-                          IconButton(
-                            icon: Icon(Icons.info),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: Text(
-                                        'This income belongs to an Asset. To delete this income, please delete the corresponding Asset'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'OK'),
-                                        child: Text('OK'),
-                                      )
-                                    ],
-                                  );
-                                },
-                              );
-                            },
+              return _incomeList.length == 0
+                  ? EmptyListInfo()
+                  : ListView.builder(
+                      itemCount: _incomeList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          key: ValueKey(_incomeList[index].id),
+                          title: Text(_incomeList[index].name),
+                          subtitle: Row(
+                            children: [
+                              Text(
+                                describeEnum(
+                                    _incomeList[index].frequency.toString()),
+                              ),
+                              YearlyAppreciationInfo(
+                                percentage: _incomeList[index]
+                                    .yearlyAppreciationPercentage,
+                                label: 'p. a.',
+                              ),
+                            ],
                           ),
-                      ],
-                    ),
-                  );
-                },
-              );
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(_incomeList[index].amount.toString()),
+                              if (!_incomeList[index].belongsToAsset)
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    setState(() {
+                                      var selectedIncome = _incomeList[index];
+                                      incomeModel.delete(selectedIncome.id);
+                                    });
+                                  },
+                                )
+                              else
+                                IconButton(
+                                  icon: Icon(Icons.info),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: Text(
+                                              'This income belongs to an Asset. To delete this income, please delete the corresponding Asset'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, 'OK'),
+                                              child: Text('OK'),
+                                            )
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
             },
           ),
         );
