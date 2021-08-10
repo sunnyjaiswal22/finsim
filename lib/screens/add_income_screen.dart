@@ -167,8 +167,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       children: [
                         Text('Start Date '),
                         SizedBox(width: 20),
-                        Text(
-                            '${income.startDate.format("dd-MM-yyyy hh:mm:ss")}'),
+                        Text('${income.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
                     TextButton(

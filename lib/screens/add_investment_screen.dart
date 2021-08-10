@@ -28,16 +28,17 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
     arguments = arguments as Map<String, dynamic>;
     Asset asset = arguments['asset'];
 
-    final currentDate = Jiffy().startOf(Units.DAY);
+    asset.investment.startDate = asset.startDate.clone();
+    asset.investment.endDate = asset.endDate.clone();
 
     Future<void> _selectStartDate(
       BuildContext context,
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: currentDate.dateTime,
-          firstDate: currentDate.clone().subtract(years: 10).dateTime,
-          lastDate: currentDate.clone().add(years: 10).dateTime);
+          initialDate: asset.startDate.dateTime,
+          firstDate: asset.startDate.clone().subtract(years: 10).dateTime,
+          lastDate: asset.startDate.clone().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(asset.investment.endDate)) {
         setState(() {
           asset.investment.startDate = Jiffy(picked);
@@ -50,9 +51,9 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
     ) async {
       final DateTime? picked = await showDatePicker(
           context: context,
-          initialDate: currentDate.dateTime,
-          firstDate: currentDate.clone().subtract(years: 10).dateTime,
-          lastDate: currentDate.clone().add(years: 10).dateTime);
+          initialDate: asset.endDate.dateTime,
+          firstDate: asset.endDate.clone().subtract(years: 10).dateTime,
+          lastDate: asset.endDate.clone().add(years: 10).dateTime);
       if (picked != null && !Jiffy(picked).isSame(asset.investment.endDate)) {
         setState(() {
           asset.investment.endDate = Jiffy(picked);

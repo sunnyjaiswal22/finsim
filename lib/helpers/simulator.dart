@@ -55,11 +55,11 @@ class Simulator {
             date.isSame(income.startDate);
         var monthlyEvent = income.frequency == IncomeFrequency.Monthly &&
             date.date == income.startDate.date &&
-            date.isSameOrBefore(income.endDate);
+            date.isBefore(income.endDate);
         var yearlyEvent = income.frequency == IncomeFrequency.Yearly &&
             date.date == income.startDate.date &&
             date.month == income.startDate.month &&
-            date.isSameOrBefore(income.endDate);
+            date.isBefore(income.endDate);
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
           totalSavings += incomeAmountMap[income.id]!;
@@ -110,12 +110,12 @@ class Simulator {
         var monthlyEvent =
             expenditure.frequency == ExpenditureFrequency.Monthly &&
                 date.date == expenditure.startDate.date &&
-                date.isSameOrBefore(expenditure.endDate);
+                date.isBefore(expenditure.endDate);
         var yearlyEvent =
             expenditure.frequency == ExpenditureFrequency.Yearly &&
                 date.date == expenditure.startDate.date &&
                 date.month == expenditure.startDate.month &&
-                date.isSameOrBefore(expenditure.endDate);
+                date.isBefore(expenditure.endDate);
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
           totalSavings -= expenditureAmountMap[expenditure.id]!;
@@ -162,7 +162,20 @@ class Simulator {
           assetTotalInvestmentMap[asset.id] = 0;
         }
         //Investment in asset
-        if (date.isSame(asset.investment.startDate)) {
+        var onceEvent =
+            asset.investment.frequency == ExpenditureFrequency.Once &&
+                date.isSame(asset.investment.startDate);
+        var monthlyEvent =
+            asset.investment.frequency == ExpenditureFrequency.Monthly &&
+                date.date == asset.investment.startDate.date &&
+                date.isBefore(asset.investment.endDate);
+        var yearlyEvent =
+            asset.investment.frequency == ExpenditureFrequency.Yearly &&
+                date.date == asset.investment.startDate.date &&
+                date.month == asset.investment.startDate.month &&
+                date.isBefore(asset.investment.endDate);
+
+        if (onceEvent || monthlyEvent || yearlyEvent) {
           assetTotalInvestmentMap[asset.id] =
               assetTotalInvestmentMap[asset.id]! + asset.investment.amount;
         }
@@ -215,6 +228,7 @@ class Simulator {
         assetTotalInvestmentMap.forEach((key, value) {
           totalInvestments += value;
         });
+        print('totalInvestments: $totalInvestments');
         var savingsBarColor = totalSavings >= 0 ? Colors.green : Colors.red;
         var assetsBarColor = totalInvestments >= 0 ? Colors.green : Colors.red;
 
