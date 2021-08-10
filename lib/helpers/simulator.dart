@@ -34,10 +34,9 @@ class Simulator {
     Jiffy simulationStartDate = Jiffy().startOf(Units.DAY);
     Jiffy simulationEndDate = Jiffy(simulationStartDate).add(years: 5);
     var totalSavings = 0;
-    var totalInvestments = 0;
     var incomeAmountMap = <int, int>{};
     var expenditureAmountMap = <int, int>{};
-    var assetInvestmentMap = <int, int>{};
+    var assetTotalInvestmentMap = <int, int>{};
     var statementList = <StatementEntry>[];
     List<BarChartGroupData> savingsBarGroupList = [];
     List<BarChartGroupData> assetsBarGroupList = [];
@@ -77,7 +76,7 @@ class Simulator {
         }
 
         //Income year completed
-        if (date.isBetween(income.startDate, income.endDate) &&
+        if (date.isSameOrBefore(income.endDate) &&
             date.date == income.startDate.date &&
             date.month == income.startDate.month &&
             date.year != income.startDate.year &&
@@ -94,7 +93,7 @@ class Simulator {
             message: income.name +
                 ': Appreciated by: ' +
                 yearlyAppreciation.toString(),
-            details: describeEnum(income.frequency.toString()),
+            details: 'Yearly',
             balance: totalSavings,
           ));
         }
@@ -133,7 +132,7 @@ class Simulator {
         }
 
         //Expenditure year completed
-        if (date.isBetween(expenditure.startDate, expenditure.endDate) &&
+        if (date.isSameOrBefore(expenditure.endDate) &&
             date.date == expenditure.startDate.date &&
             date.month == expenditure.startDate.month &&
             date.year != expenditure.startDate.year &&
@@ -150,7 +149,7 @@ class Simulator {
             message: expenditure.name +
                 ': Appreciated by: ' +
                 yearlyAppreciation.toString(),
-            details: describeEnum(expenditure.frequency.toString()),
+            details: 'Yearly',
             balance: totalSavings,
           ));
         }
@@ -158,47 +157,44 @@ class Simulator {
 
       //******************** ASSET ********************//
       assetList.forEach((asset) {
-        //Storing amount in another variable so as to not modify the original object
-        if (!assetInvestmentMap.containsKey(asset.id)) {
-          assetInvestmentMap[asset.id] = asset.investment.amount;
+        //Initialize total asset investment if not present
+        if (!assetTotalInvestmentMap.containsKey(asset.id)) {
+          assetTotalInvestmentMap[asset.id] = 0;
+        }
+        //Investment in asset
+        if (date.isSame(asset.investment.startDate)) {
+          assetTotalInvestmentMap[asset.id] =
+              assetTotalInvestmentMap[asset.id]! + asset.investment.amount;
         }
 
-        //Asset created
-        if (date.isSame(asset.startDate)) {
-          print('${date.format("dd-MM-yyy")} is same');
-          totalInvestments += assetInvestmentMap[asset.id]!;
-        }
-
-        //Asset Investment year completed
-        if (date.isBetween(asset.startDate, asset.endDate) &&
+        //Asset year completed
+        if (date.isSameOrBefore(asset.endDate) &&
             date.date == asset.startDate.date &&
             date.month == asset.startDate.month &&
             date.year != asset.startDate.year &&
             asset.yearlyAppreciationPercentage != 0) {
-          int yearlyAppreciation = (assetInvestmentMap[asset.id]! *
+          int yearlyAppreciation = (assetTotalInvestmentMap[asset.id]! *
               asset.yearlyAppreciationPercentage ~/
               100);
-          assetInvestmentMap[asset.id] =
-              assetInvestmentMap[asset.id]! + yearlyAppreciation;
-          //totalInvestments += assetInvestmentMap[asset.id]!;
+
+          assetTotalInvestmentMap[asset.id] =
+              assetTotalInvestmentMap[asset.id]! + yearlyAppreciation;
+
           statementList.add(StatementEntry(
             date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Credit,
-            message: asset.investment.name +
-                ': Appreciated by: ' +
-                yearlyAppreciation.toString(),
-            details: describeEnum(asset.investment.frequency.toString()),
+            message: asset.name + ': Profit: ' + yearlyAppreciation.toString(),
+            details: 'Yearly',
             balance: totalSavings,
           ));
         }
 
         //Asset end date reached
         if (date.isSame(asset.endDate)) {
-          var assetValue = assetInvestmentMap[asset.id]!;
+          var assetValue = assetTotalInvestmentMap[asset.id]!;
           totalSavings += assetValue;
-          totalInvestments -= assetValue;
-          assetInvestmentMap[asset.id] = 0;
+          assetTotalInvestmentMap[asset.id] = 0;
           statementList.add(StatementEntry(
             date: date.clone(),
             amount: assetValue,
@@ -214,6 +210,11 @@ class Simulator {
       if (date.date == simulationStartDate.date &&
           date.month == simulationStartDate.month &&
           date.year != simulationStartDate.year) {
+        //Calculate total investments by checking current value of each asset
+        var totalInvestments = 0;
+        assetTotalInvestmentMap.forEach((key, value) {
+          totalInvestments += value;
+        });
         var savingsBarColor = totalSavings >= 0 ? Colors.green : Colors.red;
         var assetsBarColor = totalInvestments >= 0 ? Colors.green : Colors.red;
 
