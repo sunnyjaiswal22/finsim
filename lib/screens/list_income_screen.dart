@@ -77,10 +77,33 @@ class _ListIncomeState extends State<ListIncomeScreen> {
                                 IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () {
-                                    setState(() {
-                                      var selectedIncome = _incomeList[index];
-                                      incomeModel.delete(selectedIncome.id);
-                                    });
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: Text('Delete this item?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: Text('No'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  var selectedIncome =
+                                                      _incomeList[index];
+                                                  incomeModel.delete(
+                                                      selectedIncome.id);
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Yes'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
                                 )
                               else

@@ -19,7 +19,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
   Asset asset = Asset();
   @override
   Widget build(BuildContext context) {
-    final initialDate = Jiffy().startOf(Units.MONTH);
+    final initialDate = Jiffy().startOf(Units.DAY);
 
     Future<void> _selectStartDate(
       BuildContext context,

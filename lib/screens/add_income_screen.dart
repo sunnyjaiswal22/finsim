@@ -40,7 +40,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
         income.name = asset.name;
       }
     }
-    final initialDate = Jiffy().startOf(Units.MONTH);
+    final initialDate = Jiffy().startOf(Units.DAY);
 
     Future<void> _selectStartDate(
       BuildContext context,

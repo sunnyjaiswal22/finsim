@@ -28,7 +28,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
     arguments = arguments as Map<String, dynamic>;
     var isBlankStart = arguments['isBlankStart'];
 
-    final initialDate = Jiffy().startOf(Units.MONTH);
+    final initialDate = Jiffy().startOf(Units.DAY);
 
     Future<void> _selectStartDate(
       BuildContext context,

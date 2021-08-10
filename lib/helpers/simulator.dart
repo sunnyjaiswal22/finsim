@@ -275,9 +275,7 @@ class Simulator {
         assetsBarGroupList.add(assetsBarChartGroupData);
       }
     }
-    // statement.forEach((log) {
-    //   print(log);
-    // });
+
     var result = {
       'savings': savingsBarGroupList,
       'assets': assetsBarGroupList,
