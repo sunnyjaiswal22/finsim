@@ -48,7 +48,7 @@ class Asset {
     a.endDate = Jiffy(map['endDate']);
     a.yearlyAppreciationPercentage = map['yearlyAppreciationPercentage'];
     a.generatesIncome = map['generatesIncome'] == 1 ? true : false;
-    //Investment and income already set and mapped
+    //Investment (expenditure) and income already set and mapped
     return a;
   }
 

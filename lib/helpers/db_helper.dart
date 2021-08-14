@@ -1,6 +1,7 @@
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
+import 'package:finsim/models/liability.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 
@@ -26,7 +27,8 @@ class DBHelper {
                   yearlyAppreciationPercentage INTEGER, 
                   startDate TEXT, 
                   endDate TEXT, 
-                  belongsToAsset INTEGER);''');
+                  belongsToAsset INTEGER,
+                  belongsToLiability INTEGER);''');
     await db.execute('''CREATE TABLE IF NOT EXISTS asset (
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
@@ -38,6 +40,15 @@ class DBHelper {
                   income_id INTEGER, 
                   FOREIGN KEY(investment_id) REFERENCES expenditure(id), 
                   FOREIGN KEY(income_id) REFERENCES income(id));''');
+    await db.execute('''CREATE TABLE IF NOT EXISTS liability (
+                  id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                  name TEXT, 
+                  amount INTEGER, 
+                  rateOfInterest INTEGER, 
+                  startDate TEXT, 
+                  endDate TEXT, 
+                  emi_id INTEGER, 
+                  FOREIGN KEY(emi_id) REFERENCES expenditure(id));''');
     return;
   }
 
@@ -106,16 +117,25 @@ class DBHelper {
     });
   }
 
-  static Future<int> deleteExpenditure(int id, [sql.Transaction? txn]) async {
-    var db = txn != null ? txn : await getDatabase();
+  static Future<int> saveLiability(Liability liability) async {
+    final db = await getDatabase();
 
-    return await db.delete('expenditure', where: 'id = ?', whereArgs: [id]);
+    return await db.transaction((txn) async {
+      liability.emi.id = await saveExpenditure(liability.emi, txn);
+      return await insert('liability', liability.toMap(), txn);
+    });
   }
 
   static Future<int> deleteIncome(int id, [sql.Transaction? txn]) async {
     final db = txn != null ? txn : await getDatabase();
 
     return await db.delete('income', where: 'id = ?', whereArgs: [id]);
+  }
+
+  static Future<int> deleteExpenditure(int id, [sql.Transaction? txn]) async {
+    var db = txn != null ? txn : await getDatabase();
+
+    return await db.delete('expenditure', where: 'id = ?', whereArgs: [id]);
   }
 
   static Future<int> deleteAsset(Asset asset) async {
@@ -128,6 +148,17 @@ class DBHelper {
       if (asset.income.id != 0) {
         await deleteIncome(asset.income.id, txn);
       }
+      return deleteStatus;
+    });
+  }
+
+  static Future<int> deleteLiability(Liability liability) async {
+    final db = await getDatabase();
+
+    return await db.transaction((txn) async {
+      var deleteStatus = await txn
+          .delete('liability', where: 'id = ?', whereArgs: [liability.id]);
+      await deleteExpenditure(liability.emi.id, txn);
       return deleteStatus;
     });
   }
@@ -156,18 +187,6 @@ class DBHelper {
     return list;
   }
 
-  static Future<Expenditure> getExpenditure(int id) async {
-    final mapList = await fetchWhere('expenditure', '"id" = ?', [id]);
-    final map = mapList[0];
-    return Expenditure.fromMap(map);
-  }
-
-  static Future<Income> getIncome(int id) async {
-    final mapList = await fetchWhere('income', '"id" = ?', [id]);
-    final map = mapList[0];
-    return Income.fromMap(map);
-  }
-
   static Future<List<Asset>> getAssets() async {
     final db = await getDatabase();
 
@@ -189,5 +208,34 @@ class DBHelper {
     }
 
     return list;
+  }
+
+  static Future<List<Liability>> getLiabilities() async {
+    final db = await getDatabase();
+
+    final mapList = await db.query('liability');
+    List<Liability> list = [];
+    for (var map in mapList) {
+      var liability = Liability.fromMap(map);
+      list.add(liability);
+      //Get Expenditure data
+      liability.emi = await getExpenditure(
+        int.parse(map['emi_id'].toString()),
+      );
+    }
+
+    return list;
+  }
+
+  static Future<Expenditure> getExpenditure(int id) async {
+    final mapList = await fetchWhere('expenditure', '"id" = ?', [id]);
+    final map = mapList[0];
+    return Expenditure.fromMap(map);
+  }
+
+  static Future<Income> getIncome(int id) async {
+    final mapList = await fetchWhere('income', '"id" = ?', [id]);
+    final map = mapList[0];
+    return Income.fromMap(map);
   }
 }

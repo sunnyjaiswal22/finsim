@@ -12,6 +12,7 @@ class Expenditure {
   Jiffy startDate = Jiffy().startOf(Units.DAY);
   Jiffy endDate = Jiffy().startOf(Units.DAY).add(years: 100);
   bool belongsToAsset = false;
+  bool belongsToLiability = false;
 
   Map<String, Object> toMap() {
     return {
@@ -24,6 +25,7 @@ class Expenditure {
       'startDate': this.startDate.format(), //ISO 8601 format
       'endDate': this.endDate.format(), //ISO 8601 format
       'belongsToAsset': belongsToAsset ? 1 : 0,
+      'belongsToLiability': belongsToLiability ? 1 : 0,
     };
   }
 
@@ -37,6 +39,7 @@ class Expenditure {
     e.startDate = Jiffy(map['startDate']);
     e.endDate = Jiffy(map['endDate']);
     e.belongsToAsset = map['belongsToAsset'] == 1 ? true : false;
+    e.belongsToLiability = map['belongsToLiability'] == 1 ? true : false;
 
     return e;
   }
@@ -51,7 +54,8 @@ class Expenditure {
       o.yearlyAppreciationPercentage == yearlyAppreciationPercentage &&
       o.startDate.dateTime == startDate.dateTime &&
       o.endDate.dateTime == endDate.dateTime &&
-      o.belongsToAsset == belongsToAsset;
+      o.belongsToAsset == belongsToAsset &&
+      o.belongsToLiability == belongsToLiability;
 
   @override
   int get hashCode => hashValues(
@@ -63,5 +67,6 @@ class Expenditure {
         startDate.dateTime,
         endDate.dateTime,
         belongsToAsset,
+        belongsToLiability,
       );
 }
