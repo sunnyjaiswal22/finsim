@@ -1,6 +1,9 @@
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
+import 'package:finsim/models/liability.dart';
+import 'package:finsim/models/liability_model.dart';
 import 'package:finsim/screens/add_asset_screen.dart';
+import 'package:finsim/screens/add_liability_screen.dart';
 import 'package:finsim/widgets/empty_list_info.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:finsim/widgets/yearly_appreciation_info.dart';
@@ -19,8 +22,8 @@ class ListLiabilityScreen extends StatefulWidget {
 class _ListLiabilityState extends State<ListLiabilityScreen> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<AssetModel>(
-      builder: (context, assetModel, _) {
+    return Consumer<LiabilityModel>(
+      builder: (context, liabilityModel, _) {
         return Scaffold(
           appBar: AppBar(
             title: Center(
@@ -29,26 +32,26 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
             actions: [
               IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AddAssetScreen.routeName);
+                  Navigator.pushNamed(context, AddLiabilityScreen.routeName);
                 },
                 icon: Icon(Icons.add),
               ),
             ],
           ),
           drawer: NavigationDrawer(),
-          body: FutureBuilder<List<Asset>>(
-              future: assetModel.items,
+          body: FutureBuilder<List<Liability>>(
+              future: liabilityModel.items,
               builder: (context, snapshot) {
                 if (snapshot.connectionState != ConnectionState.done) {
                   return Center(child: CircularProgressIndicator());
                 }
-                final _assetList = snapshot.data!;
-                return _assetList.length == 0
+                final _liabilityList = snapshot.data!;
+                return _liabilityList.length == 0
                     ? EmptyListInfo()
                     : ListView.builder(
-                        itemCount: _assetList.length,
+                        itemCount: _liabilityList.length,
                         itemBuilder: (BuildContext context, int index) {
-                          var item = _assetList[index];
+                          var item = _liabilityList[index];
                           return ListTile(
                             key: ValueKey(item.id),
                             leading: Icon(Icons.account_balance),
@@ -56,7 +59,7 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
                               children: [
                                 Text(item.name),
                                 YearlyAppreciationInfo(
-                                  percentage: item.yearlyAppreciationPercentage,
+                                  percentage: item.rateOfInterest,
                                   label: 'p. a.',
                                 )
                               ],
@@ -67,19 +70,18 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
                                 Text(' - ${item.endDate.format("MMM yyyy")} '),
                                 Text('Investment ' +
                                     describeEnum(
-                                        item.investment.frequency.toString()) +
-                                    (item.generatesIncome ? '' : '')),
+                                        item.emi.frequency.toString())),
                               ],
                             ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(item.investment.amount.toString()),
+                                Text(item.emi.amount.toString()),
                                 IconButton(
                                   onPressed: () {
                                     setState(() {
                                       var selectedAsset = item;
-                                      assetModel.delete(selectedAsset);
+                                      liabilityModel.delete(selectedAsset);
                                     });
                                   },
                                   icon: Icon(Icons.delete),

@@ -1,6 +1,7 @@
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/asset_model.dart';
+import 'package:finsim/models/liability_model.dart';
 import 'package:finsim/screens/add_asset_screen.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
 import 'package:finsim/screens/add_income_screen.dart';
@@ -27,6 +28,9 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (context) => AssetModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => LiabilityModel(),
         ),
       ],
       child: MyApp(),

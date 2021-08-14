@@ -159,6 +159,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                           int.parse(value);
                     },
                   ),
+                SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -169,26 +170,27 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                         Text('${expenditure.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
-                    TextButton(
+                    IconButton(
                       onPressed: () => _selectStartDate(context),
-                      child: Text('Select date'),
+                      icon: Icon(Icons.today, size: 30),
                     ),
                   ],
                 ),
+                SizedBox(height: 10),
                 if (expenditure.frequency != ExpenditureFrequency.Once)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          Text('End Date '),
+                          Text('End Date   '),
                           SizedBox(width: 20),
                           Text('${expenditure.endDate.format("dd-MM-yyyy")}'),
                         ],
                       ),
-                      TextButton(
+                      IconButton(
                         onPressed: () => _selectEndDate(context),
-                        child: Text('Select date'),
+                        icon: Icon(Icons.today, size: 30),
                       ),
                     ],
                   ),

@@ -160,6 +160,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     Text('Yearly'),
                   ],
                 ),
+                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -170,12 +171,13 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                         Text('${income.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
-                    TextButton(
+                    IconButton(
                       onPressed: () => _selectStartDate(context),
-                      child: Text('Select date'),
+                      icon: Icon(Icons.today, size: 30),
                     ),
                   ],
                 ),
+                SizedBox(height: 10),
                 if (income.frequency != IncomeFrequency.Once)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -187,9 +189,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                           Text('${income.endDate.format("dd-MM-yyyy")}'),
                         ],
                       ),
-                      TextButton(
+                      IconButton(
                         onPressed: () => _selectEndDate(context),
-                        child: Text('Select date'),
+                        icon: Icon(Icons.today, size: 30),
                       ),
                     ],
                   ),

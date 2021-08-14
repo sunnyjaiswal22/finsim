@@ -87,7 +87,7 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                     liability.rateOfInterest = int.parse(value);
                   },
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -98,12 +98,13 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                         Text('${liability.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
-                    TextButton(
+                    IconButton(
                       onPressed: () => _selectStartDate(context),
-                      child: Text('Select date'),
+                      icon: Icon(Icons.today, size: 30),
                     ),
                   ],
                 ),
+                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -114,9 +115,9 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                         Text('${liability.endDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
-                    TextButton(
+                    IconButton(
                       onPressed: () => _selectEndDate(context),
-                      child: Text('Select date'),
+                      icon: Icon(Icons.today, size: 30),
                     ),
                   ],
                 ),

@@ -176,27 +176,28 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                             '${asset.investment.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
-                    TextButton(
+                    IconButton(
                       onPressed: () => _selectStartDate(context),
-                      child: Text('Select date'),
+                      icon: Icon(Icons.today, size: 30),
                     ),
                   ],
                 ),
+                SizedBox(height: 10),
                 if (asset.investment.frequency != ExpenditureFrequency.Once)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          Text('End Date '),
+                          Text('End Date   '),
                           SizedBox(width: 20),
                           Text(
                               '${asset.investment.endDate.format("dd-MM-yyyy")}'),
                         ],
                       ),
-                      TextButton(
+                      IconButton(
                         onPressed: () => _selectEndDate(context),
-                        child: Text('Select date'),
+                        icon: Icon(Icons.today, size: 30),
                       ),
                     ],
                   ),
