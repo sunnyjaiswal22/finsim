@@ -1,10 +1,10 @@
-import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/liability.dart';
-import 'package:finsim/screens/add_investment_screen.dart';
+import 'package:finsim/models/liability_model.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:provider/provider.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -38,22 +38,6 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
       }
     }
 
-    Future<void> _selectEndDate(
-      BuildContext context,
-    ) async {
-      final DateTime? picked = await showDatePicker(
-          context: context,
-          initialDate: initialDate.dateTime,
-          firstDate: initialDate.clone().subtract(years: 10).dateTime,
-          lastDate: initialDate.clone().add(years: 10).dateTime);
-      if (picked != null && !Jiffy(picked).isSame(liability.endDate)) {
-        setState(() {
-          liability.endDate = Jiffy(picked);
-          liability.emi.endDate = Jiffy(picked);
-        });
-      }
-    }
-
     return Scaffold(
       appBar: FinSimAppBar.appbar(title: 'Add Liability'),
       drawer: NavigationDrawer(),
@@ -79,12 +63,37 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                     liability.emi.name = 'Liability: ' + value;
                   },
                 ),
+                SizedBox(height: 10),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Amount',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter amount";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    liability.amount = value.isEmpty ? 0 : int.parse(value);
+                  },
+                ),
+                SizedBox(height: 10),
                 TextFormField(
                   decoration:
                       const InputDecoration(labelText: 'Rate of Interest (%)'),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
-                    liability.rateOfInterest = int.parse(value);
+                    liability.rateOfInterest = double.parse(value);
+                  },
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  decoration:
+                      const InputDecoration(labelText: 'Duration (years)'),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    liability.durationInYears = int.parse(value);
                   },
                 ),
                 SizedBox(height: 20),
@@ -104,33 +113,15 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text('End Date   '),
-                        SizedBox(width: 20),
-                        Text('${liability.endDate.format("dd-MM-yyyy")}'),
-                      ],
-                    ),
-                    IconButton(
-                      onPressed: () => _selectEndDate(context),
-                      icon: Icon(Icons.today, size: 30),
-                    ),
-                  ],
-                ),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          AddLiabilityScreen.routeName,
-                        );
+                        Provider.of<LiabilityModel>(context, listen: false)
+                            .add(liability)
+                            .then((_) => Navigator.pop(context));
                       },
                       child: Text('Submit'),
                     ),

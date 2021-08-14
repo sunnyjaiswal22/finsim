@@ -8,7 +8,7 @@ class YearlyAppreciationInfo extends StatelessWidget {
     this.reverseColors = false,
   }) : super(key: key);
 
-  final int percentage;
+  final double percentage;
   final String label;
   final bool reverseColors;
 

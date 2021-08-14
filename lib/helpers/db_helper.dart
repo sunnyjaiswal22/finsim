@@ -15,7 +15,7 @@ class DBHelper {
                   name TEXT, 
                   frequency INTEGER, 
                   amount INTEGER, 
-                  yearlyAppreciationPercentage INTEGER, 
+                  yearlyAppreciationPercentage REAL, 
                   startDate TEXT, 
                   endDate TEXT, 
                   belongsToAsset INTEGER);''');
@@ -24,7 +24,7 @@ class DBHelper {
                   name TEXT, 
                   frequency INTEGER, 
                   amount INTEGER, 
-                  yearlyAppreciationPercentage INTEGER, 
+                  yearlyAppreciationPercentage REAL, 
                   startDate TEXT, 
                   endDate TEXT, 
                   belongsToAsset INTEGER,
@@ -34,7 +34,7 @@ class DBHelper {
                   name TEXT, 
                   startDate TEXT, 
                   endDate TEXT, 
-                  yearlyAppreciationPercentage INTEGER, 
+                  yearlyAppreciationPercentage REAL, 
                   investment_id INTEGER, 
                   generatesIncome INTEGER, 
                   income_id INTEGER, 
@@ -44,9 +44,9 @@ class DBHelper {
                   id INTEGER PRIMARY KEY AUTOINCREMENT, 
                   name TEXT, 
                   amount INTEGER, 
-                  rateOfInterest INTEGER, 
+                  rateOfInterest REAL, 
+                  durationInYears INTEGER, 
                   startDate TEXT, 
-                  endDate TEXT, 
                   emi_id INTEGER, 
                   FOREIGN KEY(emi_id) REFERENCES expenditure(id));''');
     return;

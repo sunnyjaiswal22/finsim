@@ -7,9 +7,9 @@ class Liability {
   int id = 0;
   String name = '';
   int amount = 0;
-  int rateOfInterest = 0;
+  double rateOfInterest = 0;
+  int durationInYears = 0;
   Jiffy startDate = Jiffy().startOf(Units.DAY);
-  Jiffy endDate = Jiffy().startOf(Units.DAY).add(years: 5);
   Expenditure emi = Expenditure();
 
   Liability() {
@@ -22,9 +22,9 @@ class Liability {
       //Not passing id in Map so that Sqflite will auto generate new id
       'name': this.name,
       'amount': this.amount,
-      'interestRate': this.rateOfInterest,
+      'rateOfInterest': this.rateOfInterest,
+      'durationInYears': this.durationInYears,
       'startDate': this.startDate.format(), //ISO 8601 format
-      'endDate': this.endDate.format(), //ISO 8601 format
       'emi_id': this.emi.id,
     };
 
@@ -37,8 +37,8 @@ class Liability {
     l.name = map['name'];
     l.amount = map['amount'];
     l.rateOfInterest = map['rateOfInterest'];
+    l.durationInYears = map['durationInYears'];
     l.startDate = Jiffy(map['startDate']);
-    l.endDate = Jiffy(map['endDate']);
 
     //EMI (expenditure) already set and mapped
     return l;
@@ -51,8 +51,8 @@ class Liability {
       o.name == name &&
       o.amount == amount &&
       o.rateOfInterest == rateOfInterest &&
+      o.durationInYears == durationInYears &&
       o.startDate.dateTime == startDate.dateTime &&
-      o.endDate.dateTime == endDate.dateTime &&
       o.emi == emi;
 
   @override
@@ -61,8 +61,8 @@ class Liability {
         name,
         amount,
         rateOfInterest,
+        durationInYears,
         startDate.dateTime,
-        endDate.dateTime,
         emi,
       );
 }

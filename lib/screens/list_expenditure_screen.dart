@@ -55,6 +55,7 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
                           key: ValueKey(_expenditureList[index].id),
+                          leading: Icon(Icons.payments, color: Colors.red),
                           title: Text(_expenditureList[index].name),
                           subtitle: Row(
                             children: [

@@ -55,6 +55,7 @@ class _ListIncomeState extends State<ListIncomeScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
                           key: ValueKey(_incomeList[index].id),
+                          leading: Icon(Icons.payments, color: Colors.green),
                           title: Text(_incomeList[index].name),
                           subtitle: Row(
                             children: [

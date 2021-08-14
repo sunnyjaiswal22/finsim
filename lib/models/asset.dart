@@ -9,7 +9,7 @@ class Asset {
   String name = '';
   Jiffy startDate = Jiffy().startOf(Units.DAY);
   Jiffy endDate = Jiffy().startOf(Units.DAY).add(years: 1);
-  int yearlyAppreciationPercentage = 0;
+  double yearlyAppreciationPercentage = 0;
   Expenditure investment = Expenditure();
   bool generatesIncome = false;
   Income income = Income();

@@ -202,7 +202,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
-                      income.yearlyAppreciationPercentage = int.parse(value);
+                      income.yearlyAppreciationPercentage = double.parse(value);
                     },
                   ),
                 SizedBox(height: 20),

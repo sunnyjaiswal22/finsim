@@ -51,7 +51,10 @@ class _ListAssetState extends State<ListAssetScreen> {
                           var item = _assetList[index];
                           return ListTile(
                             key: ValueKey(item.id),
-                            leading: Icon(Icons.account_balance),
+                            leading: Icon(
+                              Icons.account_balance,
+                              color: Colors.green,
+                            ),
                             title: Row(
                               children: [
                                 Text(item.name),

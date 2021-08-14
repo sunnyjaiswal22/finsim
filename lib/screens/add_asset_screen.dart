@@ -86,7 +86,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                       const InputDecoration(labelText: 'Yearly Profit (%)'),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
-                    asset.yearlyAppreciationPercentage = int.parse(value);
+                    asset.yearlyAppreciationPercentage = double.parse(value);
                   },
                 ),
                 SizedBox(height: 10),

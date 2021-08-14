@@ -1,8 +1,5 @@
-import 'package:finsim/models/asset.dart';
-import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/models/liability.dart';
 import 'package:finsim/models/liability_model.dart';
-import 'package:finsim/screens/add_asset_screen.dart';
 import 'package:finsim/screens/add_liability_screen.dart';
 import 'package:finsim/widgets/empty_list_info.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
@@ -54,23 +51,26 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
                           var item = _liabilityList[index];
                           return ListTile(
                             key: ValueKey(item.id),
-                            leading: Icon(Icons.account_balance),
+                            leading: Icon(
+                              Icons.account_balance,
+                              color: Colors.red,
+                            ),
                             title: Row(
                               children: [
                                 Text(item.name),
                                 YearlyAppreciationInfo(
                                   percentage: item.rateOfInterest,
                                   label: 'p. a.',
+                                  reverseColors: true,
                                 )
                               ],
                             ),
                             subtitle: Wrap(
                               children: [
+                                Text('${item.durationInYears}'),
                                 Text('${item.startDate.format("MMM yyyy")}'),
-                                Text(' - ${item.endDate.format("MMM yyyy")} '),
-                                Text('Investment ' +
-                                    describeEnum(
-                                        item.emi.frequency.toString())),
+                                // Text('EMI ' +
+                                //     describeEnum(item.emi.amount.toString())),
                               ],
                             ),
                             trailing: Row(

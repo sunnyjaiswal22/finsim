@@ -156,7 +156,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       expenditure.yearlyAppreciationPercentage =
-                          int.parse(value);
+                          double.parse(value);
                     },
                   ),
                 SizedBox(height: 20),

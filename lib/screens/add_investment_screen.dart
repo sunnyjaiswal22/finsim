@@ -161,7 +161,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       asset.investment.yearlyAppreciationPercentage =
-                          int.parse(value);
+                          double.parse(value);
                     },
                   ),
                 SizedBox(height: 20),
