@@ -35,11 +35,12 @@ class Simulator {
     log("Simulating ...");
     Jiffy simulationStartDate = Jiffy().startOf(Units.DAY);
     Jiffy simulationEndDate = Jiffy(simulationStartDate).add(years: 5);
-    var totalSavings = 0;
-    var incomeAmountMap = <int, int>{};
-    var expenditureAmountMap = <int, int>{};
-    var assetInvestmentMap = <int, int>{};
-    var liabilityAmountMap = <int, int>{};
+    var totalSavings = 0.0;
+    var incomeAmountMap = <int, double>{};
+    var expenditureAmountMap = <int, double>{};
+    var assetInvestmentMap = <int, double>{};
+    var liabilityAmountMap = <int, double>{};
+    var liabilityExpenditureLastDebitMap = <int, Map<String, double>>{};
     var statementList = <StatementEntry>[];
     List<BarChartGroupData> savingsBarGroupList = [];
     List<BarChartGroupData> assetsBarGroupList = [];
@@ -53,7 +54,7 @@ class Simulator {
       incomeList.forEach((income) {
         //Storing amount in another variable so as to not modify the original object
         if (!incomeAmountMap.containsKey(income.id)) {
-          incomeAmountMap[income.id] = income.amount;
+          incomeAmountMap[income.id] = income.amount.toDouble();
         }
         var onceEvent = income.frequency == IncomeFrequency.Once &&
             date.isSame(income.startDate);
@@ -70,11 +71,11 @@ class Simulator {
           statementList.add(
             StatementEntry(
               date: date.clone(),
-              amount: incomeAmountMap[income.id]!,
+              amount: incomeAmountMap[income.id]!.round(),
               transactionType: TransactionType.Credit,
               message: income.name,
               details: describeEnum(income.frequency.toString()),
-              balance: totalSavings,
+              balance: totalSavings.round(),
             ),
           );
         }
@@ -85,8 +86,8 @@ class Simulator {
             date.month == income.startDate.month &&
             date.year != income.startDate.year &&
             income.yearlyAppreciationPercentage != 0) {
-          int yearlyAppreciation = (incomeAmountMap[income.id]! *
-              income.yearlyAppreciationPercentage ~/
+          var yearlyAppreciation = (incomeAmountMap[income.id]! *
+              income.yearlyAppreciationPercentage /
               100);
           incomeAmountMap[income.id] =
               incomeAmountMap[income.id]! + yearlyAppreciation;
@@ -98,63 +99,7 @@ class Simulator {
                 ': Appreciated by: ' +
                 yearlyAppreciation.toString(),
             details: 'Yearly',
-            balance: totalSavings,
-          ));
-        }
-      });
-
-      //******************** EXPENDITURE ********************//
-      expenditureList.forEach((expenditure) {
-        //Storing amount in another variable so as to not modify the original object
-        if (!expenditureAmountMap.containsKey(expenditure.id)) {
-          expenditureAmountMap[expenditure.id] = expenditure.amount;
-        }
-        var onceEvent = expenditure.frequency == ExpenditureFrequency.Once &&
-            date.isSame(expenditure.startDate);
-        var monthlyEvent =
-            expenditure.frequency == ExpenditureFrequency.Monthly &&
-                date.date == expenditure.startDate.date &&
-                date.isBefore(expenditure.endDate);
-        var yearlyEvent =
-            expenditure.frequency == ExpenditureFrequency.Yearly &&
-                date.date == expenditure.startDate.date &&
-                date.month == expenditure.startDate.month &&
-                date.isBefore(expenditure.endDate);
-
-        if (onceEvent || monthlyEvent || yearlyEvent) {
-          totalSavings -= expenditureAmountMap[expenditure.id]!;
-          statementList.add(
-            StatementEntry(
-              date: date.clone(),
-              amount: expenditureAmountMap[expenditure.id]!,
-              transactionType: TransactionType.Debit,
-              message: expenditure.name,
-              details: describeEnum(expenditure.frequency.toString()),
-              balance: totalSavings,
-            ),
-          );
-        }
-
-        //Expenditure year completed
-        if (date.isSameOrBefore(expenditure.endDate) &&
-            date.date == expenditure.startDate.date &&
-            date.month == expenditure.startDate.month &&
-            date.year != expenditure.startDate.year &&
-            expenditure.yearlyAppreciationPercentage != 0) {
-          int yearlyAppreciation = (expenditureAmountMap[expenditure.id]! *
-              expenditure.yearlyAppreciationPercentage ~/
-              100);
-          expenditureAmountMap[expenditure.id] =
-              expenditureAmountMap[expenditure.id]! + yearlyAppreciation;
-          statementList.add(StatementEntry(
-            date: date.clone(),
-            amount: 0,
-            transactionType: TransactionType.Debit,
-            message: expenditure.name +
-                ': Appreciated by: ' +
-                yearlyAppreciation.toString(),
-            details: 'Yearly',
-            balance: totalSavings,
+            balance: totalSavings.round(),
           ));
         }
       });
@@ -190,8 +135,8 @@ class Simulator {
             date.month == asset.startDate.month &&
             date.year != asset.startDate.year &&
             asset.yearlyAppreciationPercentage != 0) {
-          int yearlyAppreciation = (assetInvestmentMap[asset.id]! *
-              asset.yearlyAppreciationPercentage ~/
+          var yearlyAppreciation = (assetInvestmentMap[asset.id]! *
+              asset.yearlyAppreciationPercentage /
               100);
 
           assetInvestmentMap[asset.id] =
@@ -203,7 +148,7 @@ class Simulator {
             transactionType: TransactionType.Credit,
             message: asset.name + ': Profit: ' + yearlyAppreciation.toString(),
             details: 'Yearly',
-            balance: totalSavings,
+            balance: totalSavings.round(),
           ));
         }
 
@@ -214,11 +159,11 @@ class Simulator {
           assetInvestmentMap[asset.id] = 0;
           statementList.add(StatementEntry(
             date: date.clone(),
-            amount: assetValue,
+            amount: assetValue.round(),
             transactionType: TransactionType.Credit,
             message: asset.name + ': Diluted',
             details: describeEnum(asset.investment.frequency.toString()),
-            balance: totalSavings,
+            balance: totalSavings.round(),
           ));
         }
       });
@@ -227,7 +172,7 @@ class Simulator {
       liabilitiesList.forEach((liability) {
         //Initialize total asset investment if not present
         if (!liabilityAmountMap.containsKey(liability.id)) {
-          liabilityAmountMap[liability.id] = liability.amount;
+          liabilityAmountMap[liability.id] = liability.amount.toDouble();
         }
 
         var onceEvent = liability.emi.frequency == ExpenditureFrequency.Once &&
@@ -247,10 +192,103 @@ class Simulator {
               liability.rateOfInterest /
               1200;
           var emiPricipalAmount = liability.emi.amount - emiInterestAmount;
-          print(
-              'emiInterestAmount: $emiInterestAmount, emiPricipalAmount: $emiPricipalAmount');
           liabilityAmountMap[liability.id] =
-              (liabilityAmountMap[liability.id]! - emiPricipalAmount).toInt();
+              liabilityAmountMap[liability.id]! - emiPricipalAmount;
+
+          liabilityExpenditureLastDebitMap[liability.emi.id] = {
+            'emiInterestAmount': emiInterestAmount,
+            'emiPricipalAmount': emiPricipalAmount,
+            'remainingLiability': liabilityAmountMap[liability.id]!,
+          };
+        }
+
+        //Liability ended
+        if (date.isSame(liability.emi.endDate)) {
+          //Setting liability amount to 0 to avoid printing very small remaining loan amount
+          liabilityAmountMap[liability.id] = 0;
+          statementList.add(StatementEntry(
+            date: date.clone(),
+            amount: 0,
+            transactionType: TransactionType.Credit,
+            message: liability.name + ': Ended',
+            details: describeEnum(liability.emi.frequency.toString()),
+            balance: totalSavings.round(),
+          ));
+        }
+      });
+
+      //******************** EXPENDITURE ********************//
+      expenditureList.forEach((expenditure) {
+        //Storing amount in another variable so as to not modify the original object
+        if (!expenditureAmountMap.containsKey(expenditure.id)) {
+          expenditureAmountMap[expenditure.id] = expenditure.amount.toDouble();
+        }
+        var onceEvent = expenditure.frequency == ExpenditureFrequency.Once &&
+            date.isSame(expenditure.startDate);
+        var monthlyEvent =
+            expenditure.frequency == ExpenditureFrequency.Monthly &&
+                date.date == expenditure.startDate.date &&
+                date.isBefore(expenditure.endDate);
+        var yearlyEvent =
+            expenditure.frequency == ExpenditureFrequency.Yearly &&
+                date.date == expenditure.startDate.date &&
+                date.month == expenditure.startDate.month &&
+                date.isBefore(expenditure.endDate);
+
+        if (onceEvent || monthlyEvent || yearlyEvent) {
+          totalSavings -= expenditureAmountMap[expenditure.id]!;
+          var loanDetails = '';
+          if (expenditure.belongsToLiability) {
+            loanDetails = ' Interest: ' +
+                liabilityExpenditureLastDebitMap[expenditure.id]![
+                        'emiInterestAmount']!
+                    .round()
+                    .toString() +
+                ' Principal: ' +
+                liabilityExpenditureLastDebitMap[expenditure.id]![
+                        'emiPricipalAmount']!
+                    .round()
+                    .toString() +
+                ' Remaining Liability: ' +
+                liabilityExpenditureLastDebitMap[expenditure.id]![
+                        'remainingLiability']!
+                    .round()
+                    .toString();
+          }
+          statementList.add(
+            StatementEntry(
+              date: date.clone(),
+              amount: expenditureAmountMap[expenditure.id]!.round(),
+              transactionType: TransactionType.Debit,
+              message: expenditure.name,
+              details:
+                  describeEnum(expenditure.frequency.toString()) + loanDetails,
+              balance: totalSavings.round(),
+            ),
+          );
+        }
+
+        //Expenditure year completed
+        if (date.isSameOrBefore(expenditure.endDate) &&
+            date.date == expenditure.startDate.date &&
+            date.month == expenditure.startDate.month &&
+            date.year != expenditure.startDate.year &&
+            expenditure.yearlyAppreciationPercentage != 0) {
+          var yearlyAppreciation = (expenditureAmountMap[expenditure.id]! *
+              expenditure.yearlyAppreciationPercentage /
+              100);
+          expenditureAmountMap[expenditure.id] =
+              expenditureAmountMap[expenditure.id]! + yearlyAppreciation;
+          statementList.add(StatementEntry(
+            date: date.clone(),
+            amount: 0,
+            transactionType: TransactionType.Debit,
+            message: expenditure.name +
+                ': Appreciated by: ' +
+                yearlyAppreciation.toString(),
+            details: 'Yearly',
+            balance: totalSavings.round(),
+          ));
         }
       });
 
@@ -259,13 +297,13 @@ class Simulator {
           date.month == simulationStartDate.month &&
           date.year != simulationStartDate.year) {
         //Calculate total investments by checking current value of each asset
-        var totalInvestments = 0;
+        var totalInvestments = 0.0;
         assetInvestmentMap.forEach((key, value) {
           totalInvestments += value;
         });
 
         //Calculate total liabilities amount by checking current value of each liability
-        var totalLiabilities = 0;
+        var totalLiabilities = 0.0;
         liabilityAmountMap.forEach((key, value) {
           totalLiabilities += value;
         });

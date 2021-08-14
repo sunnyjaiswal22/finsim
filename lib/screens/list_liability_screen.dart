@@ -51,11 +51,12 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
                           var item = _liabilityList[index];
                           return ListTile(
                             key: ValueKey(item.id),
+                            isThreeLine: true,
                             leading: Icon(
                               Icons.account_balance,
                               color: Colors.red,
                             ),
-                            title: Row(
+                            title: Wrap(
                               children: [
                                 Text(item.name),
                                 YearlyAppreciationInfo(

@@ -55,18 +55,19 @@ class _ListIncomeState extends State<ListIncomeScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
                           key: ValueKey(_incomeList[index].id),
+                          isThreeLine: true,
                           leading: Icon(Icons.payments, color: Colors.green),
                           title: Text(_incomeList[index].name),
-                          subtitle: Row(
+                          subtitle: Wrap(
                             children: [
-                              Text(
-                                describeEnum(
-                                    _incomeList[index].frequency.toString()),
-                              ),
                               YearlyAppreciationInfo(
                                 percentage: _incomeList[index]
                                     .yearlyAppreciationPercentage,
                                 label: 'p. a.',
+                              ),
+                              Text(
+                                describeEnum(
+                                    _incomeList[index].frequency.toString()),
                               ),
                             ],
                           ),

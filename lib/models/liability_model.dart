@@ -16,6 +16,9 @@ class LiabilityModel extends ChangeNotifier {
     var ratio = onePlusRToPowerN / (onePlusRToPowerN - 1);
     l.emi.amount = (l.amount * monthlyRateOfInterest * ratio).toInt();
 
+    //Setting EMI end date
+    l.emi.endDate = l.emi.startDate.clone().add(years: l.durationInYears);
+
     //Saving
     await DBHelper.saveLiability(liability);
 

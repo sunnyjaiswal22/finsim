@@ -57,19 +57,20 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                         var item = _expenditureList[index];
                         return ListTile(
                           key: ValueKey(item.id),
+                          isThreeLine: true,
                           leading: Icon(Icons.payments, color: Colors.red),
                           title: Text(item.name),
-                          subtitle: Row(
+                          subtitle: Wrap(
                             children: [
-                              Text(
-                                describeEnum(
-                                  item.frequency.toString(),
-                                ),
-                              ),
                               YearlyAppreciationInfo(
                                 percentage: item.yearlyAppreciationPercentage,
                                 label: 'p. a.',
                                 reverseColors: true,
+                              ),
+                              Text(
+                                describeEnum(
+                                  item.frequency.toString(),
+                                ),
                               ),
                             ],
                           ),
