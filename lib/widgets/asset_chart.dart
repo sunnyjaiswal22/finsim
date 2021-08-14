@@ -5,6 +5,8 @@ import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
+import 'package:finsim/models/liability.dart';
+import 'package:finsim/models/liability_model.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -65,13 +67,15 @@ class _AssetChartState extends State<AssetChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<IncomeModel, ExpenditureModel, AssetModel>(
-      builder: (context, incomeModel, expenditureModel, assetModel, _) {
+    return Consumer4<IncomeModel, ExpenditureModel, AssetModel, LiabilityModel>(
+      builder: (context, incomeModel, expenditureModel, assetModel,
+          liabilityModel, _) {
         return FutureBuilder(
           future: Future.wait([
             incomeModel.items,
             expenditureModel.items,
             assetModel.items,
+            liabilityModel.items,
           ]),
           builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
@@ -83,10 +87,12 @@ class _AssetChartState extends State<AssetChart> {
             List<Income> incomeList = snapshot.data![0];
             List<Expenditure> expenditureList = snapshot.data![1];
             List<Asset> assetList = snapshot.data![2];
+            List<Liability> liabilityList = snapshot.data![3];
             final barChartGroupDataList = Simulator.simulate(
               incomeList,
               expenditureList,
               assetList,
+              liabilityList,
             )['assets']!;
             final horizontalGridInterval = getHorizontalGridInterval(
                 barChartGroupDataList as List<BarChartGroupData>);

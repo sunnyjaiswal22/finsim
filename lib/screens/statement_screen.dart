@@ -5,6 +5,8 @@ import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/income.dart';
+import 'package:finsim/models/liability.dart';
+import 'package:finsim/models/liability_model.dart';
 import 'package:finsim/models/statement_entry.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/foundation.dart';
@@ -17,8 +19,9 @@ class StatementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<IncomeModel, ExpenditureModel, AssetModel>(
-      builder: (context, incomeModel, expenditureModel, assetModel, _) {
+    return Consumer4<IncomeModel, ExpenditureModel, AssetModel, LiabilityModel>(
+      builder: (context, incomeModel, expenditureModel, assetModel,
+          liabilityModel, _) {
         return Scaffold(
           appBar: AppBar(
             title: Center(
@@ -31,6 +34,7 @@ class StatementScreen extends StatelessWidget {
               incomeModel.items,
               expenditureModel.items,
               assetModel.items,
+              liabilityModel.items,
             ]),
             builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
@@ -39,9 +43,13 @@ class StatementScreen extends StatelessWidget {
               List<Income> incomeList = snapshot.data![0];
               List<Expenditure> expenditureList = snapshot.data![1];
               List<Asset> assetList = snapshot.data![2];
+              List<Liability> liabilityList = snapshot.data![3];
               final statementList = Simulator.simulate(
-                      incomeList, expenditureList, assetList)['statementList']
-                  as List<StatementEntry>;
+                incomeList,
+                expenditureList,
+                assetList,
+                liabilityList,
+              )['statementList'] as List<StatementEntry>;
               return ListView.builder(
                 itemCount: statementList.length,
                 itemBuilder: (BuildContext context, int i) {

@@ -12,15 +12,15 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CashFlowChart extends StatefulWidget {
-  const CashFlowChart({Key? key}) : super(key: key);
-  static final routeName = 'cashflow-chart';
+class LiabilityChart extends StatefulWidget {
+  const LiabilityChart({Key? key}) : super(key: key);
+  static final routeName = 'asset-chart';
 
   @override
-  _CashFlowChartState createState() => _CashFlowChartState();
+  _LiabilityChartState createState() => _LiabilityChartState();
 }
 
-class _CashFlowChartState extends State<CashFlowChart> {
+class _LiabilityChartState extends State<LiabilityChart> {
   var currencyFormat = new NumberFormat("#,##,##,###", "en_IN");
   DateTime now = new DateTime.now();
 
@@ -93,7 +93,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
               expenditureList,
               assetList,
               liabilityList,
-            )['savings']!;
+            )['liabilities']!;
             final horizontalGridInterval = getHorizontalGridInterval(
                 barChartGroupDataList as List<BarChartGroupData>);
             return Container(
@@ -144,7 +144,7 @@ class _CashFlowChartState extends State<CashFlowChart> {
                           ),
                           topTitle: AxisTitle(
                             showTitle: true,
-                            titleText: 'Savings',
+                            titleText: 'Liabilities',
                             margin: 15,
                             textStyle: TextStyle(
                               fontSize: 16,

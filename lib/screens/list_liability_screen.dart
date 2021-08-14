@@ -69,8 +69,6 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
                               children: [
                                 Text(
                                     'For ${item.durationInYears} years starting ${item.startDate.format("MMM yyyy")} EMI: ${item.emi.amount}'),
-                                // Text('EMI ' +
-                                //     describeEnum(item.emi.amount.toString())),
                               ],
                             ),
                             trailing: Row(

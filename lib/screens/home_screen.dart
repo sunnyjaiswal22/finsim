@@ -1,8 +1,11 @@
+import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
+import 'package:finsim/models/liability.dart';
+import 'package:finsim/models/liability_model.dart';
 import 'package:finsim/widgets/dashboard.dart';
 import 'package:finsim/widgets/welcome.dart';
 import 'package:flutter/material.dart';
@@ -39,8 +42,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<IncomeModel, ExpenditureModel, AssetModel>(
-      builder: (context, incomeModel, expenditureModel, assetModel, _) {
+    return Consumer4<IncomeModel, ExpenditureModel, AssetModel, LiabilityModel>(
+      builder: (
+        context,
+        incomeModel,
+        expenditureModel,
+        assetModel,
+        liabilityModel,
+        _,
+      ) {
         return Scaffold(
           appBar: AppBar(
             title: Center(
@@ -56,8 +66,12 @@ class _HomeScreenState extends State<HomeScreen> {
             onWillPop: onWillPop,
             child: SingleChildScrollView(
               child: FutureBuilder(
-                future:
-                    Future.wait([incomeModel.items, expenditureModel.items]),
+                future: Future.wait([
+                  incomeModel.items,
+                  expenditureModel.items,
+                  assetModel.items,
+                  liabilityModel.items,
+                ]),
                 builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
                   if (snapshot.connectionState != ConnectionState.done) {
                     return Container(
@@ -67,8 +81,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   List<Income> incomeList = snapshot.data![0];
                   List<Expenditure> expenditureList = snapshot.data![1];
-                  final isBlankStart =
-                      incomeList.isEmpty && expenditureList.isEmpty;
+                  List<Asset> assetList = snapshot.data![2];
+                  List<Liability> liabilityList = snapshot.data![3];
+                  final isBlankStart = incomeList.isEmpty &&
+                      expenditureList.isEmpty &&
+                      assetList.isEmpty &&
+                      liabilityList.isEmpty;
                   return isBlankStart ? Welcome() : Dashboard();
                 },
               ),

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:finsim/helpers/cache.dart';
 import 'package:finsim/models/asset.dart';
+import 'package:finsim/models/liability.dart';
 import 'package:finsim/models/statement_entry.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
@@ -20,6 +21,7 @@ class Simulator {
     List<Income> incomeList,
     List<Expenditure> expenditureList,
     List<Asset> assetList,
+    List<Liability> liabilitiesList,
   ) {
     //Check if result exists in cache for the given input, return if present
     // if (listEquals(incomeList, globalCache.getObject('incomeList')) &&
@@ -36,10 +38,12 @@ class Simulator {
     var totalSavings = 0;
     var incomeAmountMap = <int, int>{};
     var expenditureAmountMap = <int, int>{};
-    var assetTotalInvestmentMap = <int, int>{};
+    var assetInvestmentMap = <int, int>{};
+    var liabilityAmountMap = <int, int>{};
     var statementList = <StatementEntry>[];
     List<BarChartGroupData> savingsBarGroupList = [];
     List<BarChartGroupData> assetsBarGroupList = [];
+    List<BarChartGroupData> liabilitiesBarGroupList = [];
 
     //******************** SIMULATION START ********************//
     for (Jiffy date = Jiffy(simulationStartDate);
@@ -158,8 +162,8 @@ class Simulator {
       //******************** ASSET ********************//
       assetList.forEach((asset) {
         //Initialize total asset investment if not present
-        if (!assetTotalInvestmentMap.containsKey(asset.id)) {
-          assetTotalInvestmentMap[asset.id] = 0;
+        if (!assetInvestmentMap.containsKey(asset.id)) {
+          assetInvestmentMap[asset.id] = 0;
         }
         //Investment in asset
         var onceEvent =
@@ -176,8 +180,8 @@ class Simulator {
                 date.isBefore(asset.investment.endDate);
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
-          assetTotalInvestmentMap[asset.id] =
-              assetTotalInvestmentMap[asset.id]! + asset.investment.amount;
+          assetInvestmentMap[asset.id] =
+              assetInvestmentMap[asset.id]! + asset.investment.amount;
         }
 
         //Asset year completed
@@ -186,12 +190,12 @@ class Simulator {
             date.month == asset.startDate.month &&
             date.year != asset.startDate.year &&
             asset.yearlyAppreciationPercentage != 0) {
-          int yearlyAppreciation = (assetTotalInvestmentMap[asset.id]! *
+          int yearlyAppreciation = (assetInvestmentMap[asset.id]! *
               asset.yearlyAppreciationPercentage ~/
               100);
 
-          assetTotalInvestmentMap[asset.id] =
-              assetTotalInvestmentMap[asset.id]! + yearlyAppreciation;
+          assetInvestmentMap[asset.id] =
+              assetInvestmentMap[asset.id]! + yearlyAppreciation;
 
           statementList.add(StatementEntry(
             date: date.clone(),
@@ -205,9 +209,9 @@ class Simulator {
 
         //Asset end date reached
         if (date.isSame(asset.endDate)) {
-          var assetValue = assetTotalInvestmentMap[asset.id]!;
+          var assetValue = assetInvestmentMap[asset.id]!;
           totalSavings += assetValue;
-          assetTotalInvestmentMap[asset.id] = 0;
+          assetInvestmentMap[asset.id] = 0;
           statementList.add(StatementEntry(
             date: date.clone(),
             amount: assetValue,
@@ -219,19 +223,59 @@ class Simulator {
         }
       });
 
-      //Simulation year completed
+      //******************** LIABILITY ********************//
+      liabilitiesList.forEach((liability) {
+        //Initialize total asset investment if not present
+        if (!liabilityAmountMap.containsKey(liability.id)) {
+          liabilityAmountMap[liability.id] = liability.amount;
+        }
+
+        var onceEvent = liability.emi.frequency == ExpenditureFrequency.Once &&
+            date.isSame(liability.emi.startDate);
+        var monthlyEvent =
+            liability.emi.frequency == ExpenditureFrequency.Monthly &&
+                date.date == liability.emi.startDate.date &&
+                date.isBefore(liability.emi.endDate);
+        var yearlyEvent =
+            liability.emi.frequency == ExpenditureFrequency.Yearly &&
+                date.date == liability.emi.startDate.date &&
+                date.month == liability.emi.startDate.month &&
+                date.isBefore(liability.emi.endDate);
+
+        if (onceEvent || monthlyEvent || yearlyEvent) {
+          var emiInterestAmount = liabilityAmountMap[liability.id]! *
+              liability.rateOfInterest /
+              1200;
+          var emiPricipalAmount = liability.emi.amount - emiInterestAmount;
+          print(
+              'emiInterestAmount: $emiInterestAmount, emiPricipalAmount: $emiPricipalAmount');
+          liabilityAmountMap[liability.id] =
+              (liabilityAmountMap[liability.id]! - emiPricipalAmount).toInt();
+        }
+      });
+
+      //******************** SIMULATION YEAR COMPLETED ********************//
       if (date.date == simulationStartDate.date &&
           date.month == simulationStartDate.month &&
           date.year != simulationStartDate.year) {
         //Calculate total investments by checking current value of each asset
         var totalInvestments = 0;
-        assetTotalInvestmentMap.forEach((key, value) {
+        assetInvestmentMap.forEach((key, value) {
           totalInvestments += value;
         });
-        print('totalInvestments: $totalInvestments');
+
+        //Calculate total liabilities amount by checking current value of each liability
+        var totalLiabilities = 0;
+        liabilityAmountMap.forEach((key, value) {
+          totalLiabilities += value;
+        });
+
         var savingsBarColor = totalSavings >= 0 ? Colors.green : Colors.red;
         var assetsBarColor = totalInvestments >= 0 ? Colors.green : Colors.red;
+        var liabilitesBarColor =
+            totalLiabilities >= 0 ? Colors.red : Colors.green;
 
+        //Savings bar chart group data
         var savingsBarChartGroupData = BarChartGroupData(
           x: date.year,
           barRods: [
@@ -251,6 +295,8 @@ class Simulator {
           //Not showing tooltip value in case of 0 amount as it overlaps with bottom titles
           showingTooltipIndicators: totalSavings == 0 ? [] : [0],
         );
+
+        //Assets bar chart group data
         var assetsBarChartGroupData = BarChartGroupData(
           x: date.year,
           barRods: [
@@ -271,14 +317,37 @@ class Simulator {
           showingTooltipIndicators: totalInvestments == 0 ? [] : [0],
         );
 
+        //Liabilities bar chart group data
+        var liabilitiesBarChartGroupData = BarChartGroupData(
+          x: date.year,
+          barRods: [
+            BarChartRodData(
+              y: totalLiabilities.toDouble(),
+              colors: [
+                liabilitesBarColor,
+                liabilitesBarColor,
+              ],
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(0),
+                topRight: Radius.circular(0),
+              ),
+              width: 30,
+            )
+          ],
+          //Not showing tooltip value in case of 0 amount as it overlaps with bottom titles
+          showingTooltipIndicators: totalLiabilities == 0 ? [] : [0],
+        );
+
         savingsBarGroupList.add(savingsBarChartGroupData);
         assetsBarGroupList.add(assetsBarChartGroupData);
+        liabilitiesBarGroupList.add(liabilitiesBarChartGroupData);
       }
     }
 
     var result = {
       'savings': savingsBarGroupList,
       'assets': assetsBarGroupList,
+      'liabilities': liabilitiesBarGroupList,
       'statementList': statementList,
     };
 
@@ -286,6 +355,7 @@ class Simulator {
     globalCache.addObject('incomeList', incomeList);
     globalCache.addObject('expenditureList', expenditureList);
     globalCache.addObject('assetList', assetList);
+    globalCache.addObject('liabilitiesList', liabilitiesList);
     globalCache.addObject('result', result);
     return result;
   }

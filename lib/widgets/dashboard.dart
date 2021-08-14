@@ -1,5 +1,6 @@
 import 'package:finsim/widgets/asset_chart.dart';
 import 'package:finsim/widgets/cashflow_chart.dart';
+import 'package:finsim/widgets/liability_chart.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatefulWidget {
@@ -17,6 +18,7 @@ class _DashboardState extends State<Dashboard> {
         children: [
           CashFlowChart(),
           AssetChart(),
+          LiabilityChart(),
         ],
       ),
     );
