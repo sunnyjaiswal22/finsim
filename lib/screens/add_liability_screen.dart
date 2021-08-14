@@ -60,7 +60,7 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                   },
                   onChanged: (value) {
                     liability.name = value;
-                    liability.emi.name = 'Liability: ' + value;
+                    liability.emi.name = 'EMI: ' + value;
                   },
                 ),
                 SizedBox(height: 10),

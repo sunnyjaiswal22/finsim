@@ -67,8 +67,8 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
                             ),
                             subtitle: Wrap(
                               children: [
-                                Text('${item.durationInYears}'),
-                                Text('${item.startDate.format("MMM yyyy")}'),
+                                Text(
+                                    'For ${item.durationInYears} years starting ${item.startDate.format("MMM yyyy")} EMI: ${item.emi.amount}'),
                                 // Text('EMI ' +
                                 //     describeEnum(item.emi.amount.toString())),
                               ],
@@ -76,7 +76,7 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(item.emi.amount.toString()),
+                                Text(item.amount.toString()),
                                 IconButton(
                                   onPressed: () {
                                     setState(() {

@@ -1,6 +1,7 @@
 import 'package:finsim/models/asset_model.dart';
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/expenditure.dart';
+import 'package:finsim/models/liability_model.dart';
 import 'package:finsim/screens/add_expenditure_screen.dart';
 import 'package:finsim/widgets/empty_list_info.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
@@ -20,8 +21,8 @@ class ListExpenditureScreen extends StatefulWidget {
 class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ExpenditureModel, AssetModel>(
-      builder: (context, expenditureModel, assetModel, _) {
+    return Consumer3<ExpenditureModel, AssetModel, LiabilityModel>(
+      builder: (context, expenditureModel, assetModel, liabilityModel, _) {
         return Scaffold(
           appBar: AppBar(
             title: Center(
@@ -53,20 +54,20 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                   : ListView.builder(
                       itemCount: _expenditureList.length,
                       itemBuilder: (BuildContext context, int index) {
+                        var item = _expenditureList[index];
                         return ListTile(
-                          key: ValueKey(_expenditureList[index].id),
+                          key: ValueKey(item.id),
                           leading: Icon(Icons.payments, color: Colors.red),
-                          title: Text(_expenditureList[index].name),
+                          title: Text(item.name),
                           subtitle: Row(
                             children: [
                               Text(
                                 describeEnum(
-                                  _expenditureList[index].frequency.toString(),
+                                  item.frequency.toString(),
                                 ),
                               ),
                               YearlyAppreciationInfo(
-                                percentage: _expenditureList[index]
-                                    .yearlyAppreciationPercentage,
+                                percentage: item.yearlyAppreciationPercentage,
                                 label: 'p. a.',
                                 reverseColors: true,
                               ),
@@ -75,20 +76,20 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(_expenditureList[index].amount.toString()),
-                              if (!_expenditureList[index].belongsToAsset)
+                              Text(item.amount.toString()),
+                              if (!item.belongsToAsset &&
+                                  !item.belongsToLiability)
                                 IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () {
                                     setState(() {
-                                      var selectedExpenditure =
-                                          _expenditureList[index];
+                                      var selectedExpenditure = item;
                                       expenditureModel
                                           .delete(selectedExpenditure.id);
                                     });
                                   },
                                 )
-                              else
+                              else if (item.belongsToAsset)
                                 IconButton(
                                   icon: Icon(Icons.info),
                                   onPressed: () {
@@ -98,6 +99,28 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                                         return AlertDialog(
                                           content: Text(
                                               'This expenditure belongs to an Asset. To delete this expenditure, please delete the corresponding Asset'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, 'OK'),
+                                              child: Text('OK'),
+                                            )
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                )
+                              else if (item.belongsToLiability)
+                                IconButton(
+                                  icon: Icon(Icons.info),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: Text(
+                                              'This expenditure belongs to a Liability. To delete this expenditure, please delete the corresponding Liability'),
                                           actions: [
                                             TextButton(
                                               onPressed: () =>
