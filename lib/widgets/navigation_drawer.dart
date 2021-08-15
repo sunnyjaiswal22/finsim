@@ -3,6 +3,7 @@ import 'package:finsim/screens/list_expenditure_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/screens/list_income_screen.dart';
 import 'package:finsim/screens/list_liability_screen.dart';
+import 'package:finsim/screens/settings_screen.dart';
 import 'package:finsim/screens/statement_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -62,6 +63,13 @@ class NavigationDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, StatementScreen.routeName);
+              },
+            ),
+            ListTile(
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, SettingsScreen.routeName);
               },
             ),
           ],

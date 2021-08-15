@@ -5,8 +5,6 @@ import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
-final _formKey = GlobalKey<FormState>();
-
 class AddAssetScreen extends StatefulWidget {
   const AddAssetScreen({Key? key}) : super(key: key);
   static final routeName = 'add-asset-screen';
@@ -16,7 +14,9 @@ class AddAssetScreen extends StatefulWidget {
 }
 
 class _AddAssetScreenState extends State<AddAssetScreen> {
+  final _formKey = GlobalKey<FormState>();
   Asset asset = Asset();
+
   @override
   Widget build(BuildContext context) {
     final initialDate = Jiffy().startOf(Units.DAY);

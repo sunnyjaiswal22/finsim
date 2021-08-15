@@ -1,3 +1,4 @@
+import 'package:finsim/helpers/globals.dart';
 import 'package:finsim/helpers/simulator.dart';
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
@@ -67,6 +68,13 @@ class _LiabilityChartState extends State<LiabilityChart> {
 
   @override
   Widget build(BuildContext context) {
+    double aspectRatio;
+    if (MediaQuery.of(context).orientation == Orientation.portrait) {
+      aspectRatio = 1.618;
+    } else {
+      aspectRatio = 2.5;
+    }
+    int yearsToSimulate = Globals.sharedPreferences.getInt('yearsToSimulate')!;
     return Consumer4<IncomeModel, ExpenditureModel, AssetModel, LiabilityModel>(
       builder: (context, incomeModel, expenditureModel, assetModel,
           liabilityModel, _) {
@@ -80,7 +88,7 @@ class _LiabilityChartState extends State<LiabilityChart> {
           builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return AspectRatio(
-                aspectRatio: 1.618,
+                aspectRatio: aspectRatio,
                 child: Center(child: CircularProgressIndicator()),
               );
             }
@@ -103,7 +111,7 @@ class _LiabilityChartState extends State<LiabilityChart> {
               padding: const EdgeInsets.all(5),
               margin: EdgeInsets.only(top: 15),
               child: AspectRatio(
-                aspectRatio: 1.618,
+                aspectRatio: aspectRatio,
                 child: Card(
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -121,9 +129,13 @@ class _LiabilityChartState extends State<LiabilityChart> {
                         bottomTitles: SideTitles(
                           showTitles: true,
                           getTitles: (double value) {
-                            return DateFormat('MMM').format(now) +
-                                ' ' +
-                                value.toInt().toString();
+                            if (yearsToSimulate <= 10) {
+                              return DateFormat('MMM').format(now) +
+                                  ' ' +
+                                  value.toInt().toString();
+                            } else {
+                              return value.toInt().toString();
+                            }
                           },
                         ),
                         leftTitles: SideTitles(showTitles: false),
@@ -172,7 +184,7 @@ class _LiabilityChartState extends State<LiabilityChart> {
                               currencyFormat.format(rod.y),
                               TextStyle(
                                 color: Colors.black,
-                                fontSize: 12,
+                                fontSize: (12 - (yearsToSimulate / 5 - 1)),
                               ),
                             );
                           },

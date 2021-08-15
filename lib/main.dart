@@ -1,3 +1,4 @@
+import 'package:finsim/helpers/globals.dart';
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/asset_model.dart';
@@ -12,11 +13,14 @@ import 'package:finsim/screens/list_expenditure_screen.dart';
 import 'package:finsim/screens/home_screen.dart';
 import 'package:finsim/screens/list_income_screen.dart';
 import 'package:finsim/screens/list_liability_screen.dart';
+import 'package:finsim/screens/settings_screen.dart';
 import 'package:finsim/screens/statement_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Globals.initializeSharedPreferences();
   runApp(
     MultiProvider(
       providers: [
@@ -59,6 +63,7 @@ class MyApp extends StatelessWidget {
         AddInvestmentScreen.routeName: (context) => AddInvestmentScreen(),
         AddLiabilityScreen.routeName: (context) => AddLiabilityScreen(),
         StatementScreen.routeName: (context) => StatementScreen(),
+        SettingsScreen.routeName: (context) => SettingsScreen(),
       },
     );
   }

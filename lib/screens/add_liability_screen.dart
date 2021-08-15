@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
-final _formKey = GlobalKey<FormState>();
-
 class AddLiabilityScreen extends StatefulWidget {
   const AddLiabilityScreen({Key? key}) : super(key: key);
   static final routeName = 'add-liability-screen';
@@ -17,7 +15,9 @@ class AddLiabilityScreen extends StatefulWidget {
 }
 
 class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
+  final _formKey = GlobalKey<FormState>();
   Liability liability = Liability();
+
   @override
   Widget build(BuildContext context) {
     final initialDate = Jiffy().startOf(Units.DAY);

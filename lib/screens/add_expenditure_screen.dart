@@ -9,7 +9,6 @@ import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
 enum ExpenditureFrequency { Once, Monthly, Yearly }
-final _formKey = GlobalKey<FormState>();
 
 class AddExpenditureScreen extends StatefulWidget {
   const AddExpenditureScreen({Key? key}) : super(key: key);
@@ -20,6 +19,7 @@ class AddExpenditureScreen extends StatefulWidget {
 }
 
 class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
+  final _formKey = GlobalKey<FormState>();
   var expenditure = Expenditure();
 
   @override

@@ -11,8 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
-final _formKey = GlobalKey<FormState>();
-
 class AddInvestmentScreen extends StatefulWidget {
   const AddInvestmentScreen({Key? key}) : super(key: key);
   static final routeName = 'add-investment-screen';
@@ -22,6 +20,8 @@ class AddInvestmentScreen extends StatefulWidget {
 }
 
 class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     var arguments = ModalRoute.of(context)!.settings.arguments;

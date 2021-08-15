@@ -12,7 +12,6 @@ import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
 enum IncomeFrequency { Once, Monthly, Yearly }
-final _formKey = GlobalKey<FormState>();
 
 class AddIncomeScreen extends StatefulWidget {
   const AddIncomeScreen({Key? key}) : super(key: key);
@@ -23,8 +22,10 @@ class AddIncomeScreen extends StatefulWidget {
 }
 
 class _AddIncomeScreenState extends State<AddIncomeScreen> {
+  final _formKey = GlobalKey<FormState>();
   Income income = Income();
   late Asset asset;
+
   @override
   Widget build(BuildContext context) {
     var isBlankStart = false;

@@ -19,4 +19,8 @@ class IncomeModel extends ChangeNotifier {
     final incomeList = await DBHelper.getIncomes();
     return UnmodifiableListView(incomeList);
   }
+
+  void notifyListenersFromOutside() {
+    notifyListeners();
+  }
 }

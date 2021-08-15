@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:finsim/helpers/cache.dart';
+import 'package:finsim/helpers/globals.dart';
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/liability.dart';
 import 'package:finsim/models/statement_entry.dart';
@@ -33,8 +34,10 @@ class Simulator {
     // }
 
     log("Simulating ...");
+    int yearsToSimulate = Globals.sharedPreferences.getInt('yearsToSimulate')!;
     Jiffy simulationStartDate = Jiffy().startOf(Units.DAY);
-    Jiffy simulationEndDate = Jiffy(simulationStartDate).add(years: 5);
+    Jiffy simulationEndDate =
+        Jiffy(simulationStartDate).add(years: yearsToSimulate);
     var totalSavings = 0.0;
     var incomeAmountMap = <int, double>{};
     var expenditureAmountMap = <int, double>{};
@@ -313,6 +316,8 @@ class Simulator {
         var liabilitesBarColor =
             totalLiabilities >= 0 ? Colors.red : Colors.green;
 
+        double barRodWidth = 180 / yearsToSimulate;
+
         //Savings bar chart group data
         var savingsBarChartGroupData = BarChartGroupData(
           x: date.year,
@@ -327,7 +332,7 @@ class Simulator {
                 topLeft: Radius.circular(0),
                 topRight: Radius.circular(0),
               ),
-              width: 30,
+              width: barRodWidth,
             )
           ],
           //Not showing tooltip value in case of 0 amount as it overlaps with bottom titles
@@ -348,7 +353,7 @@ class Simulator {
                 topLeft: Radius.circular(0),
                 topRight: Radius.circular(0),
               ),
-              width: 30,
+              width: barRodWidth,
             )
           ],
           //Not showing tooltip value in case of 0 amount as it overlaps with bottom titles
@@ -369,7 +374,7 @@ class Simulator {
                 topLeft: Radius.circular(0),
                 topRight: Radius.circular(0),
               ),
-              width: 30,
+              width: barRodWidth,
             )
           ],
           //Not showing tooltip value in case of 0 amount as it overlaps with bottom titles
