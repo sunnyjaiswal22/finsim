@@ -16,7 +16,7 @@ class _WelcomeState extends State<Welcome> {
     return Wrap(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 0),
+          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 0),
           child: Column(
             children: [
               Container(
@@ -25,8 +25,14 @@ class _WelcomeState extends State<Welcome> {
               ),
               SizedBox(height: 30),
               Text(
-                'Welcome to Personal Finance Simulator. Please add your major income and expenditure details to get started',
+                'Welcome to Personal Finance Simulator.',
                 textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+              Text(
+                'Please add your major income and expenditure details to get started',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 20),
               ElevatedButton(

@@ -81,10 +81,32 @@ class _ListAssetState extends State<ListAssetScreen> {
                                 Text(item.investment.amount.toString()),
                                 IconButton(
                                   onPressed: () {
-                                    setState(() {
-                                      var selectedAsset = item;
-                                      assetModel.delete(selectedAsset);
-                                    });
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: Text('Delete this item?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: Text('No'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  var selectedAsset = item;
+                                                  assetModel
+                                                      .delete(selectedAsset);
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Yes'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
                                   icon: Icon(Icons.delete),
                                 ),

@@ -165,7 +165,6 @@ class DBHelper {
 
   static Future<List<Income>> getIncomes() async {
     final db = await getDatabase();
-
     List<Income> list = [];
     final mapList = await db.query('income');
     mapList.forEach((map) {

@@ -73,21 +73,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   liabilityModel.items,
                 ]),
                 builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height,
-                      child: Center(child: CircularProgressIndicator()),
-                    );
+                  if (snapshot.hasData) {
+                    List<Income> incomeList = snapshot.data![0];
+                    List<Expenditure> expenditureList = snapshot.data![1];
+                    List<Asset> assetList = snapshot.data![2];
+                    List<Liability> liabilityList = snapshot.data![3];
+                    final isBlankStart = incomeList.isEmpty &&
+                        expenditureList.isEmpty &&
+                        assetList.isEmpty &&
+                        liabilityList.isEmpty;
+                    return isBlankStart ? Welcome() : Dashboard();
                   }
-                  List<Income> incomeList = snapshot.data![0];
-                  List<Expenditure> expenditureList = snapshot.data![1];
-                  List<Asset> assetList = snapshot.data![2];
-                  List<Liability> liabilityList = snapshot.data![3];
-                  final isBlankStart = incomeList.isEmpty &&
-                      expenditureList.isEmpty &&
-                      assetList.isEmpty &&
-                      liabilityList.isEmpty;
-                  return isBlankStart ? Welcome() : Dashboard();
+                  return Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
                 },
               ),
             ),

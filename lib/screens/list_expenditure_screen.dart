@@ -83,11 +83,33 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                                 IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () {
-                                    setState(() {
-                                      var selectedExpenditure = item;
-                                      expenditureModel
-                                          .delete(selectedExpenditure.id);
-                                    });
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: Text('Delete this item?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: Text('No'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  var selectedExpenditure =
+                                                      item;
+                                                  expenditureModel.delete(
+                                                      selectedExpenditure.id);
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Yes'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
                                 )
                               else if (item.belongsToAsset)

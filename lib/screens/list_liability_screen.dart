@@ -78,10 +78,32 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
                                 Text(item.amount.toString()),
                                 IconButton(
                                   onPressed: () {
-                                    setState(() {
-                                      var selectedAsset = item;
-                                      liabilityModel.delete(selectedAsset);
-                                    });
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: Text('Delete this item?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: Text('No'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  var selectedAsset = item;
+                                                  liabilityModel
+                                                      .delete(selectedAsset);
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Yes'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
                                   icon: Icon(Icons.delete),
                                 ),
