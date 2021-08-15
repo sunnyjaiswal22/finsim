@@ -208,35 +208,58 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 SizedBox(height: 20),
                 if (isBlankStart)
                   ElevatedButton(
+                    child: Text('Continue'),
                     onPressed: () {
                       Provider.of<IncomeModel>(context, listen: false)
                           .add(income)
-                          .then((_) => Navigator.pushReplacementNamed(
-                                context,
-                                AddExpenditureScreen.routeName,
-                                arguments: {'isBlankStart': isBlankStart},
-                              ));
+                          .then(
+                        (_) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Text(
+                                    'Income saved, please provide a major expenditure detail'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacementNamed(
+                                        context,
+                                        AddExpenditureScreen.routeName,
+                                        arguments: {
+                                          'isBlankStart': isBlankStart
+                                        },
+                                      );
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      );
                     },
-                    child: Text('Continue'),
                   )
                 else if (income.belongsToAsset)
                   ElevatedButton(
+                    child: Text('Save Asset'),
                     onPressed: () {
                       Provider.of<AssetModel>(context, listen: false)
                           .add(asset)
                           .then((_) => Navigator.popUntil(context,
                               ModalRoute.withName(ListAssetScreen.routeName)));
                     },
-                    child: Text('Save Asset'),
                   )
                 else
                   ElevatedButton(
+                    child: Text('Submit'),
                     onPressed: () {
                       Provider.of<IncomeModel>(context, listen: false)
                           .add(income)
                           .then((_) => Navigator.pop(context));
                     },
-                    child: Text('Submit'),
                   ),
               ],
             ),
