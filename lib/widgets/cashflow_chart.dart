@@ -88,6 +88,9 @@ class _CashFlowChartState extends State<CashFlowChart> {
             List<Expenditure> expenditureList = snapshot.data![1];
             List<Asset> assetList = snapshot.data![2];
             List<Liability> liabilityList = snapshot.data![3];
+            if (incomeList.isEmpty && expenditureList.isEmpty) {
+              return Container();
+            }
             final barChartGroupDataList = Simulator.simulate(
               incomeList,
               expenditureList,

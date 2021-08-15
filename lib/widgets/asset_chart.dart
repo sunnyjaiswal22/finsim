@@ -88,6 +88,9 @@ class _AssetChartState extends State<AssetChart> {
             List<Expenditure> expenditureList = snapshot.data![1];
             List<Asset> assetList = snapshot.data![2];
             List<Liability> liabilityList = snapshot.data![3];
+            if (assetList.isEmpty) {
+              return Container();
+            }
             final barChartGroupDataList = Simulator.simulate(
               incomeList,
               expenditureList,
