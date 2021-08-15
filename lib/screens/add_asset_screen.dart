@@ -3,6 +3,7 @@ import 'package:finsim/screens/add_investment_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jiffy/jiffy.dart';
 
 class AddAssetScreen extends StatefulWidget {
@@ -19,6 +20,10 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     final initialDate = Jiffy().startOf(Units.DAY);
 
     Future<void> _selectStartDate(

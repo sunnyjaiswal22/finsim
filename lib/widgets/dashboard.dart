@@ -16,7 +16,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     int yearsToSimulate = Globals.sharedPreferences.getInt('yearsToSimulate')!;
-    if (yearsToSimulate > 7) {
+    if (yearsToSimulate > 7 && ModalRoute.of(context)!.isCurrent) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight,

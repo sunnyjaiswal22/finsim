@@ -28,6 +28,10 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     var isBlankStart = false;
     var arguments = ModalRoute.of(context)!.settings.arguments;
     if (arguments != null) {

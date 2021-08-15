@@ -24,6 +24,10 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     var arguments = ModalRoute.of(context)!.settings.arguments;
     arguments = arguments as Map<String, dynamic>;
     var isBlankStart = arguments['isBlankStart'];

@@ -3,6 +3,7 @@ import 'package:finsim/models/liability_model.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,10 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     final initialDate = Jiffy().startOf(Units.DAY);
 
     Future<void> _selectStartDate(

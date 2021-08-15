@@ -11,6 +11,7 @@ import 'package:finsim/models/statement_entry.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class StatementScreen extends StatelessWidget {
@@ -19,6 +20,10 @@ class StatementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Consumer4<IncomeModel, ExpenditureModel, AssetModel, LiabilityModel>(
       builder: (context, incomeModel, expenditureModel, assetModel,
           liabilityModel, _) {

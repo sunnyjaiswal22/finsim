@@ -7,6 +7,7 @@ import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:finsim/widgets/yearly_appreciation_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class ListIncomeScreen extends StatefulWidget {
@@ -20,6 +21,10 @@ class ListIncomeScreen extends StatefulWidget {
 class _ListIncomeState extends State<ListIncomeScreen> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Consumer2<IncomeModel, AssetModel>(
       builder: (context, incomeModel, assetModel, _) {
         return Scaffold(
