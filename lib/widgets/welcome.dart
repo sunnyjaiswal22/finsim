@@ -37,7 +37,7 @@ class _WelcomeState extends State<Welcome> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(
+                  Navigator.pushNamed(
                     context,
                     AddIncomeScreen.routeName,
                     arguments: {'isBlankStart': true},

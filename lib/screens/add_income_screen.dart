@@ -217,13 +217,29 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                content:
-                                    Text('Income saved, please provide a major expenditure detail'),
+                                title: RichText(
+                                  text: TextSpan(children: [
+                                    WidgetSpan(
+                                      alignment: PlaceholderAlignment.middle,
+                                      child: Icon(
+                                        Icons.check_circle_outline,
+                                        color: Colors.green,
+                                        size: 40,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' Income Saved',
+                                      style: TextStyle(color: Colors.black, fontSize: 22),
+                                    ),
+                                  ]),
+                                ),
+                                content: Text(
+                                    'Income saved successfully. Please tap OK to add expenditure details'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       Navigator.pop(context);
-                                      Navigator.pushReplacementNamed(
+                                      Navigator.pushNamed(
                                         context,
                                         AddExpenditureScreen.routeName,
                                         arguments: {'isBlankStart': isBlankStart},
