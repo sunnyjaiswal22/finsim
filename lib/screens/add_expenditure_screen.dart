@@ -24,10 +24,6 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     var arguments = ModalRoute.of(context)!.settings.arguments;
     arguments = arguments as Map<String, dynamic>;
     var isBlankStart = arguments['isBlankStart'];
@@ -159,8 +155,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
-                      expenditure.yearlyAppreciationPercentage =
-                          double.parse(value);
+                      expenditure.yearlyAppreciationPercentage = double.parse(value);
                     },
                   ),
                 SizedBox(height: 20),

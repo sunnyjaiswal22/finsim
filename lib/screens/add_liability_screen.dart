@@ -21,10 +21,6 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     final initialDate = Jiffy().startOf(Units.DAY);
 
     Future<void> _selectStartDate(
@@ -85,8 +81,7 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                 ),
                 SizedBox(height: 10),
                 TextFormField(
-                  decoration:
-                      const InputDecoration(labelText: 'Rate of Interest (%)'),
+                  decoration: const InputDecoration(labelText: 'Rate of Interest (%)'),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     liability.rateOfInterest = double.parse(value);
@@ -94,8 +89,7 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                 ),
                 SizedBox(height: 20),
                 TextFormField(
-                  decoration:
-                      const InputDecoration(labelText: 'Duration (years)'),
+                  decoration: const InputDecoration(labelText: 'Duration (years)'),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     liability.durationInYears = int.parse(value);

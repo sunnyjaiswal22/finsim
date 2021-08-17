@@ -8,7 +8,6 @@ import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:finsim/widgets/yearly_appreciation_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class ListExpenditureScreen extends StatefulWidget {
@@ -22,10 +21,6 @@ class ListExpenditureScreen extends StatefulWidget {
 class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     return Consumer3<ExpenditureModel, AssetModel, LiabilityModel>(
       builder: (context, expenditureModel, assetModel, liabilityModel, _) {
         return Scaffold(
@@ -83,8 +78,7 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(item.amount.toString()),
-                              if (!item.belongsToAsset &&
-                                  !item.belongsToLiability)
+                              if (!item.belongsToAsset && !item.belongsToLiability)
                                 IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () {
@@ -95,17 +89,14 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                                           content: Text('Delete this item?'),
                                           actions: [
                                             TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
+                                              onPressed: () => Navigator.pop(context),
                                               child: Text('No'),
                                             ),
                                             TextButton(
                                               onPressed: () {
                                                 setState(() {
-                                                  var selectedExpenditure =
-                                                      item;
-                                                  expenditureModel.delete(
-                                                      selectedExpenditure.id);
+                                                  var selectedExpenditure = item;
+                                                  expenditureModel.delete(selectedExpenditure.id);
                                                 });
                                                 Navigator.pop(context);
                                               },
@@ -129,8 +120,7 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                                               'This expenditure belongs to an Asset. To delete this expenditure, please delete the corresponding Asset'),
                                           actions: [
                                             TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context, 'OK'),
+                                              onPressed: () => Navigator.pop(context, 'OK'),
                                               child: Text('OK'),
                                             )
                                           ],
@@ -151,8 +141,7 @@ class _ListExpenditureScreenState extends State<ListExpenditureScreen> {
                                               'This expenditure belongs to a Liability. To delete this expenditure, please delete the corresponding Liability'),
                                           actions: [
                                             TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context, 'OK'),
+                                              onPressed: () => Navigator.pop(context, 'OK'),
                                               child: Text('OK'),
                                             )
                                           ],

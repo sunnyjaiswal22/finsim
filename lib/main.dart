@@ -1,3 +1,4 @@
+import 'package:finsim/helpers/custom_route_observer.dart';
 import 'package:finsim/helpers/globals.dart';
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/Income_model.dart';
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
         StatementScreen.routeName: (context) => StatementScreen(),
         SettingsScreen.routeName: (context) => SettingsScreen(),
       },
+      navigatorObservers: [CustomRouteObserver()],
     );
   }
 }

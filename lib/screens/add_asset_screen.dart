@@ -20,10 +20,6 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     final initialDate = Jiffy().startOf(Units.DAY);
 
     Future<void> _selectStartDate(
@@ -87,8 +83,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                   },
                 ),
                 TextFormField(
-                  decoration:
-                      const InputDecoration(labelText: 'Yearly Profit (%)'),
+                  decoration: const InputDecoration(labelText: 'Yearly Profit (%)'),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     asset.yearlyAppreciationPercentage = double.parse(value);

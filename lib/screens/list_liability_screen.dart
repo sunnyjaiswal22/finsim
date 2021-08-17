@@ -6,7 +6,6 @@ import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:finsim/widgets/yearly_appreciation_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class ListLiabilityScreen extends StatefulWidget {
@@ -20,10 +19,6 @@ class ListLiabilityScreen extends StatefulWidget {
 class _ListLiabilityState extends State<ListLiabilityScreen> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     return Consumer<LiabilityModel>(
       builder: (context, liabilityModel, _) {
         return Scaffold(
@@ -90,16 +85,14 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
                                           content: Text('Delete this item?'),
                                           actions: [
                                             TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
+                                              onPressed: () => Navigator.pop(context),
                                               child: Text('No'),
                                             ),
                                             TextButton(
                                               onPressed: () {
                                                 setState(() {
                                                   var selectedAsset = item;
-                                                  liabilityModel
-                                                      .delete(selectedAsset);
+                                                  liabilityModel.delete(selectedAsset);
                                                 });
                                                 Navigator.pop(context);
                                               },

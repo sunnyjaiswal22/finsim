@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:finsim/screens/add_income_screen.dart';
-import 'package:flutter/services.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({Key? key}) : super(key: key);
@@ -14,10 +13,6 @@ class Welcome extends StatefulWidget {
 class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     return Wrap(
       children: [
         Padding(

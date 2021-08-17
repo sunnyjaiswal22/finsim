@@ -11,7 +11,6 @@ import 'package:finsim/models/statement_entry.dart';
 import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class StatementScreen extends StatelessWidget {
@@ -20,13 +19,8 @@ class StatementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     return Consumer4<IncomeModel, ExpenditureModel, AssetModel, LiabilityModel>(
-      builder: (context, incomeModel, expenditureModel, assetModel,
-          liabilityModel, _) {
+      builder: (context, incomeModel, expenditureModel, assetModel, liabilityModel, _) {
         return Scaffold(
           appBar: AppBar(
             title: Center(
@@ -64,8 +58,7 @@ class StatementScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('No transactions yet ...',
-                              style: TextStyle(color: Colors.grey)),
+                          Text('No transactions yet ...', style: TextStyle(color: Colors.grey)),
                         ],
                       ),
                     )
@@ -76,19 +69,17 @@ class StatementScreen extends StatelessWidget {
                         return Column(
                           children: [
                             ListTile(
-                              leading:
-                                  Text('${item.date.format("dd-MM-yyyy")}'),
+                              leading: Text('${item.date.format("dd-MM-yyyy")}'),
                               title: Text(
                                 '${item.message}',
                                 style: TextStyle(
-                                  color: item.transactionType ==
-                                          TransactionType.Credit
+                                  color: item.transactionType == TransactionType.Credit
                                       ? Colors.green.shade900
                                       : Colors.red.shade900,
                                 ),
                               ),
-                              subtitle: Text(
-                                  '${describeEnum(item.transactionType)} ${item.details}'),
+                              subtitle:
+                                  Text('${describeEnum(item.transactionType)} ${item.details}'),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [

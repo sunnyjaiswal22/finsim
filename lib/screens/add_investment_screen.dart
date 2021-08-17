@@ -1,7 +1,6 @@
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
-import 'package:finsim/screens/add_expenditure_screen.dart'
-    show ExpenditureFrequency;
+import 'package:finsim/screens/add_expenditure_screen.dart' show ExpenditureFrequency;
 import 'package:finsim/screens/add_income_screen.dart';
 import 'package:finsim/screens/list_asset_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
@@ -24,10 +23,6 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     var arguments = ModalRoute.of(context)!.settings.arguments;
     arguments = arguments as Map<String, dynamic>;
     Asset asset = arguments['asset'];
@@ -102,8 +97,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                     }
                   },
                   onChanged: (value) {
-                    asset.investment.amount =
-                        value.isEmpty ? 0 : int.parse(value);
+                    asset.investment.amount = value.isEmpty ? 0 : int.parse(value);
                   },
                 ),
                 SizedBox(height: 20),
@@ -164,8 +158,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
-                      asset.investment.yearlyAppreciationPercentage =
-                          double.parse(value);
+                      asset.investment.yearlyAppreciationPercentage = double.parse(value);
                     },
                   ),
                 SizedBox(height: 20),
@@ -176,8 +169,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                       children: [
                         Text('Start Date '),
                         SizedBox(width: 20),
-                        Text(
-                            '${asset.investment.startDate.format("dd-MM-yyyy")}'),
+                        Text('${asset.investment.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
                     IconButton(
@@ -195,8 +187,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                         children: [
                           Text('End Date   '),
                           SizedBox(width: 20),
-                          Text(
-                              '${asset.investment.endDate.format("dd-MM-yyyy")}'),
+                          Text('${asset.investment.endDate.format("dd-MM-yyyy")}'),
                         ],
                       ),
                       IconButton(
@@ -217,10 +208,9 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                 else
                   ElevatedButton(
                     onPressed: () {
-                      Provider.of<AssetModel>(context, listen: false)
-                          .add(asset)
-                          .then((_) => Navigator.popUntil(context,
-                              ModalRoute.withName(ListAssetScreen.routeName)));
+                      Provider.of<AssetModel>(context, listen: false).add(asset).then((_) =>
+                          Navigator.popUntil(
+                              context, ModalRoute.withName(ListAssetScreen.routeName)));
                     },
                     child: Text('Submit'),
                   ),

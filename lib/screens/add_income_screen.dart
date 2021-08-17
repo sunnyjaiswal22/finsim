@@ -28,10 +28,6 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     var isBlankStart = false;
     var arguments = ModalRoute.of(context)!.settings.arguments;
     if (arguments != null) {
@@ -215,16 +211,14 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   ElevatedButton(
                     child: Text('Continue'),
                     onPressed: () {
-                      Provider.of<IncomeModel>(context, listen: false)
-                          .add(income)
-                          .then(
+                      Provider.of<IncomeModel>(context, listen: false).add(income).then(
                         (_) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                content: Text(
-                                    'Income saved, please provide a major expenditure detail'),
+                                content:
+                                    Text('Income saved, please provide a major expenditure detail'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -232,9 +226,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                                       Navigator.pushReplacementNamed(
                                         context,
                                         AddExpenditureScreen.routeName,
-                                        arguments: {
-                                          'isBlankStart': isBlankStart
-                                        },
+                                        arguments: {'isBlankStart': isBlankStart},
                                       );
                                     },
                                     child: Text('OK'),
@@ -251,10 +243,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   ElevatedButton(
                     child: Text('Save Asset'),
                     onPressed: () {
-                      Provider.of<AssetModel>(context, listen: false)
-                          .add(asset)
-                          .then((_) => Navigator.popUntil(context,
-                              ModalRoute.withName(ListAssetScreen.routeName)));
+                      Provider.of<AssetModel>(context, listen: false).add(asset).then((_) =>
+                          Navigator.popUntil(
+                              context, ModalRoute.withName(ListAssetScreen.routeName)));
                     },
                   )
                 else

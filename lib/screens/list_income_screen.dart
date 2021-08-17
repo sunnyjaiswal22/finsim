@@ -7,7 +7,6 @@ import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:finsim/widgets/yearly_appreciation_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class ListIncomeScreen extends StatefulWidget {
@@ -21,10 +20,6 @@ class ListIncomeScreen extends StatefulWidget {
 class _ListIncomeState extends State<ListIncomeScreen> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     return Consumer2<IncomeModel, AssetModel>(
       builder: (context, incomeModel, assetModel, _) {
         return Scaffold(
@@ -66,13 +61,11 @@ class _ListIncomeState extends State<ListIncomeScreen> {
                           subtitle: Wrap(
                             children: [
                               YearlyAppreciationInfo(
-                                percentage: _incomeList[index]
-                                    .yearlyAppreciationPercentage,
+                                percentage: _incomeList[index].yearlyAppreciationPercentage,
                                 label: 'p. a.',
                               ),
                               Text(
-                                describeEnum(
-                                    _incomeList[index].frequency.toString()),
+                                describeEnum(_incomeList[index].frequency.toString()),
                               ),
                             ],
                           ),
@@ -91,17 +84,14 @@ class _ListIncomeState extends State<ListIncomeScreen> {
                                           content: Text('Delete this item?'),
                                           actions: [
                                             TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
+                                              onPressed: () => Navigator.pop(context),
                                               child: Text('No'),
                                             ),
                                             TextButton(
                                               onPressed: () {
                                                 setState(() {
-                                                  var selectedIncome =
-                                                      _incomeList[index];
-                                                  incomeModel.delete(
-                                                      selectedIncome.id);
+                                                  var selectedIncome = _incomeList[index];
+                                                  incomeModel.delete(selectedIncome.id);
                                                 });
                                                 Navigator.pop(context);
                                               },
@@ -125,8 +115,7 @@ class _ListIncomeState extends State<ListIncomeScreen> {
                                               'This income belongs to an Asset. To delete this income, please delete the corresponding Asset'),
                                           actions: [
                                             TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context, 'OK'),
+                                              onPressed: () => Navigator.pop(context, 'OK'),
                                               child: Text('OK'),
                                             )
                                           ],

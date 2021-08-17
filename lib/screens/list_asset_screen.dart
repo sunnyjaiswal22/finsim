@@ -6,7 +6,6 @@ import 'package:finsim/widgets/navigation_drawer.dart';
 import 'package:finsim/widgets/yearly_appreciation_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class ListAssetScreen extends StatefulWidget {
@@ -20,10 +19,6 @@ class ListAssetScreen extends StatefulWidget {
 class _ListAssetState extends State<ListAssetScreen> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     return Consumer<AssetModel>(
       builder: (context, assetModel, _) {
         return Scaffold(
@@ -75,8 +70,7 @@ class _ListAssetState extends State<ListAssetScreen> {
                                 Text('${item.startDate.format("MMM yyyy")}'),
                                 Text(' - ${item.endDate.format("MMM yyyy")} '),
                                 Text('Investment ' +
-                                    describeEnum(
-                                        item.investment.frequency.toString()) +
+                                    describeEnum(item.investment.frequency.toString()) +
                                     (item.generatesIncome ? '' : '')),
                               ],
                             ),
@@ -93,16 +87,14 @@ class _ListAssetState extends State<ListAssetScreen> {
                                           content: Text('Delete this item?'),
                                           actions: [
                                             TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
+                                              onPressed: () => Navigator.pop(context),
                                               child: Text('No'),
                                             ),
                                             TextButton(
                                               onPressed: () {
                                                 setState(() {
                                                   var selectedAsset = item;
-                                                  assetModel
-                                                      .delete(selectedAsset);
+                                                  assetModel.delete(selectedAsset);
                                                 });
                                                 Navigator.pop(context);
                                               },

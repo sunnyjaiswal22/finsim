@@ -1,3 +1,4 @@
+import 'package:finsim/helpers/constants.dart';
 import 'package:finsim/helpers/globals.dart';
 import 'package:finsim/helpers/simulator.dart';
 import 'package:finsim/models/asset.dart';
@@ -25,8 +26,7 @@ class _AssetChartState extends State<AssetChart> {
   var currencyFormat = new NumberFormat("#,##,##,###", "en_IN");
   DateTime now = new DateTime.now();
 
-  double getHorizontalGridInterval(
-      List<BarChartGroupData> barChartGroupDataList) {
+  double getHorizontalGridInterval(List<BarChartGroupData> barChartGroupDataList) {
     double horizontalGridInterval = 0;
     double minAmount = 0, maxAmount = 0;
     barChartGroupDataList.forEach((barChartGroupData) {
@@ -47,8 +47,7 @@ class _AssetChartState extends State<AssetChart> {
       var y = barChartGroupData.barRods[0].y;
       maxAmount = maxAmount > y ? maxAmount : y;
     });
-    maxY =
-        maxAmount > 0 ? (maxAmount + horizontalGridInterval * 1.5) : maxAmount;
+    maxY = maxAmount > 0 ? (maxAmount + horizontalGridInterval * 1.5) : maxAmount;
     return maxY;
   }
 
@@ -61,8 +60,7 @@ class _AssetChartState extends State<AssetChart> {
       var y = barChartGroupData.barRods[0].y;
       minAmount = minAmount < y ? minAmount : y;
     });
-    minY =
-        minAmount < 0 ? (minAmount - horizontalGridInterval * 1.5) : minAmount;
+    minY = minAmount < 0 ? (minAmount - horizontalGridInterval * 1.5) : minAmount;
     return minY;
   }
 
@@ -76,8 +74,7 @@ class _AssetChartState extends State<AssetChart> {
     }
     int yearsToSimulate = Globals.sharedPreferences.getInt('yearsToSimulate')!;
     return Consumer4<IncomeModel, ExpenditureModel, AssetModel, LiabilityModel>(
-      builder: (context, incomeModel, expenditureModel, assetModel,
-          liabilityModel, _) {
+      builder: (context, incomeModel, expenditureModel, assetModel, liabilityModel, _) {
         return FutureBuilder(
           future: Future.wait([
             incomeModel.items,
@@ -105,8 +102,8 @@ class _AssetChartState extends State<AssetChart> {
               assetList,
               liabilityList,
             )['assets']!;
-            final horizontalGridInterval = getHorizontalGridInterval(
-                barChartGroupDataList as List<BarChartGroupData>);
+            final horizontalGridInterval =
+                getHorizontalGridInterval(barChartGroupDataList as List<BarChartGroupData>);
             return Container(
               padding: const EdgeInsets.all(5),
               margin: EdgeInsets.only(top: 15),
@@ -114,25 +111,20 @@ class _AssetChartState extends State<AssetChart> {
                 aspectRatio: aspectRatio,
                 child: Card(
                   elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                   color: Colors.white,
                   child: BarChart(
                     BarChartData(
                       alignment: BarChartAlignment.spaceAround,
-                      maxY: getMaxY(
-                          barChartGroupDataList, horizontalGridInterval),
-                      minY: getMinY(
-                          barChartGroupDataList, horizontalGridInterval),
+                      maxY: getMaxY(barChartGroupDataList, horizontalGridInterval),
+                      minY: getMinY(barChartGroupDataList, horizontalGridInterval),
                       titlesData: FlTitlesData(
                         show: true,
                         bottomTitles: SideTitles(
                           showTitles: true,
                           getTitles: (double value) {
-                            if (yearsToSimulate <= 10) {
-                              return DateFormat('MMM').format(now) +
-                                  ' ' +
-                                  value.toInt().toString();
+                            if (yearsToSimulate <= Constants.maxChartBarsInPortrait) {
+                              return DateFormat('MMM').format(now) + ' ' + value.toInt().toString();
                             } else {
                               return value.toInt().toString();
                             }

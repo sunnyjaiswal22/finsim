@@ -19,19 +19,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _formKey = GlobalKey<FormState>();
 
   _saveSettings(int yearsToSimulate) {
-    print('Saving settings');
     Globals.sharedPreferences.setInt('yearsToSimulate', yearsToSimulate);
-    Provider.of<IncomeModel>(context, listen: false)
-        .notifyListenersFromOutside();
+    Provider.of<IncomeModel>(context, listen: false).notifyListenersFromOutside();
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     int _yearsToSimulate = Globals.sharedPreferences.getInt('yearsToSimulate')!;
     return Scaffold(
       appBar: FinSimAppBar.appbar(title: 'Settings'),
