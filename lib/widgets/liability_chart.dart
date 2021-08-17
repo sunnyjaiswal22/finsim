@@ -86,116 +86,117 @@ class _LiabilityChartState extends State<LiabilityChart> {
             liabilityModel.items,
           ]),
           builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
+            if (snapshot.hasData) {
+              List<Income> incomeList = snapshot.data![0];
+              List<Expenditure> expenditureList = snapshot.data![1];
+              List<Asset> assetList = snapshot.data![2];
+              List<Liability> liabilityList = snapshot.data![3];
+              if (liabilityList.isEmpty) {
+                return Container();
+              }
+              final barChartGroupDataList = Simulator.simulate(
+                incomeList,
+                expenditureList,
+                assetList,
+                liabilityList,
+              )['liabilities']!;
+              final horizontalGridInterval = getHorizontalGridInterval(
+                  barChartGroupDataList as List<BarChartGroupData>);
+              return Container(
+                padding: const EdgeInsets.all(5),
+                margin: EdgeInsets.only(top: 15),
+                child: AspectRatio(
+                  aspectRatio: aspectRatio,
+                  child: Card(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    color: Colors.white,
+                    child: BarChart(
+                      BarChartData(
+                        alignment: BarChartAlignment.spaceAround,
+                        maxY: getMaxY(
+                            barChartGroupDataList, horizontalGridInterval),
+                        minY: getMinY(
+                            barChartGroupDataList, horizontalGridInterval),
+                        titlesData: FlTitlesData(
+                          show: true,
+                          bottomTitles: SideTitles(
+                            showTitles: true,
+                            getTitles: (double value) {
+                              if (yearsToSimulate <= 10) {
+                                return DateFormat('MMM').format(now) +
+                                    ' ' +
+                                    value.toInt().toString();
+                              } else {
+                                return value.toInt().toString();
+                              }
+                            },
+                          ),
+                          leftTitles: SideTitles(showTitles: false),
+                        ),
+                        borderData: FlBorderData(
+                          show: true,
+                          border: Border(
+                            bottom: BorderSide(),
+                            left: BorderSide(),
+                          ),
+                        ),
+                        axisTitleData: FlAxisTitleData(
+                            bottomTitle: AxisTitle(
+                              showTitle: true,
+                              titleText: 'Time',
+                              margin: 0,
+                            ),
+                            leftTitle: AxisTitle(
+                              showTitle: true,
+                              titleText: 'Amount',
+                            ),
+                            topTitle: AxisTitle(
+                              showTitle: true,
+                              titleText: 'Liabilities',
+                              margin: 15,
+                              textStyle: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            )),
+                        gridData: FlGridData(
+                          show: true,
+                          horizontalInterval: horizontalGridInterval,
+                        ),
+                        barTouchData: BarTouchData(
+                          touchTooltipData: BarTouchTooltipData(
+                            tooltipMargin: 2,
+                            tooltipPadding: EdgeInsets.all(0),
+                            getTooltipItem: (
+                              BarChartGroupData group,
+                              int groupIndex,
+                              BarChartRodData rod,
+                              int rodIndex,
+                            ) {
+                              return BarTooltipItem(
+                                currencyFormat.format(rod.y),
+                                TextStyle(
+                                  color: Colors.black,
+                                  fontSize: (12 - (yearsToSimulate / 5 - 1)),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        barGroups: barChartGroupDataList,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            } else {
               return AspectRatio(
                 aspectRatio: aspectRatio,
                 child: Center(child: CircularProgressIndicator()),
               );
             }
-            List<Income> incomeList = snapshot.data![0];
-            List<Expenditure> expenditureList = snapshot.data![1];
-            List<Asset> assetList = snapshot.data![2];
-            List<Liability> liabilityList = snapshot.data![3];
-            if (liabilityList.isEmpty) {
-              return Container();
-            }
-            final barChartGroupDataList = Simulator.simulate(
-              incomeList,
-              expenditureList,
-              assetList,
-              liabilityList,
-            )['liabilities']!;
-            final horizontalGridInterval = getHorizontalGridInterval(
-                barChartGroupDataList as List<BarChartGroupData>);
-            return Container(
-              padding: const EdgeInsets.all(5),
-              margin: EdgeInsets.only(top: 15),
-              child: AspectRatio(
-                aspectRatio: aspectRatio,
-                child: Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
-                  color: Colors.white,
-                  child: BarChart(
-                    BarChartData(
-                      alignment: BarChartAlignment.spaceAround,
-                      maxY: getMaxY(
-                          barChartGroupDataList, horizontalGridInterval),
-                      minY: getMinY(
-                          barChartGroupDataList, horizontalGridInterval),
-                      titlesData: FlTitlesData(
-                        show: true,
-                        bottomTitles: SideTitles(
-                          showTitles: true,
-                          getTitles: (double value) {
-                            if (yearsToSimulate <= 10) {
-                              return DateFormat('MMM').format(now) +
-                                  ' ' +
-                                  value.toInt().toString();
-                            } else {
-                              return value.toInt().toString();
-                            }
-                          },
-                        ),
-                        leftTitles: SideTitles(showTitles: false),
-                      ),
-                      borderData: FlBorderData(
-                        show: true,
-                        border: Border(
-                          bottom: BorderSide(),
-                          left: BorderSide(),
-                        ),
-                      ),
-                      axisTitleData: FlAxisTitleData(
-                          bottomTitle: AxisTitle(
-                            showTitle: true,
-                            titleText: 'Time',
-                            margin: 0,
-                          ),
-                          leftTitle: AxisTitle(
-                            showTitle: true,
-                            titleText: 'Amount',
-                          ),
-                          topTitle: AxisTitle(
-                            showTitle: true,
-                            titleText: 'Liabilities',
-                            margin: 15,
-                            textStyle: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          )),
-                      gridData: FlGridData(
-                        show: true,
-                        horizontalInterval: horizontalGridInterval,
-                      ),
-                      barTouchData: BarTouchData(
-                        touchTooltipData: BarTouchTooltipData(
-                          tooltipMargin: 2,
-                          tooltipPadding: EdgeInsets.all(0),
-                          getTooltipItem: (
-                            BarChartGroupData group,
-                            int groupIndex,
-                            BarChartRodData rod,
-                            int rodIndex,
-                          ) {
-                            return BarTooltipItem(
-                              currencyFormat.format(rod.y),
-                              TextStyle(
-                                color: Colors.black,
-                                fontSize: (12 - (yearsToSimulate / 5 - 1)),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      barGroups: barChartGroupDataList,
-                    ),
-                  ),
-                ),
-              ),
-            );
           },
         );
       },

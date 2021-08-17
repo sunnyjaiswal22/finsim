@@ -7,7 +7,7 @@ class Liability {
   int id = 0;
   String name = '';
   int amount = 0;
-  double rateOfInterest = 0;
+  double rateOfInterest = 0.0;
   int durationInYears = 0;
   Jiffy startDate = Jiffy().startOf(Units.DAY);
   Expenditure emi = Expenditure();

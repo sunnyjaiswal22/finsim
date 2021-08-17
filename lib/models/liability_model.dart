@@ -1,6 +1,6 @@
 import 'dart:collection';
-import 'dart:math';
 
+import 'package:finsim/helpers/common_calculator.dart';
 import 'package:finsim/helpers/db_helper.dart';
 import 'package:finsim/models/liability.dart';
 import 'package:finsim/models/expenditure_model.dart';
@@ -8,16 +8,16 @@ import 'package:flutter/material.dart';
 
 class LiabilityModel extends ChangeNotifier {
   Future<void> add(Liability liability) async {
-    //Calculating EMI = P × r × (1 + r)^n/((1 + r)^n - 1)
-    var l = liability;
-    var durationInMonths = l.durationInYears * 12;
-    var monthlyRateOfInterest = l.rateOfInterest / (12 * 100);
-    var onePlusRToPowerN = pow((1 + monthlyRateOfInterest), durationInMonths);
-    var ratio = onePlusRToPowerN / (onePlusRToPowerN - 1);
-    l.emi.amount = (l.amount * monthlyRateOfInterest * ratio).toInt();
+    //Calculating and setting EMI amount
+    liability.emi.amount = CommonCalculator.calculateEMI(
+      liability.amount,
+      liability.durationInYears * 12,
+      liability.rateOfInterest,
+    );
 
     //Setting EMI end date
-    l.emi.endDate = l.emi.startDate.clone().add(years: l.durationInYears);
+    liability.emi.endDate =
+        liability.emi.startDate.clone().add(years: liability.durationInYears);
 
     //Saving
     await DBHelper.saveLiability(liability);
