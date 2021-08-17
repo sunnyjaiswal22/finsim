@@ -62,41 +62,61 @@ class StatementScreen extends StatelessWidget {
                         ],
                       ),
                     )
-                  : ListView.builder(
-                      itemCount: statementList.length,
-                      itemBuilder: (BuildContext context, int i) {
-                        var item = statementList[i];
-                        return Column(
-                          children: [
-                            ListTile(
-                              leading: Text('${item.date.format("dd-MM-yyyy")}'),
-                              title: Text(
-                                '${item.message}',
-                                style: TextStyle(
-                                  color: item.transactionType == TransactionType.Credit
-                                      ? Colors.green.shade900
-                                      : Colors.red.shade900,
-                                ),
+                  : Column(
+                      children: [
+                        ListTile(
+                          leading: Text('Date          '),
+                          title: Text('Transaction'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Amount'),
+                              SizedBox(
+                                width: 20,
                               ),
-                              subtitle:
-                                  Text('${describeEnum(item.transactionType)} ${item.details}'),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
+                              Text('Balance'),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: statementList.length,
+                            itemBuilder: (BuildContext context, int i) {
+                              var item = statementList[i];
+                              return Column(
                                 children: [
-                                  Text('${item.amount}'),
-                                  SizedBox(
-                                    width: 20,
+                                  ListTile(
+                                    leading: Text('${item.date.format("dd-MM-yyyy")}'),
+                                    title: Text(
+                                      '${item.message}',
+                                      style: TextStyle(
+                                        color: item.transactionType == TransactionType.Credit
+                                            ? Colors.green.shade900
+                                            : Colors.red.shade900,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                        '${describeEnum(item.transactionType)} ${item.details}'),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text('${item.amount}'),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Text('${item.balance}'),
+                                      ],
+                                    ),
                                   ),
-                                  Text('${item.balance}'),
+                                  Divider(
+                                    thickness: 2,
+                                  ),
                                 ],
-                              ),
-                            ),
-                            Divider(
-                              thickness: 2,
-                            ),
-                          ],
-                        );
-                      },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     );
             },
           ),
