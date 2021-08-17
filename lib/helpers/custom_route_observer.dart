@@ -7,9 +7,7 @@ import 'package:flutter/widgets.dart';
 class CustomRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   _setOrientationForDashboard(String? routeName) {
     if (HomeScreen.routeName == routeName) {
-      print('Observed home route');
       int yearsToSimulate = Globals.sharedPreferences.getInt('yearsToSimulate')!;
-      print('yearsToSimulate: $yearsToSimulate');
       if (yearsToSimulate > Constants.maxChartBarsInPortrait) {
         SystemChrome.setPreferredOrientations([
           DeviceOrientation.landscapeLeft,

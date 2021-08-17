@@ -125,11 +125,8 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                         value: ExpenditureFrequency.Monthly,
                         groupValue: asset.investment.frequency,
                         onChanged: (ExpenditureFrequency? value) {
-                          print('Inside $value');
                           setState(() {
-                            print('Before: ${asset.investment.frequency}');
                             asset.investment.frequency = value!;
-                            print('After: ${asset.investment.frequency}');
                           });
                         },
                       ),

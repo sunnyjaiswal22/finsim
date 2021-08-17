@@ -17,17 +17,16 @@ class NavigationDrawer extends StatelessWidget {
         child: ListView(
           children: [
             Container(
+              height: 100,
               child: DrawerHeader(
-                decoration:
-                    BoxDecoration(color: Theme.of(context).primaryColor),
+                decoration: BoxDecoration(color: Theme.of(context).primaryColor),
                 child: Image.asset('assets/images/logo_white.png'),
               ),
             ),
             ListTile(
               title: Text('Home'),
               onTap: () {
-                Navigator.popUntil(
-                    context, ModalRoute.withName(HomeScreen.routeName));
+                Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
               },
             ),
             ListTile(

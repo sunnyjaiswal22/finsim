@@ -176,7 +176,8 @@ class _AssetChartState extends State<AssetChart> {
                               currencyFormat.format(rod.y),
                               TextStyle(
                                 color: Colors.black,
-                                fontSize: (12 - (yearsToSimulate / 5 - 1)),
+                                //Reduce font size dynamically
+                                fontSize: (12 - (yearsToSimulate / 3 - 1)),
                               ),
                             );
                           },
