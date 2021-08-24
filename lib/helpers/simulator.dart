@@ -95,7 +95,7 @@ class Simulator {
             date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Credit,
-            message: income.name + ': Appreciated by: ' + yearlyAppreciation.toString(),
+            message: income.name + ': Appreciated by: ' + yearlyAppreciation.round().toString(),
             details: 'Yearly',
             balance: totalSavings.round(),
           ));
@@ -140,7 +140,7 @@ class Simulator {
             date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Credit,
-            message: asset.name + ': Profit: ' + yearlyAppreciation.toString(),
+            message: asset.name + ': Profit: ' + yearlyAppreciation.round().toString(),
             details: 'Yearly',
             balance: totalSavings.round(),
           ));
@@ -281,7 +281,8 @@ class Simulator {
             date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Debit,
-            message: expenditure.name + ': Appreciated by: ' + yearlyAppreciation.toString(),
+            message:
+                expenditure.name + ': Appreciated by: ' + yearlyAppreciation.round().toString(),
             details: 'Yearly',
             balance: totalSavings.round(),
           ));

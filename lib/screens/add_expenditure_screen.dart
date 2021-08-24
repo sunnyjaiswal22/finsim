@@ -1,3 +1,4 @@
+import 'package:finsim/helpers/constants.dart';
 import 'package:finsim/models/expenditure_model.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/screens/home_screen.dart';
@@ -184,7 +185,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                         children: [
                           Text('End Date   '),
                           SizedBox(width: 20),
-                          Text('${expenditure.endDate.format("dd-MM-yyyy")}'),
+                          if (!expenditure.endDate.isSame(Constants.maxDateTime))
+                            Text('${expenditure.endDate.format("dd-MM-yyyy")}'),
                         ],
                       ),
                       IconButton(

@@ -1,3 +1,4 @@
+import 'package:finsim/helpers/constants.dart';
 import 'package:finsim/models/Income_model.dart';
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
@@ -187,7 +188,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                         children: [
                           Text('End Date   '),
                           SizedBox(width: 20),
-                          Text('${income.endDate.format("dd-MM-yyyy")}'),
+                          if (!income.endDate.isSame(Constants.maxDateTime))
+                            Text('${income.endDate.format("dd-MM-yyyy")}'),
                         ],
                       ),
                       IconButton(

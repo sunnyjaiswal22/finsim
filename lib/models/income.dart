@@ -1,3 +1,4 @@
+import 'package:finsim/helpers/constants.dart';
 import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
@@ -9,7 +10,7 @@ class Income {
   int amount = 0;
   double yearlyAppreciationPercentage = 0;
   Jiffy startDate = Jiffy().startOf(Units.DAY);
-  Jiffy endDate = Jiffy().startOf(Units.DAY).add(years: 100);
+  Jiffy endDate = Constants.maxDateTime.clone();
   bool belongsToAsset = false;
 
   Map<String, Object> toMap() {
