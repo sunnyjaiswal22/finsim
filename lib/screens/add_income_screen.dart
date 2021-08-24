@@ -213,66 +213,72 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   ElevatedButton(
                     child: Text('Continue'),
                     onPressed: () {
-                      Provider.of<IncomeModel>(context, listen: false).add(income).then(
-                        (_) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: RichText(
-                                  text: TextSpan(children: [
-                                    WidgetSpan(
-                                      alignment: PlaceholderAlignment.middle,
-                                      child: Icon(
-                                        Icons.check_circle_outline,
-                                        color: Colors.green,
-                                        size: 40,
+                      if (_formKey.currentState!.validate()) {
+                        Provider.of<IncomeModel>(context, listen: false).add(income).then(
+                          (_) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: RichText(
+                                    text: TextSpan(children: [
+                                      WidgetSpan(
+                                        alignment: PlaceholderAlignment.middle,
+                                        child: Icon(
+                                          Icons.check_circle_outline,
+                                          color: Colors.green,
+                                          size: 40,
+                                        ),
                                       ),
-                                    ),
-                                    TextSpan(
-                                      text: ' Income Saved',
-                                      style: TextStyle(color: Colors.black, fontSize: 22),
-                                    ),
-                                  ]),
-                                ),
-                                content: Text(
-                                    'Income saved successfully. Please tap OK to add expenditure details'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      Navigator.pushNamed(
-                                        context,
-                                        AddExpenditureScreen.routeName,
-                                        arguments: {'isBlankStart': isBlankStart},
-                                      );
-                                    },
-                                    child: Text('OK'),
+                                      TextSpan(
+                                        text: ' Income Saved',
+                                        style: TextStyle(color: Colors.black, fontSize: 22),
+                                      ),
+                                    ]),
                                   ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      );
+                                  content: Text(
+                                      'Income saved successfully. Please tap OK to add expenditure details'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pushNamed(
+                                          context,
+                                          AddExpenditureScreen.routeName,
+                                          arguments: {'isBlankStart': isBlankStart},
+                                        );
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        );
+                      }
                     },
                   )
                 else if (income.belongsToAsset)
                   ElevatedButton(
                     child: Text('Save Asset'),
                     onPressed: () {
-                      Provider.of<AssetModel>(context, listen: false).add(asset).then((_) =>
-                          Navigator.popUntil(
-                              context, ModalRoute.withName(ListAssetScreen.routeName)));
+                      if (_formKey.currentState!.validate()) {
+                        Provider.of<AssetModel>(context, listen: false).add(asset).then((_) =>
+                            Navigator.popUntil(
+                                context, ModalRoute.withName(ListAssetScreen.routeName)));
+                      }
                     },
                   )
                 else
                   ElevatedButton(
                     child: Text('Submit'),
                     onPressed: () {
-                      Provider.of<IncomeModel>(context, listen: false)
-                          .add(income)
-                          .then((_) => Navigator.pop(context));
+                      if (_formKey.currentState!.validate()) {
+                        Provider.of<IncomeModel>(context, listen: false)
+                            .add(income)
+                            .then((_) => Navigator.pop(context));
+                      }
                     },
                   ),
               ],

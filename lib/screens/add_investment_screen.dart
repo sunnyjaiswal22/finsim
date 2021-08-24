@@ -197,17 +197,21 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                 if (asset.generatesIncome)
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, AddIncomeScreen.routeName,
-                          arguments: {'asset': asset});
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.pushNamed(context, AddIncomeScreen.routeName,
+                            arguments: {'asset': asset});
+                      }
                     },
                     child: Text('Proceed to Add Income'),
                   )
                 else
                   ElevatedButton(
                     onPressed: () {
-                      Provider.of<AssetModel>(context, listen: false).add(asset).then((_) =>
-                          Navigator.popUntil(
-                              context, ModalRoute.withName(ListAssetScreen.routeName)));
+                      if (_formKey.currentState!.validate()) {
+                        Provider.of<AssetModel>(context, listen: false).add(asset).then((_) =>
+                            Navigator.popUntil(
+                                context, ModalRoute.withName(ListAssetScreen.routeName)));
+                      }
                     },
                     child: Text('Submit'),
                   ),

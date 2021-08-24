@@ -199,55 +199,59 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                 if (isBlankStart)
                   ElevatedButton(
                     onPressed: () {
-                      Provider.of<ExpenditureModel>(context, listen: false).add(expenditure).then(
-                        (_) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: RichText(
-                                  text: TextSpan(children: [
-                                    WidgetSpan(
-                                      alignment: PlaceholderAlignment.middle,
-                                      child: Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green,
-                                        size: 40,
+                      if (_formKey.currentState!.validate()) {
+                        Provider.of<ExpenditureModel>(context, listen: false).add(expenditure).then(
+                          (_) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: RichText(
+                                    text: TextSpan(children: [
+                                      WidgetSpan(
+                                        alignment: PlaceholderAlignment.middle,
+                                        child: Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                          size: 40,
+                                        ),
                                       ),
-                                    ),
-                                    TextSpan(
-                                      text: ' Thanks',
-                                      style: TextStyle(color: Colors.black, fontSize: 22),
-                                    ),
-                                  ]),
-                                ),
-                                content: Text(
-                                    'Expenditure details saved. Please click OK to view output. Please add more details including Assets and Liabilities to get more realistic output'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.popUntil(
-                                        context,
-                                        ModalRoute.withName(HomeScreen.routeName),
-                                      );
-                                    },
-                                    child: Text('OK'),
+                                      TextSpan(
+                                        text: ' Thanks',
+                                        style: TextStyle(color: Colors.black, fontSize: 22),
+                                      ),
+                                    ]),
                                   ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      );
+                                  content: Text(
+                                      'Expenditure details saved. Please click OK to view output. Please add more details including Assets and Liabilities to get more realistic output'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.popUntil(
+                                          context,
+                                          ModalRoute.withName(HomeScreen.routeName),
+                                        );
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        );
+                      }
                     },
                     child: Text('Continue'),
                   )
                 else
                   ElevatedButton(
                     onPressed: () {
-                      Provider.of<ExpenditureModel>(context, listen: false)
-                          .add(expenditure)
-                          .then((_) => Navigator.pop(context));
+                      if (_formKey.currentState!.validate()) {
+                        Provider.of<ExpenditureModel>(context, listen: false)
+                            .add(expenditure)
+                            .then((_) => Navigator.pop(context));
+                      }
                     },
                     child: Text('Submit'),
                   ),

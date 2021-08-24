@@ -110,7 +110,7 @@ class DBHelper {
 
     return await db.transaction((txn) async {
       asset.investment.id = await saveExpenditure(asset.investment, txn);
-      if (asset.income.id != 0) {
+      if (asset.generatesIncome) {
         asset.income.id = await saveIncome(asset.income, txn);
       }
       return await insert('asset', asset.toMap(), txn);
@@ -142,10 +142,9 @@ class DBHelper {
     final db = await getDatabase();
 
     return await db.transaction((txn) async {
-      var deleteStatus =
-          await txn.delete('asset', where: 'id = ?', whereArgs: [asset.id]);
+      var deleteStatus = await txn.delete('asset', where: 'id = ?', whereArgs: [asset.id]);
       await deleteExpenditure(asset.investment.id, txn);
-      if (asset.income.id != 0) {
+      if (asset.generatesIncome) {
         await deleteIncome(asset.income.id, txn);
       }
       return deleteStatus;
@@ -156,8 +155,7 @@ class DBHelper {
     final db = await getDatabase();
 
     return await db.transaction((txn) async {
-      var deleteStatus = await txn
-          .delete('liability', where: 'id = ?', whereArgs: [liability.id]);
+      var deleteStatus = await txn.delete('liability', where: 'id = ?', whereArgs: [liability.id]);
       await deleteExpenditure(liability.emi.id, txn);
       return deleteStatus;
     });

@@ -161,11 +161,13 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          AddInvestmentScreen.routeName,
-                          arguments: {'asset': asset},
-                        );
+                        if (_formKey.currentState!.validate()) {
+                          Navigator.pushNamed(
+                            context,
+                            AddInvestmentScreen.routeName,
+                            arguments: {'asset': asset},
+                          );
+                        }
                       },
                       child: Text('Proceed to add Investment'),
                     ),
