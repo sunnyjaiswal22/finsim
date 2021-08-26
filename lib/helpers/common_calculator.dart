@@ -25,8 +25,7 @@ class CommonCalculator {
     //r = monthly_rate = annual_rate / 1200
     //n = after_number_of_months
     var monthlyRateOfInterest = annualRateOfInterest / (12 * 100);
-    var onePlusRToPowerN =
-        pow((1 + monthlyRateOfInterest), afterNumberOfMonths);
+    var onePlusRToPowerN = pow((1 + monthlyRateOfInterest), afterNumberOfMonths);
 
     var ratio = (onePlusRToPowerN - 1) / monthlyRateOfInterest;
     return ((amount * onePlusRToPowerN) - (emiAmount * ratio));

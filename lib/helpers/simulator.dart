@@ -102,66 +102,6 @@ class Simulator {
         }
       });
 
-      //******************** ASSET ********************//
-      assetList.forEach((asset) {
-        //Initialize total asset investment if not present
-        if (!assetInvestmentMap.containsKey(asset.id)) {
-          assetInvestmentMap[asset.id] = 0;
-        }
-        //Investment in asset
-        var onceEvent = asset.investment.frequency == ExpenditureFrequency.Once &&
-            date.isSame(asset.investment.startDate);
-        var monthlyEvent = asset.investment.frequency == ExpenditureFrequency.Monthly &&
-            date.date == asset.investment.startDate.date &&
-            date.isAfter(asset.investment.startDate) && //Event doesn't occur on first day itself
-            date.isSameOrBefore(asset.investment.endDate); //Event should include the last day also
-        var yearlyEvent = asset.investment.frequency == ExpenditureFrequency.Yearly &&
-            date.date == asset.investment.startDate.date &&
-            date.month == asset.investment.startDate.month &&
-            date.isAfter(asset.investment.startDate) && //Event doesn't occur on first day itself
-            date.isSameOrBefore(asset.investment.endDate); //Event should include the last day also
-
-        if (onceEvent || monthlyEvent || yearlyEvent) {
-          assetInvestmentMap[asset.id] = assetInvestmentMap[asset.id]! + asset.investment.amount;
-        }
-
-        //Asset year completed
-        if (date.isSameOrBefore(asset.endDate) &&
-            date.date == asset.startDate.date &&
-            date.month == asset.startDate.month &&
-            date.year != asset.startDate.year &&
-            asset.yearlyAppreciationPercentage != 0) {
-          var yearlyAppreciation =
-              (assetInvestmentMap[asset.id]! * asset.yearlyAppreciationPercentage / 100);
-
-          assetInvestmentMap[asset.id] = assetInvestmentMap[asset.id]! + yearlyAppreciation;
-
-          statementList.add(StatementEntry(
-            date: date.clone(),
-            amount: 0,
-            transactionType: TransactionType.Credit,
-            message: asset.name + ': Profit: ' + yearlyAppreciation.round().toString(),
-            details: 'Yearly',
-            balance: totalSavings.round(),
-          ));
-        }
-
-        //Asset end date reached
-        if (date.isSame(asset.endDate)) {
-          var assetValue = assetInvestmentMap[asset.id]!;
-          totalSavings += assetValue;
-          assetInvestmentMap[asset.id] = 0;
-          statementList.add(StatementEntry(
-            date: date.clone(),
-            amount: assetValue.round(),
-            transactionType: TransactionType.Credit,
-            message: asset.name + ': Diluted',
-            details: describeEnum(asset.investment.frequency.toString()),
-            balance: totalSavings.round(),
-          ));
-        }
-      });
-
       //******************** LIABILITY ********************//
       liabilitiesList.forEach((liability) {
         //Initialize total asset investment if not present
@@ -181,7 +121,7 @@ class Simulator {
             amount: 0,
             transactionType: TransactionType.Debit,
             message: liability.name + ': Initialised',
-            details: 'Remaining loan amount: ${liabilityAmountMap[liability.id]}',
+            details: 'Remaining loan amount: ${liabilityAmountMap[liability.id]!.round()}',
             balance: totalSavings.round(),
           ));
         }
@@ -220,6 +160,7 @@ class Simulator {
       });
 
       //******************** EXPENDITURE ********************//
+      //Expenditure calculation should be after liability calculations as it needs its data
       expenditureList.forEach((expenditure) {
         //Storing amount in another variable so as to not modify the original object
         if (!expenditureAmountMap.containsKey(expenditure.id)) {
@@ -284,6 +225,67 @@ class Simulator {
             message:
                 expenditure.name + ': Appreciated by: ' + yearlyAppreciation.round().toString(),
             details: 'Yearly',
+            balance: totalSavings.round(),
+          ));
+        }
+      });
+
+      //******************** ASSET ********************//
+      //Assets calculated after expenditure so that the order in statement is logical
+      assetList.forEach((asset) {
+        //Initialize total asset investment if not present
+        if (!assetInvestmentMap.containsKey(asset.id)) {
+          assetInvestmentMap[asset.id] = 0;
+        }
+        //Investment in asset
+        var onceEvent = asset.investment.frequency == ExpenditureFrequency.Once &&
+            date.isSame(asset.investment.startDate);
+        var monthlyEvent = asset.investment.frequency == ExpenditureFrequency.Monthly &&
+            date.date == asset.investment.startDate.date &&
+            date.isAfter(asset.investment.startDate) && //Event doesn't occur on first day itself
+            date.isSameOrBefore(asset.investment.endDate); //Event should include the last day also
+        var yearlyEvent = asset.investment.frequency == ExpenditureFrequency.Yearly &&
+            date.date == asset.investment.startDate.date &&
+            date.month == asset.investment.startDate.month &&
+            date.isAfter(asset.investment.startDate) && //Event doesn't occur on first day itself
+            date.isSameOrBefore(asset.investment.endDate); //Event should include the last day also
+
+        if (onceEvent || monthlyEvent || yearlyEvent) {
+          assetInvestmentMap[asset.id] = assetInvestmentMap[asset.id]! + asset.investment.amount;
+        }
+
+        //Asset year completed
+        if (date.isSameOrBefore(asset.endDate) &&
+            date.date == asset.startDate.date &&
+            date.month == asset.startDate.month &&
+            date.year != asset.startDate.year &&
+            asset.yearlyAppreciationPercentage != 0) {
+          var yearlyAppreciation =
+              (assetInvestmentMap[asset.id]! * asset.yearlyAppreciationPercentage / 100);
+
+          assetInvestmentMap[asset.id] = assetInvestmentMap[asset.id]! + yearlyAppreciation;
+
+          statementList.add(StatementEntry(
+            date: date.clone(),
+            amount: 0,
+            transactionType: TransactionType.Credit,
+            message: asset.name + ': Profit: ' + yearlyAppreciation.round().toString(),
+            details: 'Yearly',
+            balance: totalSavings.round(),
+          ));
+        }
+
+        //Asset end date reached
+        if (date.isSame(asset.endDate)) {
+          var assetValue = assetInvestmentMap[asset.id]!;
+          totalSavings += assetValue;
+          assetInvestmentMap[asset.id] = 0;
+          statementList.add(StatementEntry(
+            date: date.clone(),
+            amount: assetValue.round(),
+            transactionType: TransactionType.Credit,
+            message: asset.name + ': Diluted',
+            details: describeEnum(asset.investment.frequency.toString()),
             balance: totalSavings.round(),
           ));
         }

@@ -27,9 +27,6 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
     arguments = arguments as Map<String, dynamic>;
     Asset asset = arguments['asset'];
 
-    asset.investment.startDate = asset.startDate.clone();
-    asset.investment.endDate = asset.endDate.clone();
-
     Future<void> _selectStartDate(
       BuildContext context,
     ) async {

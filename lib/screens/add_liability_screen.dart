@@ -81,8 +81,18 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                 ),
                 SizedBox(height: 10),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Rate of Interest (%)'),
+                  decoration: const InputDecoration(labelText: 'Rate of Interest (% per annum)'),
                   keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter rate of interest";
+                    }
+                    var doubleValue = double.parse(value);
+                    if (doubleValue == 0.0) {
+                      return "Please enter a non zero value";
+                    }
+                    return null;
+                  },
                   onChanged: (value) {
                     liability.rateOfInterest = double.parse(value);
                   },
@@ -91,8 +101,23 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Duration (years)'),
                   keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter duration";
+                    }
+                    var intValue = int.tryParse(value);
+                    if (intValue == null) {
+                      return "Please enter an integer value";
+                    }
+                    if (intValue == 0) {
+                      return "Please enter a non zero value";
+                    }
+                    return null;
+                  },
                   onChanged: (value) {
-                    liability.durationInYears = int.parse(value);
+                    if (int.tryParse(value) != null) {
+                      liability.durationInYears = int.parse(value);
+                    }
                   },
                 ),
                 SizedBox(height: 20),
@@ -118,9 +143,11 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Provider.of<LiabilityModel>(context, listen: false)
-                            .add(liability)
-                            .then((_) => Navigator.pop(context));
+                        if (_formKey.currentState!.validate()) {
+                          Provider.of<LiabilityModel>(context, listen: false)
+                              .add(liability)
+                              .then((_) => Navigator.pop(context));
+                        }
                       },
                       child: Text('Submit'),
                     ),

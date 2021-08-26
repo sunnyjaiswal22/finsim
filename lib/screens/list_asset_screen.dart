@@ -67,11 +67,15 @@ class _ListAssetState extends State<ListAssetScreen> {
                             ),
                             subtitle: Wrap(
                               children: [
-                                Text('${item.startDate.format("MMM yyyy")}'),
-                                Text(' - ${item.endDate.format("MMM yyyy")} '),
+                                Text(
+                                    '${item.startDate.format("MMM yyyy")} - ${item.endDate.format("MMM yyyy")}'),
                                 Text('Investment ' +
                                     describeEnum(item.investment.frequency.toString()) +
-                                    (item.generatesIncome ? '' : '')),
+                                    ' ${item.investment.amount}'),
+                                if (item.generatesIncome)
+                                  Text('Income ' +
+                                      describeEnum(item.income.frequency.toString()) +
+                                      '${item.income.amount}'),
                               ],
                             ),
                             trailing: Row(
