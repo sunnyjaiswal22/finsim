@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:finsim/helpers/cache.dart';
 import 'package:finsim/helpers/common_calculator.dart';
 import 'package:finsim/helpers/globals.dart';
@@ -25,15 +23,15 @@ class Simulator {
     List<Liability> liabilitiesList,
   ) {
     //Check if result exists in cache for the given input, return if present
-    // if (listEquals(incomeList, globalCache.getObject('incomeList')) &&
-    //     listEquals(expenditureList, globalCache.getObject('expenditureList')) &&
-    //     listEquals(assetList, globalCache.getObject('assetList')) &&
-    //     globalCache.getObject('result') != null) {
-    //   log("Simulation result returned from cache");
-    //   return globalCache.getObject('result');
-    // }
+    if (listEquals(incomeList, globalCache.getObject('incomeList')) &&
+        listEquals(expenditureList, globalCache.getObject('expenditureList')) &&
+        listEquals(assetList, globalCache.getObject('assetList')) &&
+        listEquals(liabilitiesList, globalCache.getObject('liabilitiesList')) &&
+        globalCache.getObject('result') != null) {
+      //log("Simulation result returned from cache");
+      return globalCache.getObject('result');
+    }
 
-    log("Simulating ...");
     int yearsToSimulate = Globals.sharedPreferences.getInt('yearsToSimulate')!;
     Jiffy simulationStartDate = Jiffy().startOf(Units.DAY);
     Jiffy simulationEndDate = Jiffy(simulationStartDate).add(years: yearsToSimulate);

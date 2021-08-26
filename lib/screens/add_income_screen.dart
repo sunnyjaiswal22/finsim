@@ -117,7 +117,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 SizedBox(height: 20),
                 Row(
                   children: [
-                    Text('Frequency:'),
+                    const Text('Frequency:'),
                     SizedBox(width: 10),
                     SizedBox(
                       width: 30,
@@ -131,7 +131,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                         },
                       ),
                     ),
-                    Text('Once'),
+                    const Text('Once'),
                     SizedBox(width: 15),
                     SizedBox(
                       width: 30,
@@ -145,7 +145,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                         },
                       ),
                     ),
-                    Text('Monthly'),
+                    const Text('Monthly'),
                     SizedBox(width: 15),
                     SizedBox(
                       width: 30,
@@ -159,7 +159,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                         },
                       ),
                     ),
-                    Text('Yearly'),
+                    const Text('Yearly'),
                   ],
                 ),
                 SizedBox(height: 10),
@@ -168,7 +168,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   children: [
                     Row(
                       children: [
-                        Text('Start Date '),
+                        const Text('Start Date '),
                         SizedBox(width: 20),
                         Text('${income.startDate.format("dd-MM-yyyy")}'),
                       ],
@@ -186,7 +186,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     children: [
                       Row(
                         children: [
-                          Text('End Date   '),
+                          const Text('End Date   '),
                           SizedBox(width: 20),
                           if (!income.endDate.isSame(Constants.maxDateTime))
                             Text('${income.endDate.format("dd-MM-yyyy")}'),
@@ -211,7 +211,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 SizedBox(height: 20),
                 if (isBlankStart)
                   ElevatedButton(
-                    child: Text('Continue'),
+                    child: const Text('Continue'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         Provider.of<IncomeModel>(context, listen: false).add(income).then(
@@ -248,7 +248,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                                           arguments: {'isBlankStart': isBlankStart},
                                         );
                                       },
-                                      child: Text('OK'),
+                                      child: const Text('OK'),
                                     ),
                                   ],
                                 );
@@ -261,7 +261,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   )
                 else if (income.belongsToAsset)
                   ElevatedButton(
-                    child: Text('Save Asset'),
+                    child: const Text('Save Asset'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         Provider.of<AssetModel>(context, listen: false).add(asset).then((_) =>
@@ -272,7 +272,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   )
                 else
                   ElevatedButton(
-                    child: Text('Submit'),
+                    child: const Text('Submit'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         Provider.of<IncomeModel>(context, listen: false)

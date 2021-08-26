@@ -126,7 +126,7 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                   children: [
                     Row(
                       children: [
-                        Text('Start Date '),
+                        const Text('Start Date '),
                         SizedBox(width: 20),
                         Text('${liability.startDate.format("dd-MM-yyyy")}'),
                       ],
@@ -149,7 +149,7 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                               .then((_) => Navigator.pop(context));
                         }
                       },
-                      child: Text('Submit'),
+                      child: const Text('Submit'),
                     ),
                   ],
                 ),

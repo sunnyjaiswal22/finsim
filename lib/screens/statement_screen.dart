@@ -24,7 +24,7 @@ class StatementScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Center(
-              child: Text('Statement'),
+              child: const Text('Statement'),
             ),
           ),
           drawer: NavigationDrawer(),
@@ -58,23 +58,24 @@ class StatementScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('No transactions yet ...', style: TextStyle(color: Colors.grey)),
+                          const Text('No transactions yet ...',
+                              style: TextStyle(color: Colors.grey)),
                         ],
                       ),
                     )
                   : Column(
                       children: [
                         ListTile(
-                          leading: Text('Date          '),
-                          title: Text('Transaction'),
+                          leading: const Text('Date          '),
+                          title: const Text('Transaction'),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text('Amount'),
+                              const Text('Amount'),
                               SizedBox(
                                 width: 20,
                               ),
-                              Text('Balance'),
+                              const Text('Balance'),
                             ],
                           ),
                         ),

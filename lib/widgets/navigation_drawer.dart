@@ -24,48 +24,48 @@ class NavigationDrawer extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text('Home'),
+              title: const Text('Home'),
               onTap: () {
                 Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
               },
             ),
             ListTile(
-              title: Text('Income Sources'),
+              title: const Text('Income Sources'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, ListIncomeScreen.routeName);
               },
             ),
             ListTile(
-              title: Text('Expenditures'),
+              title: const Text('Expenditures'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, ListExpenditureScreen.routeName);
               },
             ),
             ListTile(
-              title: Text('Assets'),
+              title: const Text('Assets'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, ListAssetScreen.routeName);
               },
             ),
             ListTile(
-              title: Text('Liabilities'),
+              title: const Text('Liabilities'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, ListLiabilityScreen.routeName);
               },
             ),
             ListTile(
-              title: Text('Statement'),
+              title: const Text('Statement'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, StatementScreen.routeName);
               },
             ),
             ListTile(
-              title: Text('Settings'),
+              title: const Text('Settings'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, SettingsScreen.routeName);

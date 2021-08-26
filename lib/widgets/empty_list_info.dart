@@ -13,9 +13,9 @@ class EmptyListInfo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('This list is empty. Tap', style: TextStyle(color: Colors.grey)),
+          const Text('This list is empty. Tap', style: TextStyle(color: Colors.grey)),
           Icon(Icons.add, color: Colors.grey),
-          Text('to add an item', style: TextStyle(color: Colors.grey)),
+          const Text('to add an item', style: TextStyle(color: Colors.grey)),
         ],
       ),
     );

@@ -104,7 +104,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                 SizedBox(height: 20),
                 Row(
                   children: [
-                    Text('Frequency:'),
+                    const Text('Frequency:'),
                     SizedBox(width: 10),
                     SizedBox(
                       width: 30,
@@ -118,7 +118,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                         },
                       ),
                     ),
-                    Text('Once'),
+                    const Text('Once'),
                     SizedBox(width: 15),
                     SizedBox(
                       width: 30,
@@ -132,7 +132,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                         },
                       ),
                     ),
-                    Text('Monthly'),
+                    const Text('Monthly'),
                     SizedBox(width: 15),
                     SizedBox(
                       width: 30,
@@ -146,7 +146,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                         },
                       ),
                     ),
-                    Text('Yearly'),
+                    const Text('Yearly'),
                   ],
                 ),
                 if (expenditure.frequency != ExpenditureFrequency.Once)
@@ -165,7 +165,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                   children: [
                     Row(
                       children: [
-                        Text('Start Date '),
+                        const Text('Start Date '),
                         SizedBox(width: 20),
                         Text('${expenditure.startDate.format("dd-MM-yyyy")}'),
                       ],
@@ -183,7 +183,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                     children: [
                       Row(
                         children: [
-                          Text('End Date   '),
+                          const Text('End Date   '),
                           SizedBox(width: 20),
                           if (!expenditure.endDate.isSame(Constants.maxDateTime))
                             Text('${expenditure.endDate.format("dd-MM-yyyy")}'),
@@ -222,7 +222,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                                       ),
                                     ]),
                                   ),
-                                  content: Text(
+                                  content: const Text(
                                       'Expenditure details saved. Please click OK to view output. Please add more details including Assets and Liabilities to get more realistic output'),
                                   actions: [
                                     TextButton(
@@ -232,7 +232,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                                           ModalRoute.withName(HomeScreen.routeName),
                                         );
                                       },
-                                      child: Text('OK'),
+                                      child: const Text('OK'),
                                     ),
                                   ],
                                 );
@@ -242,7 +242,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                         );
                       }
                     },
-                    child: Text('Continue'),
+                    child: const Text('Continue'),
                   )
                 else
                   ElevatedButton(
@@ -253,7 +253,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                             .then((_) => Navigator.pop(context));
                       }
                     },
-                    child: Text('Submit'),
+                    child: const Text('Submit'),
                   ),
               ],
             ),

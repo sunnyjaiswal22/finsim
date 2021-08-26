@@ -25,7 +25,7 @@ class _ListIncomeState extends State<ListIncomeScreen> {
         return Scaffold(
           appBar: AppBar(
             title: Center(
-              child: Text('Income Sources'),
+              child: const Text('Income Sources'),
             ),
             actions: [
               IconButton(
@@ -81,11 +81,11 @@ class _ListIncomeState extends State<ListIncomeScreen> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          content: Text('Delete this item?'),
+                                          content: const Text('Delete this item?'),
                                           actions: [
                                             TextButton(
                                               onPressed: () => Navigator.pop(context),
-                                              child: Text('No'),
+                                              child: const Text('No'),
                                             ),
                                             TextButton(
                                               onPressed: () {
@@ -95,7 +95,7 @@ class _ListIncomeState extends State<ListIncomeScreen> {
                                                 });
                                                 Navigator.pop(context);
                                               },
-                                              child: Text('Yes'),
+                                              child: const Text('Yes'),
                                             ),
                                           ],
                                         );
@@ -111,12 +111,12 @@ class _ListIncomeState extends State<ListIncomeScreen> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          content: Text(
+                                          content: const Text(
                                               'This income belongs to an Asset. To delete this income, please delete the corresponding Asset'),
                                           actions: [
                                             TextButton(
                                               onPressed: () => Navigator.pop(context, 'OK'),
-                                              child: Text('OK'),
+                                              child: const Text('OK'),
                                             )
                                           ],
                                         );

@@ -95,14 +95,14 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                   children: [
                     Row(
                       children: [
-                        Text('Start Date '),
+                        const Text('Start Date '),
                         SizedBox(width: 20),
                         Text('${asset.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
                     TextButton(
                       onPressed: () => _selectStartDate(context),
-                      child: Text('Select date'),
+                      child: const Text('Select date'),
                     ),
                   ],
                 ),
@@ -111,20 +111,20 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                   children: [
                     Row(
                       children: [
-                        Text('End Date   '),
+                        const Text('End Date   '),
                         SizedBox(width: 20),
                         Text('${asset.endDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
                     TextButton(
                       onPressed: () => _selectEndDate(context),
-                      child: Text('Select date'),
+                      child: const Text('Select date'),
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    Text('Generates regular income '),
+                    const Text('Generates regular income '),
                     SizedBox(width: 15),
                     SizedBox(
                       width: 30,
@@ -138,7 +138,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                         },
                       ),
                     ),
-                    Text('Yes'),
+                    const Text('Yes'),
                     SizedBox(width: 15),
                     SizedBox(
                       width: 30,
@@ -152,7 +152,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                         },
                       ),
                     ),
-                    Text('No'),
+                    const Text('No'),
                   ],
                 ),
                 SizedBox(height: 20),
@@ -169,7 +169,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                           );
                         }
                       },
-                      child: Text('Proceed to add Investment'),
+                      child: const Text('Proceed to add Investment'),
                     ),
                   ],
                 ),

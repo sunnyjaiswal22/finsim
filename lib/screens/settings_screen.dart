@@ -60,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   ElevatedButton(
-                    child: Text('Submit'),
+                    child: const Text('Submit'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _saveSettings(_yearsToSimulate);

@@ -24,7 +24,7 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
         return Scaffold(
           appBar: AppBar(
             title: Center(
-              child: Text('Liabilities'),
+              child: const Text('Liabilities'),
             ),
             actions: [
               IconButton(
@@ -82,11 +82,11 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          content: Text('Delete this item?'),
+                                          content: const Text('Delete this item?'),
                                           actions: [
                                             TextButton(
                                               onPressed: () => Navigator.pop(context),
-                                              child: Text('No'),
+                                              child: const Text('No'),
                                             ),
                                             TextButton(
                                               onPressed: () {
@@ -96,7 +96,7 @@ class _ListLiabilityState extends State<ListLiabilityScreen> {
                                                 });
                                                 Navigator.pop(context);
                                               },
-                                              child: Text('Yes'),
+                                              child: const Text('Yes'),
                                             ),
                                           ],
                                         );

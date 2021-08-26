@@ -43,7 +43,7 @@ class _WelcomeState extends State<Welcome> {
                     arguments: {'isBlankStart': true},
                   );
                 },
-                child: Text('Continue'),
+                child: const Text('Continue'),
               ),
             ],
           ),

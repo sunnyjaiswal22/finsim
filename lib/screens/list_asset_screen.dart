@@ -24,7 +24,7 @@ class _ListAssetState extends State<ListAssetScreen> {
         return Scaffold(
           appBar: AppBar(
             title: Center(
-              child: Text('Assets'),
+              child: const Text('Assets'),
             ),
             actions: [
               IconButton(
@@ -88,11 +88,11 @@ class _ListAssetState extends State<ListAssetScreen> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          content: Text('Delete this item?'),
+                                          content: const Text('Delete this item?'),
                                           actions: [
                                             TextButton(
                                               onPressed: () => Navigator.pop(context),
-                                              child: Text('No'),
+                                              child: const Text('No'),
                                             ),
                                             TextButton(
                                               onPressed: () {
@@ -102,7 +102,7 @@ class _ListAssetState extends State<ListAssetScreen> {
                                                 });
                                                 Navigator.pop(context);
                                               },
-                                              child: Text('Yes'),
+                                              child: const Text('Yes'),
                                             ),
                                           ],
                                         );

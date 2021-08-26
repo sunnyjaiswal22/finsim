@@ -100,7 +100,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                 SizedBox(height: 20),
                 Row(
                   children: [
-                    Text('Frequency:'),
+                    const Text('Frequency:'),
                     SizedBox(width: 10),
                     SizedBox(
                       width: 30,
@@ -114,7 +114,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                         },
                       ),
                     ),
-                    Text('Once'),
+                    const Text('Once'),
                     SizedBox(width: 15),
                     SizedBox(
                       width: 30,
@@ -128,7 +128,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                         },
                       ),
                     ),
-                    Text('Monthly'),
+                    const Text('Monthly'),
                     SizedBox(width: 15),
                     SizedBox(
                       width: 30,
@@ -142,7 +142,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                         },
                       ),
                     ),
-                    Text('Yearly'),
+                    const Text('Yearly'),
                   ],
                 ),
                 if (asset.investment.frequency != ExpenditureFrequency.Once)
@@ -161,7 +161,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                   children: [
                     Row(
                       children: [
-                        Text('Start Date '),
+                        const Text('Start Date '),
                         SizedBox(width: 20),
                         Text('${asset.investment.startDate.format("dd-MM-yyyy")}'),
                       ],
@@ -179,7 +179,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                     children: [
                       Row(
                         children: [
-                          Text('End Date   '),
+                          const Text('End Date   '),
                           SizedBox(width: 20),
                           Text('${asset.investment.endDate.format("dd-MM-yyyy")}'),
                         ],
@@ -199,7 +199,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                             arguments: {'asset': asset});
                       }
                     },
-                    child: Text('Proceed to Add Income'),
+                    child: const Text('Proceed to Add Income'),
                   )
                 else
                   ElevatedButton(
@@ -210,7 +210,7 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                                 context, ModalRoute.withName(ListAssetScreen.routeName)));
                       }
                     },
-                    child: Text('Submit'),
+                    child: const Text('Submit'),
                   ),
               ],
             ),
