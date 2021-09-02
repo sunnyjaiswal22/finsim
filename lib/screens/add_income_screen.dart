@@ -214,7 +214,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     child: const Text('Continue'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Provider.of<IncomeModel>(context, listen: false).add(income).then(
+                        Provider.of<IncomeModel>(context, listen: false)
+                            .add(income)
+                            .then(
                           (_) {
                             showDialog(
                               context: context,
@@ -232,12 +234,13 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                                       ),
                                       TextSpan(
                                         text: ' Income Saved',
-                                        style: TextStyle(color: Colors.black, fontSize: 22),
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 22),
                                       ),
                                     ]),
                                   ),
                                   content: Text(
-                                      'Income saved successfully. Please tap OK to add expenditure details'),
+                                      'Income saved successfully. Now please add expenditure details'),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
@@ -245,7 +248,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                                         Navigator.pushNamed(
                                           context,
                                           AddExpenditureScreen.routeName,
-                                          arguments: {'isBlankStart': isBlankStart},
+                                          arguments: {
+                                            'isBlankStart': isBlankStart
+                                          },
                                         );
                                       },
                                       child: const Text('OK'),
@@ -264,9 +269,12 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     child: const Text('Save Asset'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Provider.of<AssetModel>(context, listen: false).add(asset).then((_) =>
-                            Navigator.popUntil(
-                                context, ModalRoute.withName(ListAssetScreen.routeName)));
+                        Provider.of<AssetModel>(context, listen: false)
+                            .add(asset)
+                            .then((_) => Navigator.popUntil(
+                                context,
+                                ModalRoute.withName(
+                                    ListAssetScreen.routeName)));
                       }
                     },
                   )

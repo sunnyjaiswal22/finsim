@@ -156,7 +156,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
-                      expenditure.yearlyAppreciationPercentage = double.parse(value);
+                      expenditure.yearlyAppreciationPercentage =
+                          double.parse(value);
                     },
                   ),
                 SizedBox(height: 20),
@@ -185,7 +186,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                         children: [
                           const Text('End Date   '),
                           SizedBox(width: 20),
-                          if (!expenditure.endDate.isSame(Constants.maxDateTime))
+                          if (!expenditure.endDate
+                              .isSame(Constants.maxDateTime))
                             Text('${expenditure.endDate.format("dd-MM-yyyy")}'),
                         ],
                       ),
@@ -200,7 +202,9 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Provider.of<ExpenditureModel>(context, listen: false).add(expenditure).then(
+                        Provider.of<ExpenditureModel>(context, listen: false)
+                            .add(expenditure)
+                            .then(
                           (_) {
                             showDialog(
                               context: context,
@@ -218,18 +222,20 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                                       ),
                                       TextSpan(
                                         text: ' Thanks',
-                                        style: TextStyle(color: Colors.black, fontSize: 22),
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 22),
                                       ),
                                     ]),
                                   ),
                                   content: const Text(
-                                      'Expenditure details saved. Please click OK to view output. Please add more details including Assets and Liabilities to get more realistic output'),
+                                      'Expenditure details saved. Please add more details like assets and liabilities to get more realistic results. Tap OK to view simulation result.'),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
                                         Navigator.popUntil(
                                           context,
-                                          ModalRoute.withName(HomeScreen.routeName),
+                                          ModalRoute.withName(
+                                              HomeScreen.routeName),
                                         );
                                       },
                                       child: const Text('OK'),

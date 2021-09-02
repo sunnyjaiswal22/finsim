@@ -6,7 +6,8 @@ import 'package:finsim/models/liability.dart';
 import 'package:finsim/models/statement_entry.dart';
 import 'package:finsim/models/expenditure.dart';
 import 'package:finsim/models/income.dart';
-import 'package:finsim/screens/add_expenditure_screen.dart' show ExpenditureFrequency;
+import 'package:finsim/screens/add_expenditure_screen.dart'
+    show ExpenditureFrequency;
 import 'package:finsim/screens/add_income_screen.dart' show IncomeFrequency;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
@@ -22,19 +23,22 @@ class Simulator {
     List<Asset> assetList,
     List<Liability> liabilitiesList,
   ) {
+    int yearsToSimulate = Globals.sharedPreferences.getInt('yearsToSimulate')!;
+
     //Check if result exists in cache for the given input, return if present
     if (listEquals(incomeList, globalCache.getObject('incomeList')) &&
         listEquals(expenditureList, globalCache.getObject('expenditureList')) &&
         listEquals(assetList, globalCache.getObject('assetList')) &&
         listEquals(liabilitiesList, globalCache.getObject('liabilitiesList')) &&
+        yearsToSimulate == globalCache.getObject('yearsToSimulate') &&
         globalCache.getObject('result') != null) {
       //log("Simulation result returned from cache");
       return globalCache.getObject('result');
     }
 
-    int yearsToSimulate = Globals.sharedPreferences.getInt('yearsToSimulate')!;
     Jiffy simulationStartDate = Jiffy().startOf(Units.DAY);
-    Jiffy simulationEndDate = Jiffy(simulationStartDate).add(years: yearsToSimulate);
+    Jiffy simulationEndDate =
+        Jiffy(simulationStartDate).add(years: yearsToSimulate);
     var totalSavings = 0.0;
     var incomeAmountMap = <int, double>{};
     var expenditureAmountMap = <int, double>{};
@@ -56,11 +60,14 @@ class Simulator {
         if (!incomeAmountMap.containsKey(income.id)) {
           incomeAmountMap[income.id] = income.amount.toDouble();
         }
-        var onceEvent = income.frequency == IncomeFrequency.Once && date.isSame(income.startDate);
+        var onceEvent = income.frequency == IncomeFrequency.Once &&
+            date.isSame(income.startDate);
         var monthlyEvent = income.frequency == IncomeFrequency.Monthly &&
             date.date == income.startDate.date &&
-            date.isAfter(income.startDate) && //Event doesn't occur on first day itself
-            date.isSameOrBefore(income.endDate); //Event should include the last day also
+            date.isAfter(
+                income.startDate) && //Event doesn't occur on first day itself
+            date.isSameOrBefore(
+                income.endDate); //Event should include the last day also
         var yearlyEvent = income.frequency == IncomeFrequency.Yearly &&
             date.date == income.startDate.date &&
             date.month == income.startDate.month &&
@@ -86,14 +93,18 @@ class Simulator {
             date.month == income.startDate.month &&
             date.year != income.startDate.year &&
             income.yearlyAppreciationPercentage != 0) {
-          var yearlyAppreciation =
-              (incomeAmountMap[income.id]! * income.yearlyAppreciationPercentage / 100);
-          incomeAmountMap[income.id] = incomeAmountMap[income.id]! + yearlyAppreciation;
+          var yearlyAppreciation = (incomeAmountMap[income.id]! *
+              income.yearlyAppreciationPercentage /
+              100);
+          incomeAmountMap[income.id] =
+              incomeAmountMap[income.id]! + yearlyAppreciation;
           statementList.add(StatementEntry(
             date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Credit,
-            message: income.name + ': Appreciated by: ' + yearlyAppreciation.round().toString(),
+            message: income.name +
+                ': Appreciated by: ' +
+                yearlyAppreciation.round().toString(),
             details: 'Yearly',
             balance: totalSavings.round(),
           ));
@@ -106,9 +117,11 @@ class Simulator {
         if (!liabilityAmountMap.containsKey(liability.id) &&
             date.isSameOrAfter(liability.emi.startDate)) {
           //Calculating number of months passed, if the loan started from back date
-          int afterNumberOfMonths = date.diff(liability.emi.startDate, Units.MONTH).toInt();
+          int afterNumberOfMonths =
+              date.diff(liability.emi.startDate, Units.MONTH).toInt();
           //Calculating remaning loan amount, if the loan started from back date
-          liabilityAmountMap[liability.id] = CommonCalculator.calculateRemainingLoan(
+          liabilityAmountMap[liability.id] =
+              CommonCalculator.calculateRemainingLoan(
             liability.amount,
             liability.emi.amount,
             liability.rateOfInterest,
@@ -119,21 +132,27 @@ class Simulator {
             amount: 0,
             transactionType: TransactionType.Debit,
             message: liability.name + ': Initialised',
-            details: 'Remaining loan amount: ${liabilityAmountMap[liability.id]!.round()}',
+            details:
+                'Remaining loan amount: ${liabilityAmountMap[liability.id]!.round()}',
             balance: totalSavings.round(),
           ));
         }
 
-        var monthlyEvent = liability.emi.frequency == ExpenditureFrequency.Monthly &&
+        var monthlyEvent = liability.emi.frequency ==
+                ExpenditureFrequency.Monthly &&
             date.date == liability.emi.startDate.date &&
-            date.isAfter(liability.emi.startDate) && //Event doesn't occur on first day itself
-            date.isSameOrBefore(liability.emi.endDate); //Event should include the last day also
+            date.isAfter(liability
+                .emi.startDate) && //Event doesn't occur on first day itself
+            date.isSameOrBefore(
+                liability.emi.endDate); //Event should include the last day also
 
         if (monthlyEvent) {
-          var emiInterestAmount =
-              liabilityAmountMap[liability.id]! * liability.rateOfInterest / 1200;
+          var emiInterestAmount = liabilityAmountMap[liability.id]! *
+              liability.rateOfInterest /
+              1200;
           var emiPricipalAmount = liability.emi.amount - emiInterestAmount;
-          liabilityAmountMap[liability.id] = liabilityAmountMap[liability.id]! - emiPricipalAmount;
+          liabilityAmountMap[liability.id] =
+              liabilityAmountMap[liability.id]! - emiPricipalAmount;
 
           liabilityExpenditureLastDebitMap[liability.emi.id] = {
             'emiInterestAmount': emiInterestAmount,
@@ -166,30 +185,37 @@ class Simulator {
         }
         var onceEvent = expenditure.frequency == ExpenditureFrequency.Once &&
             date.isSame(expenditure.startDate);
-        var monthlyEvent = expenditure.frequency == ExpenditureFrequency.Monthly &&
-            date.date == expenditure.startDate.date &&
-            date.isAfter(expenditure.startDate) && //Event doesn't occur on first day itself
-            date.isSameOrBefore(expenditure.endDate);
-        var yearlyEvent = expenditure.frequency == ExpenditureFrequency.Yearly &&
-            date.date == expenditure.startDate.date &&
-            date.month == expenditure.startDate.month &&
-            date.isAfter(expenditure.startDate) && //Event doesn't occur on first day itself
-            date.isSameOrBefore(expenditure.endDate);
+        var monthlyEvent =
+            expenditure.frequency == ExpenditureFrequency.Monthly &&
+                date.date == expenditure.startDate.date &&
+                date.isAfter(expenditure
+                    .startDate) && //Event doesn't occur on first day itself
+                date.isSameOrBefore(expenditure.endDate);
+        var yearlyEvent =
+            expenditure.frequency == ExpenditureFrequency.Yearly &&
+                date.date == expenditure.startDate.date &&
+                date.month == expenditure.startDate.month &&
+                date.isAfter(expenditure
+                    .startDate) && //Event doesn't occur on first day itself
+                date.isSameOrBefore(expenditure.endDate);
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
           totalSavings -= expenditureAmountMap[expenditure.id]!;
           var loanDetails = '';
           if (expenditure.belongsToLiability) {
             loanDetails = ' Interest: ' +
-                liabilityExpenditureLastDebitMap[expenditure.id]!['emiInterestAmount']!
+                liabilityExpenditureLastDebitMap[expenditure.id]![
+                        'emiInterestAmount']!
                     .round()
                     .toString() +
                 ' Principal: ' +
-                liabilityExpenditureLastDebitMap[expenditure.id]!['emiPricipalAmount']!
+                liabilityExpenditureLastDebitMap[expenditure.id]![
+                        'emiPricipalAmount']!
                     .round()
                     .toString() +
                 ' Remaining Liability: ' +
-                liabilityExpenditureLastDebitMap[expenditure.id]!['remainingLiability']!
+                liabilityExpenditureLastDebitMap[expenditure.id]![
+                        'remainingLiability']!
                     .round()
                     .toString();
           }
@@ -199,7 +225,8 @@ class Simulator {
               amount: expenditureAmountMap[expenditure.id]!.round(),
               transactionType: TransactionType.Debit,
               message: expenditure.name,
-              details: describeEnum(expenditure.frequency.toString()) + loanDetails,
+              details:
+                  describeEnum(expenditure.frequency.toString()) + loanDetails,
               balance: totalSavings.round(),
             ),
           );
@@ -220,8 +247,9 @@ class Simulator {
             date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Debit,
-            message:
-                expenditure.name + ': Appreciated by: ' + yearlyAppreciation.round().toString(),
+            message: expenditure.name +
+                ': Appreciated by: ' +
+                yearlyAppreciation.round().toString(),
             details: 'Yearly',
             balance: totalSavings.round(),
           ));
@@ -236,20 +264,28 @@ class Simulator {
           assetInvestmentMap[asset.id] = 0;
         }
         //Investment in asset
-        var onceEvent = asset.investment.frequency == ExpenditureFrequency.Once &&
-            date.isSame(asset.investment.startDate);
-        var monthlyEvent = asset.investment.frequency == ExpenditureFrequency.Monthly &&
-            date.date == asset.investment.startDate.date &&
-            date.isAfter(asset.investment.startDate) && //Event doesn't occur on first day itself
-            date.isSameOrBefore(asset.investment.endDate); //Event should include the last day also
-        var yearlyEvent = asset.investment.frequency == ExpenditureFrequency.Yearly &&
-            date.date == asset.investment.startDate.date &&
-            date.month == asset.investment.startDate.month &&
-            date.isAfter(asset.investment.startDate) && //Event doesn't occur on first day itself
-            date.isSameOrBefore(asset.investment.endDate); //Event should include the last day also
+        var onceEvent =
+            asset.investment.frequency == ExpenditureFrequency.Once &&
+                date.isSame(asset.investment.startDate);
+        var monthlyEvent =
+            asset.investment.frequency == ExpenditureFrequency.Monthly &&
+                date.date == asset.investment.startDate.date &&
+                date.isAfter(asset.investment
+                    .startDate) && //Event doesn't occur on first day itself
+                date.isSameOrBefore(asset.investment
+                    .endDate); //Event should include the last day also
+        var yearlyEvent =
+            asset.investment.frequency == ExpenditureFrequency.Yearly &&
+                date.date == asset.investment.startDate.date &&
+                date.month == asset.investment.startDate.month &&
+                date.isAfter(asset.investment
+                    .startDate) && //Event doesn't occur on first day itself
+                date.isSameOrBefore(asset.investment
+                    .endDate); //Event should include the last day also
 
         if (onceEvent || monthlyEvent || yearlyEvent) {
-          assetInvestmentMap[asset.id] = assetInvestmentMap[asset.id]! + asset.investment.amount;
+          assetInvestmentMap[asset.id] =
+              assetInvestmentMap[asset.id]! + asset.investment.amount;
         }
 
         //Asset year completed
@@ -258,16 +294,20 @@ class Simulator {
             date.month == asset.startDate.month &&
             date.year != asset.startDate.year &&
             asset.yearlyAppreciationPercentage != 0) {
-          var yearlyAppreciation =
-              (assetInvestmentMap[asset.id]! * asset.yearlyAppreciationPercentage / 100);
+          var yearlyAppreciation = (assetInvestmentMap[asset.id]! *
+              asset.yearlyAppreciationPercentage /
+              100);
 
-          assetInvestmentMap[asset.id] = assetInvestmentMap[asset.id]! + yearlyAppreciation;
+          assetInvestmentMap[asset.id] =
+              assetInvestmentMap[asset.id]! + yearlyAppreciation;
 
           statementList.add(StatementEntry(
             date: date.clone(),
             amount: 0,
             transactionType: TransactionType.Credit,
-            message: asset.name + ': Profit: ' + yearlyAppreciation.round().toString(),
+            message: asset.name +
+                ': Profit: ' +
+                yearlyAppreciation.round().toString(),
             details: 'Yearly',
             balance: totalSavings.round(),
           ));
@@ -307,7 +347,8 @@ class Simulator {
 
         var savingsBarColor = totalSavings >= 0 ? Colors.green : Colors.red;
         var assetsBarColor = totalInvestments >= 0 ? Colors.green : Colors.red;
-        var liabilitesBarColor = totalLiabilities >= 0 ? Colors.red : Colors.green;
+        var liabilitesBarColor =
+            totalLiabilities >= 0 ? Colors.red : Colors.green;
 
         double barRodWidth = 180 / yearsToSimulate;
 
@@ -392,6 +433,7 @@ class Simulator {
     globalCache.addObject('expenditureList', expenditureList);
     globalCache.addObject('assetList', assetList);
     globalCache.addObject('liabilitiesList', liabilitiesList);
+    globalCache.addObject('yearsToSimulate', yearsToSimulate);
     globalCache.addObject('result', result);
     return result;
   }
