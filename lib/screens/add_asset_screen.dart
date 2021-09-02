@@ -28,8 +28,8 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: initialDate.dateTime,
-          firstDate: initialDate.clone().subtract(years: 10).dateTime,
-          lastDate: initialDate.clone().add(years: 10).dateTime);
+          firstDate: initialDate.clone().subtract(years: 100).dateTime,
+          lastDate: initialDate.clone().add(years: 100).dateTime);
       if (picked != null && !Jiffy(picked).isSame(asset.startDate)) {
         setState(() {
           asset.startDate = Jiffy(picked);
@@ -45,8 +45,8 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: initialDate.dateTime,
-          firstDate: initialDate.clone().subtract(years: 10).dateTime,
-          lastDate: initialDate.clone().add(years: 10).dateTime);
+          firstDate: initialDate.clone().subtract(years: 100).dateTime,
+          lastDate: initialDate.clone().add(years: 100).dateTime);
       if (picked != null && !Jiffy(picked).isSame(asset.endDate)) {
         setState(() {
           asset.endDate = Jiffy(picked);
@@ -83,7 +83,8 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                   },
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Yearly Profit (%)'),
+                  decoration:
+                      const InputDecoration(labelText: 'Yearly Profit (%)'),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     asset.yearlyAppreciationPercentage = double.parse(value);

@@ -1,6 +1,7 @@
 import 'package:finsim/models/asset.dart';
 import 'package:finsim/models/asset_model.dart';
-import 'package:finsim/screens/add_expenditure_screen.dart' show ExpenditureFrequency;
+import 'package:finsim/screens/add_expenditure_screen.dart'
+    show ExpenditureFrequency;
 import 'package:finsim/screens/add_income_screen.dart';
 import 'package:finsim/screens/list_asset_screen.dart';
 import 'package:finsim/widgets/finsim_appbar.dart';
@@ -33,8 +34,8 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: asset.startDate.dateTime,
-          firstDate: asset.startDate.clone().subtract(years: 10).dateTime,
-          lastDate: asset.startDate.clone().add(years: 10).dateTime);
+          firstDate: asset.startDate.clone().subtract(years: 100).dateTime,
+          lastDate: asset.startDate.clone().add(years: 100).dateTime);
       if (picked != null && !Jiffy(picked).isSame(asset.investment.endDate)) {
         setState(() {
           asset.investment.startDate = Jiffy(picked);
@@ -48,8 +49,8 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: asset.endDate.dateTime,
-          firstDate: asset.endDate.clone().subtract(years: 10).dateTime,
-          lastDate: asset.endDate.clone().add(years: 10).dateTime);
+          firstDate: asset.endDate.clone().subtract(years: 100).dateTime,
+          lastDate: asset.endDate.clone().add(years: 100).dateTime);
       if (picked != null && !Jiffy(picked).isSame(asset.investment.endDate)) {
         setState(() {
           asset.investment.endDate = Jiffy(picked);
@@ -94,7 +95,8 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                     }
                   },
                   onChanged: (value) {
-                    asset.investment.amount = value.isEmpty ? 0 : int.parse(value);
+                    asset.investment.amount =
+                        value.isEmpty ? 0 : int.parse(value);
                   },
                 ),
                 SizedBox(height: 20),
@@ -152,7 +154,8 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
-                      asset.investment.yearlyAppreciationPercentage = double.parse(value);
+                      asset.investment.yearlyAppreciationPercentage =
+                          double.parse(value);
                     },
                   ),
                 SizedBox(height: 20),
@@ -163,7 +166,8 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                       children: [
                         const Text('Start Date '),
                         SizedBox(width: 20),
-                        Text('${asset.investment.startDate.format("dd-MM-yyyy")}'),
+                        Text(
+                            '${asset.investment.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
                     IconButton(
@@ -181,7 +185,8 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                         children: [
                           const Text('End Date   '),
                           SizedBox(width: 20),
-                          Text('${asset.investment.endDate.format("dd-MM-yyyy")}'),
+                          Text(
+                              '${asset.investment.endDate.format("dd-MM-yyyy")}'),
                         ],
                       ),
                       IconButton(
@@ -205,9 +210,12 @@ class _AddInvestmentScreenState extends State<AddInvestmentScreen> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Provider.of<AssetModel>(context, listen: false).add(asset).then((_) =>
-                            Navigator.popUntil(
-                                context, ModalRoute.withName(ListAssetScreen.routeName)));
+                        Provider.of<AssetModel>(context, listen: false)
+                            .add(asset)
+                            .then((_) => Navigator.popUntil(
+                                context,
+                                ModalRoute.withName(
+                                    ListAssetScreen.routeName)));
                       }
                     },
                     child: const Text('Submit'),

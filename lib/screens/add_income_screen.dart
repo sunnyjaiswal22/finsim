@@ -50,8 +50,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: initialDate.dateTime,
-          firstDate: initialDate.clone().subtract(years: 10).dateTime,
-          lastDate: initialDate.clone().add(years: 10).dateTime);
+          firstDate: initialDate.clone().subtract(years: 100).dateTime,
+          lastDate: initialDate.clone().add(years: 100).dateTime);
       if (picked != null && !Jiffy(picked).isSame(income.startDate)) {
         setState(() {
           income.startDate = Jiffy(picked);
@@ -65,8 +65,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: initialDate.dateTime,
-          firstDate: initialDate.clone().subtract(years: 10).dateTime,
-          lastDate: initialDate.clone().add(years: 10).dateTime);
+          firstDate: initialDate.clone().subtract(years: 100).dateTime,
+          lastDate: initialDate.clone().add(years: 100).dateTime);
       if (picked != null && !Jiffy(picked).isSame(income.endDate)) {
         setState(() {
           income.endDate = Jiffy(picked);

@@ -29,8 +29,8 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: initialDate.dateTime,
-          firstDate: initialDate.clone().subtract(years: 10).dateTime,
-          lastDate: initialDate.clone().add(years: 10).dateTime);
+          firstDate: initialDate.clone().subtract(years: 100).dateTime,
+          lastDate: initialDate.clone().add(years: 100).dateTime);
       if (picked != null && !Jiffy(picked).isSame(liability.startDate)) {
         setState(() {
           liability.startDate = Jiffy(picked);
@@ -81,7 +81,8 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                 ),
                 SizedBox(height: 10),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Rate of Interest (% per annum)'),
+                  decoration: const InputDecoration(
+                      labelText: 'Rate of Interest (% per annum)'),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -99,7 +100,8 @@ class _AddLiabilityScreenState extends State<AddLiabilityScreen> {
                 ),
                 SizedBox(height: 20),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Duration (years)'),
+                  decoration:
+                      const InputDecoration(labelText: 'Duration (years)'),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {

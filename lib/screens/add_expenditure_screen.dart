@@ -37,8 +37,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: initialDate.dateTime,
-          firstDate: initialDate.clone().subtract(years: 10).dateTime,
-          lastDate: initialDate.clone().add(years: 10).dateTime);
+          firstDate: initialDate.clone().subtract(years: 100).dateTime,
+          lastDate: initialDate.clone().add(years: 100).dateTime);
       if (picked != null && !Jiffy(picked).isSame(expenditure.endDate)) {
         setState(() {
           expenditure.startDate = Jiffy(picked);
@@ -52,8 +52,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: initialDate.dateTime,
-          firstDate: initialDate.clone().subtract(years: 10).dateTime,
-          lastDate: initialDate.clone().add(years: 10).dateTime);
+          firstDate: initialDate.clone().subtract(years: 100).dateTime,
+          lastDate: initialDate.clone().add(years: 100).dateTime);
       if (picked != null && !Jiffy(picked).isSame(expenditure.endDate)) {
         setState(() {
           expenditure.endDate = Jiffy(picked);
