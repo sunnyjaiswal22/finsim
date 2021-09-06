@@ -83,8 +83,7 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                   },
                 ),
                 TextFormField(
-                  decoration:
-                      const InputDecoration(labelText: 'Yearly Profit (%)'),
+                  decoration: const InputDecoration(labelText: 'Yearly Profit (%)'),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     asset.yearlyAppreciationPercentage = double.parse(value);
@@ -101,9 +100,9 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                         Text('${asset.startDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
-                    TextButton(
+                    IconButton(
                       onPressed: () => _selectStartDate(context),
-                      child: const Text('Select date'),
+                      icon: Icon(Icons.today, size: 30),
                     ),
                   ],
                 ),
@@ -117,9 +116,9 @@ class _AddAssetScreenState extends State<AddAssetScreen> {
                         Text('${asset.endDate.format("dd-MM-yyyy")}'),
                       ],
                     ),
-                    TextButton(
+                    IconButton(
                       onPressed: () => _selectEndDate(context),
-                      child: const Text('Select date'),
+                      icon: Icon(Icons.today, size: 30),
                     ),
                   ],
                 ),
