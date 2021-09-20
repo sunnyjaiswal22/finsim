@@ -67,6 +67,7 @@ class MyApp extends StatelessWidget {
         SettingsScreen.routeName: (context) => SettingsScreen(),
       },
       navigatorObservers: [CustomRouteObserver()],
+      debugShowCheckedModeBanner: false,
     );
   }
 }
