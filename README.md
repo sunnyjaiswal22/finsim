@@ -1,6 +1,7 @@
 # FinSim
 
-A personal financial simulator mobile app.
+A personal financial simulator mobile app.\
+Google Play Store link: https://play.google.com/store/apps/details?id=io.github.sunnyjaiswal22.finsim
 
 ## Getting Started
 
